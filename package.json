@@ -23,5 +23,8 @@
   "bugs": {
     "url": "https://github.com/Munter/hyperlink/issues"
   },
-  "homepage": "https://github.com/Munter/hyperlink"
+  "homepage": "https://github.com/Munter/hyperlink",
+  "dependencies": {
+    "assetgraph": "^1.6.42"
+  }
 }

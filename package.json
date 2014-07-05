@@ -1,0 +1,27 @@
+{
+  "name": "hyperlink",
+  "version": "0.0.0",
+  "description": "A node library and command line tool to test the integrity of your internal an external hyperlinks\"",
+  "main": "lib/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:Munter/hyperlink.git"
+  },
+  "keywords": [
+    "web",
+    "link",
+    "hyperlink",
+    "reference",
+    "asset",
+    "assetgraph"
+  ],
+  "author": "Peter Müller <munter@fumle.dk>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Munter/hyperlink/issues"
+  },
+  "homepage": "https://github.com/Munter/hyperlink"
+}

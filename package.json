@@ -25,6 +25,7 @@
   },
   "homepage": "https://github.com/Munter/hyperlink",
   "dependencies": {
-    "assetgraph": "^1.6.42"
+    "assetgraph": "^1.6.42",
+    "request": "^2.36.0"
   }
 }

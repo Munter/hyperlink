@@ -1,6 +1,6 @@
 {
   "name": "hyperlink",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "A node library and command line tool to test the integrity of your internal an external hyperlinks",
   "main": "lib/index.js",
   "scripts": {

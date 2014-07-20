@@ -4,7 +4,8 @@
   "description": "A node library and command line tool to test the integrity of your internal an external hyperlinks",
   "main": "lib/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "jshint **/*.js"
   },
   "repository": {
     "type": "git",
@@ -23,6 +24,10 @@
   "bugs": {
     "url": "https://github.com/Munter/hyperlink/issues"
   },
+  "directories": {
+    "lib": "./lib",
+    "bin": "./bin"
+  },
   "homepage": "https://github.com/Munter/hyperlink",
   "dependencies": {
     "assetgraph": "^1.6.42",
@@ -30,5 +35,8 @@
     "chalk": "^0.5.0",
     "lodash": "^2.4.1",
     "request": "^2.36.0"
+  },
+  "devDependencies": {
+    "jshint": "^2.5.2"
   }
 }

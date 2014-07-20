@@ -21,7 +21,7 @@ var optimist = require('optimist'),
         // })
         .options('verbose', {
             alias: 'v',
-            describe: 'Also log correctly linked asset discovery.',
+            describe: 'Log all added assets and relations. VERY verbose.',
             type: 'boolean'
         })
         .options('recursive', {

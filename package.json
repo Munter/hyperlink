@@ -5,7 +5,7 @@
   "main": "lib/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "lint": "jshint **/*.js"
+    "lint": "jshint ."
   },
   "repository": {
     "type": "git",

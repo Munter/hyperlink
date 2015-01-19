@@ -1,7 +1,7 @@
 Hyperlink
 =========
-[![NPM version](https://badge.fury.io/js/hyperlink.png)](http://badge.fury.io/js/hyperlink)
-[![Dependency Status](https://david-dm.org/Munter/hyperlink.png)](https://david-dm.org/Munter/hyperlink)
+[![NPM version](https://badge.fury.io/js/hyperlink.svg)](http://badge.fury.io/js/hyperlink)
+[![Dependency Status](https://david-dm.org/Munter/hyperlink.svg)](https://david-dm.org/Munter/hyperlink)
 
 Detect invalid and inefficient links on your webpages. Works with local files or websites, on the command line and as a node library.
 

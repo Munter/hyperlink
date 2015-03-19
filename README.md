@@ -18,6 +18,13 @@ Todo:
 - Detect inefficient redirects to internal assets
 - Autocorrect inefficient redirects in local files
 
+Feedback Needed
+---------------
+
+This was a quick hack to scratch an itch, so it's not very polished. Yet.
+
+Please open issues with features you would like to see and ideas on how to improve the output so it becomes more human redable.
+
 
 Installation
 ------------

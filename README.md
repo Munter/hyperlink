@@ -62,13 +62,35 @@ Done
 
 Command line usage and options:
 
-`hyperlink <url | urls | file | files> [--root path/to/webroot] [--recursive | -r] [--verbose | -v]`
+`hyperlink <url | urls | file | files> [--root path/to/webroot] [--recursive | -r]`
 
 Hyperlink takes any number of input files or urls. It is recommended having these urls on the same domain or be part of the same web site.
 
 The `--root` option is only needed for resolving root relaive urls in case you are not sending in pages located in the web root.
 
 The most common use case is to do `hyperlink path/to/index.html -r`, giving `hyperlink` your index file in your web root and having it recursively explore all linked pages and their referenced assets, internal and external.
+
+
+Integrations
+------------
+
+Hyperlink exits with an error code equal to the number of errors encountered, making it a useful CI tool.
+
+Hyperlink is using the [TAP](https://testanything.org/) output format, which is sort of human readable, and very machine readable. Use the TAP output in your CI setup, or pipe the output through one of these awesome formatters to get improved human readability, an output Jenkins likes, or whatever you want: [tap-colorize](https://www.npmjs.com/package/tap-colorize) [tap-difflet](https://www.npmjs.com/package/tap-difflet) [tap-dot](https://www.npmjs.com/package/tap-dot) [tap-json](https://www.npmjs.com/package/tap-json) [tap-min](https://www.npmjs.com/package/tap-min) [tap-nyan](https://www.npmjs.com/package/tap-nyan) [tap-spec](https://www.npmjs.com/package/tap-spec) [tap-xunit](https://www.npmjs.com/package/tap-xunit)
+
+**Example:**
+
+```
+$ hyperlink https://mntr.dk/ | tap-nyan
+ 37  -_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-__,------,
+ 1   -_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-__|  /\_/\
+ 0   -_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_~|_( x .x)
+     -_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_ ""  ""
+  Failed Tests: There was 1 failure
+
+    ✗ Crawling 17 outgoing urls: URI should have no redirects - http://www.milwaukeepolicenews.com/
+
+```
 
 
 License

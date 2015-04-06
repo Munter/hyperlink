@@ -7,6 +7,8 @@ Detect invalid and inefficient links on your webpages. Works with local files or
 
 Because web performance is not only about making your own page run smoothly, but also about giving people a quick navigation out of your page.
 
+Read some more of the thoughts behind hyperlink in [Check your link rot](https://mntr.dk/2015/check-your-link-rot/).
+
 Hyperlink is known to:
 - Detect broken links to internal assets
 - Detect broken links to external assets
@@ -17,13 +19,6 @@ Hyperlink is known to:
 Todo:
 - Detect inefficient redirects to internal assets
 - Autocorrect inefficient redirects in local files
-
-Feedback Needed
----------------
-
-This was a quick hack to scratch an itch, so it's not very polished. Yet.
-
-Please open issues with features you would like to see and ideas on how to improve the output so it becomes more human redable.
 
 
 Installation

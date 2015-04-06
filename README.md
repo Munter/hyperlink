@@ -39,27 +39,6 @@ Hyperlink exposes an executable `hyperlink` in your npm binaries folder.
 Usage
 -----
 
-```
-$ hyperlink http://mntr.dk
- ✔ 0.002 secs: logEvents
- ✔ 1.873 secs: loadAssets
- ✔ 2.035 secs: populate
-Crawling 15 outgoing urls:
-Outgoing link status codes:
-{ '200': 15 }
- ✔ 2.997 secs:
-  Html  1 11.8 KB
-   Ico  1  1.1 KB
-   Png  8 13.1 KB
-   Css  2 28.3 KB
-   Rss  1  4.6 KB
-   Svg  1  8.6 KB
-  Jpeg  1  2.6 KB
-Total: 15 70.2 KB
- ✔ 0.003 secs: writeStatsToStderr
-Done
-```
-
 Command line usage and options:
 
 `hyperlink <url | urls | file | files> [--root path/to/webroot] [--recursive | -r]`

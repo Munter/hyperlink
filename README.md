@@ -13,7 +13,7 @@ Hyperlink is known to:
 - Detect broken links to internal assets
 - Detect broken links to external assets
 - Detect missing DNS records on external links
-- Detect inefficient external links that reult in a redirect chain
+- Detect inefficient external links that result in a redirect chain
 - Detect miscellaneous syntax errors in your web assets
 
 Todo:
@@ -40,7 +40,7 @@ Command line usage and options:
 
 Hyperlink takes any number of input files or urls. It is recommended having these urls on the same domain or be part of the same web site.
 
-The `--root` option is only needed for resolving root relaive urls in case you are not sending in pages located in the web root.
+The `--root` option is only needed for resolving root relative urls in case you are not sending in pages located in the web root.
 
 The most common use case is to do `hyperlink path/to/index.html -r`, giving `hyperlink` your index file in your web root and having it recursively explore all linked pages and their referenced assets, internal and external.
 

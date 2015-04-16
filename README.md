@@ -66,6 +66,12 @@ $ hyperlink https://mntr.dk/ | tap-nyan
 
 ```
 
+[Tee](http://en.wikipedia.org/wiki/Tee_%28command%29) is a very useful program when you want to save and replay TAP outputs. In order to save the output to a file but still see the logs on stdout you might run a command line like so:
+
+```
+hyperlink https://mntr.dk -r | tee mntr.dk.tap | tap-colorize
+```
+
 
 License
 -------

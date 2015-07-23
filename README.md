@@ -15,6 +15,7 @@ Hyperlink is known to:
 - Detect missing DNS records on external links
 - Detect inefficient external links that result in a redirect chain
 - Detect miscellaneous syntax errors in your web assets
+- Detect mixed content warnings on TLS secured pages
 
 Todo:
 - Detect inefficient redirects to internal assets

@@ -28,6 +28,10 @@
     "lib": "./lib",
     "bin": "./bin"
   },
+  "files": [
+    "lib/index.js",
+    "bin/hyperlink"
+  ],
   "homepage": "https://github.com/Munter/hyperlink",
   "dependencies": {
     "assetgraph": "^1.22.0",

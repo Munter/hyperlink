@@ -29,6 +29,12 @@ var optimist = require('optimist'),
             describe: 'Crawl all HTML-pages linked with relative and root relative links. This stays inside your domain.',
             type: 'boolean'
         })
+        .options('concurrency', {
+            alias: 'c',
+            describe: 'The maximum number of assets that can be loading at once (defaults to 100)',
+            default: 100,
+            type: 'integer'
+        })
         .wrap(72)
         .argv;
 
@@ -67,5 +73,6 @@ hyperlink({
     root: rootUrl,
     inputUrls: inputUrls,
     recursive: commandLineOptions.recursive,
-    verbose: commandLineOptions.verbose
+    verbose: commandLineOptions.verbose,
+    concurrency: commandLineOptions.concurrency
 });

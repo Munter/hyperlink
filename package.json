@@ -43,6 +43,6 @@
     "urltools": "0.2.0"
   },
   "devDependencies": {
-    "jshint": "^2.5.2"
+    "jshint": "^2.8.0"
   }
 }

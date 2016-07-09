@@ -38,7 +38,7 @@
     "async": "1.4.2",
     "lodash": "^3.10.1",
     "optimist": "^0.6.1",
-    "request": "2.67.0",
+    "request": "2.73.0",
     "tap-render": "^0.1.7",
     "urltools": "0.2.0"
   },

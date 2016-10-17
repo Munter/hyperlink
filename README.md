@@ -49,8 +49,6 @@ The most common use case is to do `hyperlink path/to/index.html -r`, giving `hyp
 Integrations
 ------------
 
-Hyperlink exits with an error code equal to the number of errors encountered, making it a useful CI tool.
-
 Hyperlink is using the [TAP](https://testanything.org/) output format, which is sort of human readable, and very machine readable. Use the TAP output in your CI setup, or pipe the output through one of these awesome formatters to get improved human readability, an output Jenkins likes, or whatever you want: [tap-colorize](https://www.npmjs.com/package/tap-colorize) [tap-difflet](https://www.npmjs.com/package/tap-difflet) [tap-dot](https://www.npmjs.com/package/tap-dot) [tap-json](https://www.npmjs.com/package/tap-json) [tap-min](https://www.npmjs.com/package/tap-min) [tap-nyan](https://www.npmjs.com/package/tap-nyan) [tap-spec](https://www.npmjs.com/package/tap-spec) [tap-xunit](https://www.npmjs.com/package/tap-xunit)
 
 **Example:**

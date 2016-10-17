@@ -35,7 +35,7 @@
   "homepage": "https://github.com/Munter/hyperlink",
   "dependencies": {
     "assetgraph": "^3.0.0-27",
-    "async": "^2.1.1",
+    "async": "^2.1.2",
     "lodash": "^4.16.4",
     "optimist": "^0.6.1",
     "request": "^2.75.0",
@@ -43,6 +43,6 @@
     "urltools": "^0.2.1"
   },
   "devDependencies": {
-    "jshint": "^2.8.0"
+    "jshint": "^2.9.3"
   }
 }

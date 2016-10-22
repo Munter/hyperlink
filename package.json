@@ -29,8 +29,8 @@
     "bin": "./bin"
   },
   "files": [
-    "lib/index.js",
-    "bin/hyperlink"
+    "lib",
+    "bin"
   ],
   "homepage": "https://github.com/Munter/hyperlink",
   "dependencies": {

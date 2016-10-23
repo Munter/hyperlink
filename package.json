@@ -48,7 +48,7 @@
     "urltools": "^0.2.1"
   },
   "devDependencies": {
-    "jshint": "^2.9.3",
+    "jshint": "^2.9.4",
     "mocha": "^3.1.2",
     "nyc": "^8.3.2",
     "unexpected": "^10.18.1"

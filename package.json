@@ -4,8 +4,11 @@
   "description": "A node library and command line tool to test the integrity of your internal an external hyperlinks",
   "main": "lib/index.js",
   "scripts": {
-    "test": "npm run lint",
-    "lint": "jshint ."
+    "lint": "jshint .",
+    "test": "mocha",
+    "coverage": "nyc npm test",
+    "preversion": "npm run lint && npm run test",
+    "CI": "npm run lint && npm run coverage"
   },
   "repository": {
     "type": "git",
@@ -43,6 +46,9 @@
     "urltools": "^0.2.1"
   },
   "devDependencies": {
-    "jshint": "^2.9.3"
+    "jshint": "^2.9.3",
+    "mocha": "^3.1.2",
+    "nyc": "^8.3.2",
+    "unexpected": "^10.18.1"
   }
 }

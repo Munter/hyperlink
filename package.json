@@ -5,9 +5,9 @@
   "main": "lib/index.js",
   "scripts": {
     "lint": "jshint .",
-    "test": "mocha",
-    "coverage": "nyc npm test",
-    "preversion": "npm run lint && npm run test",
+    "test": "npm run lint && mocha",
+    "coverage": "nyc mocha",
+    "preversion": "npm test",
     "CI": "npm run lint && npm run coverage"
   },
   "repository": {

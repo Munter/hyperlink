@@ -29,7 +29,7 @@ describe('relationDebugDescription', function () {
 
     it('should return asset.urlOrDescription when asset is not text', function () {
         var relation = getRelation();
-        relation.from.isText = false
+        relation.from.isText = false;
         var result = relationDebugDescription(relation);
 
 

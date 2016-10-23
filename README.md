@@ -12,6 +12,7 @@ Read some more of the thoughts behind hyperlink in [Check your link rot](https:/
 Hyperlink is known to:
 - Detect broken links to internal assets
 - Detect broken links to external assets
+- Detect broken links to fragment identifiers
 - Detect missing DNS records on external links
 - Detect inefficient external links that result in a redirect chain
 - Detect miscellaneous syntax errors in your web assets

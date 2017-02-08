@@ -44,7 +44,7 @@
     "lodash": "^4.16.4",
     "optimist": "^0.6.1",
     "request": "^2.75.0",
-    "tap-render": "^0.1.7",
+    "tap-render": "Munter/tap-render#0.1.7-patch1",
     "urltools": "^0.3.0"
   },
   "devDependencies": {

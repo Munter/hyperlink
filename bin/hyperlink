@@ -29,6 +29,11 @@ var optimist = require('optimist'),
             describe: 'Crawl all HTML-pages linked with relative and root relative links. This stays inside your domain.',
             type: 'boolean'
         })
+        .options('exclude', {
+            describe: 'Url pattern to exclude from the build. Supports * wildcards. You can create multiple of these: --exclude *.php --exclude http://example.com/*.gif',
+            type: 'string',
+            demand: false
+        })
         .options('concurrency', {
             alias: 'c',
             describe: 'The maximum number of assets that can be loading at once (defaults to 100)',
@@ -46,6 +51,7 @@ if (commandLineOptions.h) {
 var urlTools = require('urltools'),
     // canonicalUrl = commandLineOptions.canonicalurl && urlTools.ensureTrailingSlash(commandLineOptions.canonicalurl),
     rootUrl = commandLineOptions.root && urlTools.urlOrFsPathToUrl(commandLineOptions.root, true),
+    excludePatterns = commandLineOptions.exclude && [].concat(commandLineOptions.exclude),
     inputUrls;
 
 var hyperlink = require('../lib/index');
@@ -72,6 +78,7 @@ if (commandLineOptions._.length > 0) {
 hyperlink({
     root: rootUrl,
     inputUrls: inputUrls,
+    excludePatterns: excludePatterns,
     recursive: commandLineOptions.recursive,
     verbose: commandLineOptions.verbose,
     concurrency: commandLineOptions.concurrency

@@ -41,7 +41,7 @@ describe('relationDebugDescription', function () {
         var result = relationDebugDescription(relation);
 
 
-        expect(result, 'to end with', 'index.html:8:14');
+        expect(result, 'to end with', 'index.html:8:14 <a href="foo.html">...</a>');
     });
 
     it('should append line and char offsets to non-file-url assets', function () {
@@ -50,6 +50,6 @@ describe('relationDebugDescription', function () {
         var result = relationDebugDescription(relation);
 
 
-        expect(result, 'to end with', 'index.html (8:14)');
+        expect(result, 'to end with', 'index.html (8:14) <a href="foo.html">...</a>');
     });
 });

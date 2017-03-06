@@ -52,4 +52,19 @@ describe('relationDebugDescription', function () {
 
         expect(result, 'to end with', 'index.html (8:14) <a href="foo.html">...</a>');
     });
+
+    it('should handle relations to inline assets', function () {
+        return new AssetGraph({ root: __dirname })
+            .loadAssets({
+                type: 'Html',
+                url: 'file://' + __dirname + '/index.html',
+                text: '<!doctype html><html><head><style>body { background: url(https://mntr.dk/invalid.png); }</style></head><body></body></html>'
+            })
+            .populate({ followRelations: { crossOrigin: false }})
+            .queue(function (assetGraph) {
+                var relation = assetGraph.findRelations({}, true)[1];
+                var result = relationDebugDescription(relation);
+                expect(result, 'to end with', 'index.html:1:58 inlined Css: url(https://mntr.dk/invalid.png)');
+            });
+    });
 });

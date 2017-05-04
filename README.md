@@ -40,7 +40,23 @@ Usage
 
 Command line usage and options:
 
-`hyperlink <url | urls | file | files> [--root path/to/webroot] [--recursive | -r]`
+```
+$ hyperlink [options] <htmlFile(s) | url(s)>
+
+Options:
+  -h, --help         Show this help                     [default: false]
+  --root             Path to your web root (will be deduced from your
+                     input files if not specified)                      
+  --verbose, -v      Log all added assets and relations. VERY verbose.  
+  --recursive, -r    Crawl all HTML-pages linked with relative and root
+                     relative links. This stays inside your domain.     
+  --exclude          Url pattern to exclude from the build. Supports *
+                     wildcards. You can create multiple of these:
+                     --exclude *.php --exclude http://example.com/*.gif
+                                                                        
+  --concurrency, -c  The maximum number of assets that can be loading
+                     at once (defaults to 100)            [default: 100]
+```
 
 Hyperlink takes any number of input files or urls. It is recommended having these urls on the same domain or be part of the same web site.
 

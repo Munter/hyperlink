@@ -40,6 +40,10 @@ var optimist = require('optimist'),
             default: 100,
             type: 'integer'
         })
+        .options('debug', {
+            describe: 'Print debugging information during the run',
+            type: 'boolean'
+        })
         .wrap(72)
         .argv;
 
@@ -81,5 +85,6 @@ hyperlink({
     excludePatterns: excludePatterns,
     recursive: commandLineOptions.recursive,
     verbose: commandLineOptions.verbose,
-    concurrency: commandLineOptions.concurrency
+    concurrency: commandLineOptions.concurrency,
+    memdebug: commandLineOptions.debug
 });

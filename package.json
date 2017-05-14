@@ -50,7 +50,7 @@
   },
   "devDependencies": {
     "jshint": "^2.9.4",
-    "mocha": "^3.3.0",
+    "mocha": "^3.4.0",
     "nyc": "^10.3.2",
     "unexpected": "^10.29.0"
   }

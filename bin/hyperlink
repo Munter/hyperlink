@@ -14,11 +14,11 @@ var optimist = require('optimist'),
             type: 'string',
             demand: false
         })
-        // .options('canonicalurl', {
-        //     describe: 'URI root where the project being built will be deployed.',
-        //     type: 'string',
-        //     demand: false
-        // })
+        .options('canonicalroot', {
+            describe: 'URI root where the project being built will be deployed. Canonical URLs in local sources will be resolved to local URLs',
+            type: 'string',
+            demand: false
+        })
         .options('verbose', {
             alias: 'v',
             describe: 'Log all added assets and relations. VERY verbose.',
@@ -53,7 +53,7 @@ if (commandLineOptions.h) {
 }
 
 var urlTools = require('urltools'),
-    // canonicalUrl = commandLineOptions.canonicalurl && urlTools.ensureTrailingSlash(commandLineOptions.canonicalurl),
+    canonicalRoot = commandLineOptions.canonicalroot && urlTools.ensureTrailingSlash(commandLineOptions.canonicalroot),
     rootUrl = commandLineOptions.root && urlTools.urlOrFsPathToUrl(commandLineOptions.root, true),
     excludePatterns = commandLineOptions.exclude && [].concat(commandLineOptions.exclude),
     inputUrls;
@@ -81,6 +81,7 @@ if (commandLineOptions._.length > 0) {
 
 hyperlink({
     root: rootUrl,
+    canonicalRoot: canonicalRoot,
     inputUrls: inputUrls,
     excludePatterns: excludePatterns,
     recursive: commandLineOptions.recursive,

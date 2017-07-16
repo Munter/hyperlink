@@ -29,6 +29,11 @@ var optimist = require('optimist'),
             describe: 'Crawl all HTML-pages linked with relative and root relative links. This stays inside your domain.',
             type: 'boolean'
         })
+        .options('source-maps', {
+            describe: 'Verify the correctness of links to source map files and sources.',
+            type: 'boolean',
+            default: false
+        })
         .options('exclude', {
             describe: 'Url pattern to exclude from the build. Supports * wildcards. You can create multiple of these: --exclude *.php --exclude http://example.com/*.gif',
             type: 'string',
@@ -56,6 +61,7 @@ var urlTools = require('urltools'),
     canonicalRoot = commandLineOptions.canonicalroot && urlTools.ensureTrailingSlash(commandLineOptions.canonicalroot),
     rootUrl = commandLineOptions.root && urlTools.urlOrFsPathToUrl(commandLineOptions.root, true),
     excludePatterns = commandLineOptions.exclude && [].concat(commandLineOptions.exclude),
+    followSourceMaps = commandLineOptions['source-maps'],
     inputUrls;
 
 var hyperlink = require('../lib/index');
@@ -83,6 +89,7 @@ hyperlink({
     root: rootUrl,
     canonicalRoot: canonicalRoot,
     inputUrls: inputUrls,
+    followSourceMaps: followSourceMaps,
     excludePatterns: excludePatterns,
     recursive: commandLineOptions.recursive,
     verbose: commandLineOptions.verbose,

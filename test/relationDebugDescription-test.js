@@ -40,17 +40,22 @@ describe('relationDebugDescription', function () {
         var relation = getRelation();
         var result = relationDebugDescription(relation);
 
-
         expect(result, 'to end with', 'index.html:8:14 <a href="foo.html">...</a>');
     });
 
     it('should append line and char offsets to non-file-url assets', function () {
-        var relation = getRelation();
-        relation.from.url = 'https://mntr.dk/index.html';
-        var result = relationDebugDescription(relation);
-
-
-        expect(result, 'to end with', 'index.html (8:14) <a href="foo.html">...</a>');
+        return new AssetGraph({ root: 'https://mntr.dk' })
+            .loadAssets({
+                type: 'Html',
+                url: 'https://mntr.dk/index.html',
+                text: '<!DOCTYPE html>\n<html lang="en">\n<head>\n    <meta charset="UTF-8">\n    <title>Document</title>\n</head>\n<body>\n    <a href="foo.html">foo</a>\n</body>\n</html>'
+            })
+            .populate({ followRelations: { crossOrigin: false }})
+            .queue(function (assetGraph) {
+                var relation = assetGraph.findRelations({}, true)[0];
+                var result = relationDebugDescription(relation);
+                expect(result, 'to end with', 'index.html (8:14) <a href="foo.html">...</a>');
+            });
     });
 
     it('should handle relations to inline assets', function () {

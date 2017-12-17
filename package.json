@@ -40,7 +40,7 @@
   "homepage": "https://github.com/Munter/hyperlink",
   "dependencies": {
     "assetgraph": "^3.13.1",
-    "async": "^2.4.0",
+    "async": "^2.6.0",
     "lodash": "^4.17.4",
     "optimist": "^0.6.1",
     "pretty-bytes": "^4.0.2",
@@ -50,8 +50,8 @@
   },
   "devDependencies": {
     "jshint": "^2.9.4",
-    "mocha": "^3.3.0",
-    "nyc": "^10.3.2",
-    "unexpected": "^10.29.0"
+    "mocha": "^4.0.1",
+    "nyc": "^11.3.0",
+    "unexpected": "^10.36.2"
   }
 }

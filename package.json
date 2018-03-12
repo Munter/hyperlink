@@ -39,7 +39,7 @@
   ],
   "homepage": "https://github.com/Munter/hyperlink",
   "dependencies": {
-    "assetgraph": "^3.13.1",
+    "assetgraph": "^4.0.0",
     "async": "^2.6.0",
     "lodash": "^4.17.4",
     "optimist": "^0.6.1",

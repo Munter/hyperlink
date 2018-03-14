@@ -89,14 +89,24 @@ if (commandLineOptions._.length > 0) {
 const t = new TapRender();
 t.pipe(process.stdout);
 
-hyperlink({
-    root: rootUrl,
-    canonicalRoot: canonicalRoot,
-    inputUrls: inputUrls,
-    followSourceMaps: followSourceMaps,
-    excludePatterns: excludePatterns,
-    recursive: commandLineOptions.recursive,
-    verbose: commandLineOptions.verbose,
-    concurrency: commandLineOptions.concurrency,
-    memdebug: commandLineOptions.debug
-}, t);
+(async () => {
+    try {
+        await hyperlink({
+            root: rootUrl,
+            canonicalRoot: canonicalRoot,
+            inputUrls: inputUrls,
+            followSourceMaps: followSourceMaps,
+            excludePatterns: excludePatterns,
+            recursive: commandLineOptions.recursive,
+            verbose: commandLineOptions.verbose,
+            concurrency: commandLineOptions.concurrency,
+            memdebug: commandLineOptions.debug
+        }, t);
+    } catch (err) {
+        console.log(err.stack);
+        process.exit(1);
+    }
+    const results = t.close();
+
+    process.exit(results.fail ? 1 : 0);
+})();

@@ -57,6 +57,7 @@ if (commandLineOptions.h) {
     process.exit(1);
 }
 
+const TapRender = require('tap-render');
 var urlTools = require('urltools'),
     canonicalRoot = commandLineOptions.canonicalroot && urlTools.ensureTrailingSlash(commandLineOptions.canonicalroot),
     rootUrl = commandLineOptions.root && urlTools.urlOrFsPathToUrl(commandLineOptions.root, true),
@@ -85,6 +86,9 @@ if (commandLineOptions._.length > 0) {
     process.exit(1);
 }
 
+const t = new TapRender();
+t.pipe(process.stdout);
+
 hyperlink({
     root: rootUrl,
     canonicalRoot: canonicalRoot,
@@ -95,4 +99,4 @@ hyperlink({
     verbose: commandLineOptions.verbose,
     concurrency: commandLineOptions.concurrency,
     memdebug: commandLineOptions.debug
-});
+}, t);

@@ -1,0 +1,4 @@
+testdata
+.nyc_output
+node_modules
+coverage

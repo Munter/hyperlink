@@ -9,7 +9,7 @@ if (process.stdin.isTTY) {
   config.plugins = config.plugins || [];
   config.plugins.push('prettier');
   config.rules = config.rules || {};
-  config.rules['prettier/prettier'] = 'error';
+  // config.rules['prettier/prettier'] = 'error';
 }
 
 module.exports = config;

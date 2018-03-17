@@ -165,6 +165,21 @@ describe('hyperlink', function () {
             });
         });
 
+        it('should not complain about an #iefix fragment in a CSS file', async function () {
+            const t = new TapRender();
+            sinon.spy(t, 'push');
+            const root = pathModule.resolve(__dirname, '..', 'testdata', 'fontWithIefix');
+            await hyperlink({
+                root,
+                inputUrls: [ '/' ]
+            }, t);
+            expect(t.push, 'to have no calls satisfying', () => {
+                t.push(null, {
+                    operator: 'missing-fragment'
+                });
+            });
+        });
+
         it('should issue an error when referencing another asset with an empty fragment', async function () {
             httpception([
                 {

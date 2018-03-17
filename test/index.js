@@ -77,4 +77,91 @@ describe('hyperlink', function () {
             server.close();
         }
     });
+
+    describe('with document fragments', function () {
+        it('should not complain when a referenced fragment exists in the target HTML', async function () {
+            httpception([
+                {
+                    request: 'GET https://example.com/',
+                    response: {
+                        statusCode: 200,
+                        headers: {
+                            'Content-Type': 'text/html; charset=UTF-8'
+                        },
+                        body: '<html><head></head><body><a href="foo.html#bar">Link</a></body></html>'
+                    }
+                },
+                {
+                    request: 'GET https://example.com/foo.html',
+                    response: {
+                        statusCode: 200,
+                        headers: {
+                            'Content-Type': 'text/html; charset=UTF-8'
+                        },
+                        body: '<html><head></head><body><a id="bar">Welcome!</a></body></html>'
+                    }
+                }
+            ]);
+
+            const t = new TapRender();
+            sinon.spy(t, 'push');
+            await hyperlink({
+                recursive: true,
+                root: 'https://example.com/',
+                inputUrls: [ 'https://example.com/' ]
+            }, t);
+
+            expect(t.close(), 'to satisfy', {fail: 0});
+            expect(t.push, 'to have a call satisfying', () => {
+                t.push(null, {
+                    ok: true,
+                    operator: 'missing-fragment',
+                    name: 'Fragment check: https://example.com/ --> foo.html#bar'
+                });
+            });
+        });
+
+        it('should issue a warning when a referenced fragment does not exist', async function () {
+            httpception([
+                {
+                    request: 'GET https://example.com/',
+                    response: {
+                        statusCode: 200,
+                        headers: {
+                            'Content-Type': 'text/html; charset=UTF-8'
+                        },
+                        body: '<html><head></head><body><a href="foo.html#bar">Link</a></body></html>'
+                    }
+                },
+                {
+                    request: 'GET https://example.com/foo.html',
+                    response: {
+                        statusCode: 200,
+                        headers: {
+                            'Content-Type': 'text/html; charset=UTF-8'
+                        },
+                        body: '<html><head></head><body>No fragments here</body></html>'
+                    }
+                }
+            ]);
+
+            const t = new TapRender();
+            sinon.spy(t, 'push');
+            await hyperlink({
+                recursive: true,
+                root: 'https://example.com/',
+                inputUrls: [ 'https://example.com/' ]
+            }, t);
+
+            expect(t.close(), 'to satisfy', {fail: 1});
+            expect(t.push, 'to have a call satisfying', () => {
+                t.push(null, {
+                    ok: false,
+                    operator: 'missing-fragment',
+                    expected: 'id="bar"',
+                    name: 'Fragment check: https://example.com/ --> foo.html#bar'
+                });
+            });
+        });
+    });
 });

@@ -356,7 +356,7 @@ describe('hyperlink', function () {
                 expect(t.push, 'to have a call satisfying', () => {
                     t.push(null, {
                         actual: 'DNS Missing https://thisdomaindoesnotandshouldnotexistqhqwicqecqwe.com/',
-                        at: '' // FIXME: Include referencing asset(s)
+                        at: 'testdata/preconnect/nonexistent/index.html:3:34 <link rel="preconnect" href="https://thisdomaindoesnotandshouldnotexistqhqwicqecqwe.com/">'
                     });
                 });
             });

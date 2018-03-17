@@ -377,4 +377,45 @@ describe('hyperlink', function () {
             });
         });
     });
+
+    describe('with a dns-prefetch link', function () {
+        describe('pointing to a host that is up', function () {
+            it('should report no errors and inform that 1 host was checked', async function () {
+                const t = new TapRender();
+                sinon.spy(t, 'push');
+                const root = pathModule.resolve(__dirname, '..', 'testdata', 'dns-prefetch', 'existing');
+                await hyperlink({
+                    root,
+                    inputUrls: [ '/' ]
+                }, t);
+
+                expect(t.close(), 'to satisfy', {fail: 0, pass: 2});
+                expect(t.push, 'to have a call satisfying', () => {
+                    t.push({
+                        name: 'Looking up 1 host names (checking <link rel="dns-prefetch" href="...">'
+                    });
+                });
+            });
+        });
+
+        describe('pointing to a host that does not have a DNS entry', function () {
+            it('should issue an error', async function () {
+                const t = new TapRender();
+                sinon.spy(t, 'push');
+                const root = pathModule.resolve(__dirname, '..', 'testdata', 'dns-prefetch', 'nonexistent');
+                await hyperlink({
+                    root,
+                    inputUrls: [ '/' ]
+                }, t);
+
+                expect(t.close(), 'to satisfy', {fail: 1});
+                expect(t.push, 'to have a call satisfying', () => {
+                    t.push(null, {
+                        actual: 'DNS Missing http://thisdomaindoesnotandshouldnotexistqhqwicqecqwe.com/',
+                        at: 'testdata/dns-prefetch/nonexistent/index.html:3:36 <link rel="dns-prefetch" href="//thisdomaindoesnotandshouldnotexistqhqwicqecqwe.com/">'
+                    });
+                });
+            });
+        });
+    });
 });

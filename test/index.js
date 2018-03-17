@@ -122,7 +122,7 @@ describe('hyperlink', function () {
             });
         });
 
-        it('should issue a warning when a referenced fragment does not exist', async function () {
+        it('should issue an error when a referenced fragment does not exist', async function () {
             httpception([
                 {
                     request: 'GET https://example.com/',
@@ -161,6 +161,79 @@ describe('hyperlink', function () {
                     operator: 'missing-fragment',
                     expected: 'id="bar"',
                     name: 'Fragment check: https://example.com/ --> foo.html#bar'
+                });
+            });
+        });
+
+        it('should issue an error when referencing another asset with an empty fragment', async function () {
+            httpception([
+                {
+                    request: 'GET https://example.com/',
+                    response: {
+                        statusCode: 200,
+                        headers: {
+                            'Content-Type': 'text/html; charset=UTF-8'
+                        },
+                        body: '<html><head></head><body><a href="foo.html#">Link</a></body></html>'
+                    }
+                },
+                {
+                    request: 'GET https://example.com/foo.html',
+                    response: {
+                        statusCode: 200,
+                        headers: {
+                            'Content-Type': 'text/html; charset=UTF-8'
+                        },
+                        body: '<html><head></head><body>No fragments here</body></html>'
+                    }
+                }
+            ]);
+
+            const t = new TapRender();
+            sinon.spy(t, 'push');
+            await hyperlink({
+                recursive: true,
+                root: 'https://example.com/',
+                inputUrls: [ 'https://example.com/' ]
+            }, t);
+
+            expect(t.close(), 'to satisfy', {fail: 1});
+            expect(t.push, 'to have a call satisfying', () => {
+                t.push(null, {
+                    ok: false,
+                    operator: 'empty-fragment',
+                    name: 'Fragment check: https://example.com/ --> foo.html#',
+                    expected: 'Fragment identifiers in links to different documents should not be empty'
+                });
+            });
+        });
+
+        it('should be fine when an asset references itself with an empty fragment', async function () {
+            httpception([
+                {
+                    request: 'GET https://example.com/',
+                    response: {
+                        statusCode: 200,
+                        headers: {
+                            'Content-Type': 'text/html; charset=UTF-8'
+                        },
+                        body: '<html><head></head><body><a href="#">Link</a></body></html>'
+                    }
+                }
+            ]);
+
+            const t = new TapRender();
+            sinon.spy(t, 'push');
+            await hyperlink({
+                recursive: true,
+                root: 'https://example.com/',
+                inputUrls: [ 'https://example.com/' ]
+            }, t);
+
+            expect(t.close(), 'to satisfy', {fail: 0});
+            expect(t.push, 'to have no calls satisfying', () => {
+                t.push(null, {
+                    operator: 'empty-fragment'
                 });
             });
         });

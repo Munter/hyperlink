@@ -1,5 +1,7 @@
 /*global describe, it, console:true*/
-const expect = require('unexpected').clone().use(require('unexpected-sinon'));
+const expect = require('unexpected')
+    .clone()
+    .use(require('unexpected-sinon'));
 const hyperlink = require('../lib/');
 const httpception = require('httpception');
 const TapRender = require('tap-render');
@@ -42,5 +44,37 @@ describe('hyperlink', function () {
         expect(t.push, 'to have a call satisfying', () => {
             t.push(null, { name: 'URI should be secure - http://example.com/insecureScript.js' });
         });
+    });
+
+    it('should unload the assets as they are being processed', async function () {
+        const server = require('http').createServer(
+            (req, res) => {
+                res.writeHead(200, {
+                    'Content-Type': 'text/css'
+                });
+                const id = parseInt(req.url.match(/(\d+)\.css/));
+                if (id < 100) {
+                    res.end(`@import "${id + 1}.css";`);
+                } else {
+                    res.end('body { color: maroon; }');
+                }
+            }
+        ).listen(0);
+        const serverAddress = server.address();
+        const root = `http://${serverAddress.address === '::' ? 'localhost' : serverAddress.address}:${serverAddress.port}/`;
+
+        const t = new TapRender();
+        try {
+            const ag = await hyperlink({
+                root,
+                inputUrls: [ `${root}1.css` ]
+            }, t);
+
+            expect(t.close(), 'to satisfy', {fail: 0, pass: 100});
+            expect(ag.findAssets({isLoaded: false}), 'to have length', 100);
+            expect(ag.findAssets({isLoaded: true}), 'to have length', 0);
+        } finally {
+            server.close();
+        }
     });
 });

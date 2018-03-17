@@ -164,4 +164,87 @@ describe('hyperlink', function () {
             });
         });
     });
+
+    describe('with a relation that points at an asset that returns 404', function () {
+        describe('when the other asset within the same origin', function () {
+            it('should issue a warning', async function () {
+                httpception([
+                    {
+                        request: 'GET https://example.com/styles.css',
+                        response: {
+                            statusCode: 200,
+                            headers: {
+                                'Content-Type': 'text/css'
+                            },
+                            body: '@import "other.css";'
+                        }
+                    },
+                    {
+                        request: 'GET https://example.com/other.css',
+                        response: 404
+                    }
+                ]);
+
+                const t = new TapRender();
+                sinon.spy(t, 'push');
+                await hyperlink({
+                    recursive: true,
+                    root: 'https://example.com/',
+                    inputUrls: [ 'https://example.com/styles.css' ]
+                }, t);
+
+                expect(t.close(), 'to satisfy', {fail: 1});
+                expect(t.push, 'to have a call satisfying', () => {
+                    t.push(null, {
+                        ok: false,
+                        operator: 'error',
+                        name: 'Failed loading https://example.com/other.css',
+                        actual: 'https://example.com/other.css: HTTP 404 Not Found',
+                        at: 'https://example.com/styles.css (1:10) '
+                    });
+                });
+            });
+        });
+
+        describe('when the other asset is at a different origin', function () {
+            // This should obviously be fixed:
+            it.skip('should issue a warning', async function () {
+                httpception([
+                    {
+                        request: 'GET https://example.com/styles.css',
+                        response: {
+                            statusCode: 200,
+                            headers: {
+                                'Content-Type': 'text/css'
+                            },
+                            body: '@import "https://somewhereelse.com/other.css";'
+                        }
+                    },
+                    {
+                        request: 'HEAD https://somewhereelse.com/other.css',
+                        response: 404
+                    }
+                ]);
+
+                const t = new TapRender();
+                sinon.spy(t, 'push');
+                await hyperlink({
+                    recursive: true,
+                    root: 'https://example.com/',
+                    inputUrls: [ 'https://example.com/styles.css' ]
+                }, t);
+
+                expect(t.close(), 'to satisfy', {fail: 1});
+                expect(t.push, 'to have a call satisfying', () => {
+                    t.push(null, {
+                        ok: false,
+                        operator: 'error',
+                        name: 'Failed loading https://somewhereelse.com/other.css',
+                        actual: 'https://somewhereelse.com/other.css: HTTP 404 Not Found',
+                        at: 'https://example.com/styles.css (1:10) '
+                    });
+                });
+            });
+        });
+    });
 });

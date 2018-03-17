@@ -4,7 +4,7 @@
   "description": "A node library and command line tool to test the integrity of your internal an external hyperlinks",
   "main": "lib/index.js",
   "scripts": {
-    "lint": "eslint .",
+    "lint": "eslint . bin/hyperlink",
     "test": "npm run lint && npm run test:unit && npm run test:integration",
     "test:unit": "mocha",
     "test:integration": "./bin/hyperlink testdata/missing-link.html",

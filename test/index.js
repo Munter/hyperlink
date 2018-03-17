@@ -6,6 +6,7 @@ const hyperlink = require('../lib/');
 const httpception = require('httpception');
 const TapRender = require('tap-render');
 const sinon = require('sinon');
+const pathModule = require('path');
 
 describe('hyperlink', function () {
     it('should complain about insecure content warnings', async function () {
@@ -242,6 +243,47 @@ describe('hyperlink', function () {
                         name: 'Failed loading https://somewhereelse.com/other.css',
                         actual: 'https://somewhereelse.com/other.css: HTTP 404 Not Found',
                         at: 'https://example.com/styles.css (1:10) '
+                    });
+                });
+            });
+        });
+    });
+
+    describe('with a preconnect link', function () {
+        describe('pointing to a host that is up', function () {
+            it('should report no errors and inform that 1 host was checked', async function () {
+                const t = new TapRender();
+                sinon.spy(t, 'push');
+                const root = pathModule.resolve(__dirname, '..', 'testdata', 'preconnect', 'existing');
+                await hyperlink({
+                    root,
+                    inputUrls: [ '/' ]
+                }, t);
+
+                expect(t.close(), 'to satisfy', {fail: 0, pass: 2});
+                expect(t.push, 'to have a call satisfying', () => {
+                    t.push({
+                        name: 'Connecting to 1 hosts (checking <link rel="preconnect" href="...">'
+                    });
+                });
+            });
+        });
+
+        describe('pointing to a host that does not have a DNS entry', function () {
+            it('should issue an error', async function () {
+                const t = new TapRender();
+                sinon.spy(t, 'push');
+                const root = pathModule.resolve(__dirname, '..', 'testdata', 'preconnect', 'nonexistent');
+                await hyperlink({
+                    root,
+                    inputUrls: [ '/' ]
+                }, t);
+
+                expect(t.close(), 'to satisfy', {fail: 1});
+                expect(t.push, 'to have a call satisfying', () => {
+                    t.push(null, {
+                        actual: 'DNS Missing https://thisdomaindoesnotandshouldnotexistqhqwicqecqwe.com/',
+                        at: '' // FIXME: Include referencing asset(s)
                     });
                 });
             });

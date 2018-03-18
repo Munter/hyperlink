@@ -418,4 +418,42 @@ describe('hyperlink', function () {
             });
         });
     });
+
+    describe('with excludePatterns', function () {
+        it('should report problems, but mark the entry as skipped', async function () {
+            httpception([
+                {
+                    request: 'GET https://example.com/',
+                    response: {
+                        statusCode: 200,
+                        headers: {
+                            'Content-Type': 'text/html; charset=UTF-8'
+                        },
+                        body: '<html><head><script src="script.js"></script></head><body></body></html>'
+                    }
+                },
+                {
+                    request: 'GET https://example.com/script.js',
+                    response: 404
+                }
+            ]);
+
+            const t = new TapRender();
+            sinon.spy(t, 'push');
+            await hyperlink({
+                recursive: false,
+                root: 'https://example.com/',
+                inputUrls: [ 'https://example.com/' ],
+                excludePatterns: [ 'https://example.com/script.js' ]
+            }, t);
+
+            expect(t.close(), 'to satisfy', {fail: 0, skip: 1});
+            expect(t.push, 'to have a call satisfying', () => {
+                t.push(null, {
+                    skip: true,
+                    name: 'Failed loading https://example.com/script.js'
+                });
+            });
+        });
+    });
 });

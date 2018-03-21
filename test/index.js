@@ -401,6 +401,163 @@ describe('hyperlink', function () {
         });
     });
 
+    describe('with HTTP redirects', function () {
+        it('should emit an error when an HtmlAnchor points at an external page that has a permanent redirect', async function () {
+            httpception([
+                {
+                    request: 'GET https://example.com/',
+                    response: {
+                        statusCode: 200,
+                        headers: {
+                            'Content-Type': 'text/html; charset=UTF-8'
+                        },
+                        body: '<html><head></head><body><a href="https://elsewhere.com/">Link</a></body></html>'
+                    }
+                },
+                {
+                    request: 'HEAD https://elsewhere.com/',
+                    response: {
+                        statusCode: 301,
+                        headers: {
+                            Location: 'https://elsewhere.com/redirectTarget'
+                        }
+                    }
+                },
+                {
+                    request: 'HEAD https://elsewhere.com/redirectTarget',
+                    response: {
+                        statusCode: 200,
+                        headers: {
+                            'Content-Type': 'text/html'
+                        }
+                    }
+                }
+            ]);
+
+            const t = new TapRender();
+            sinon.spy(t, 'push');
+            await hyperlink({
+                root: 'https://example.com/',
+                inputUrls: [ 'https://example.com/' ]
+            }, t);
+
+            expect(t.close(), 'to satisfy', {fail: 1});
+            expect(t.push, 'to have a call satisfying', () => {
+                t.push(null, {
+                    ok: false,
+                    name: 'URI should have no redirects - https://elsewhere.com/'
+                });
+            });
+        });
+
+        it('should not emit an error when an HtmlAnchor points at an external page that has a temporary redirect', async function () {
+            httpception([
+                {
+                    request: 'GET https://example.com/',
+                    response: {
+                        statusCode: 200,
+                        headers: {
+                            'Content-Type': 'text/html; charset=UTF-8'
+                        },
+                        body: '<html><head></head><body><a href="https://elsewhere.com/">Link</a></body></html>'
+                    }
+                },
+                {
+                    request: 'HEAD https://elsewhere.com/',
+                    response: {
+                        statusCode: 302,
+                        headers: {
+                            Location: 'https://elsewhere.com/redirectTarget'
+                        }
+                    }
+                },
+                {
+                    request: 'HEAD https://elsewhere.com/redirectTarget',
+                    response: {
+                        statusCode: 200,
+                        headers: {
+                            'Content-Type': 'text/html'
+                        }
+                    }
+                }
+            ]);
+
+            const t = new TapRender();
+            sinon.spy(t, 'push');
+            await hyperlink({
+                root: 'https://example.com/',
+                inputUrls: [ 'https://example.com/' ]
+            }, t);
+
+            expect(t.close(), 'to satisfy', {fail: 0, pass: 2});
+            expect(t.push, 'to have a call satisfying', () => {
+                t.push(null, {
+                    ok: true,
+                    name: 'URI should have no redirects - https://elsewhere.com/'
+                });
+            });
+        });
+
+        it('should emit an error when a sequence of redirects from a secure page includes an insecure url', async function () {
+            httpception([
+                {
+                    request: 'GET https://example.com/',
+                    response: {
+                        statusCode: 200,
+                        headers: {
+                            'Content-Type': 'text/html; charset=UTF-8'
+                        },
+                        body: '<html><head></head><body><iframe src="https://elsewhere.com/"></iframe></body></html>'
+                    }
+                },
+                {
+                    request: 'HEAD https://elsewhere.com/',
+                    response: {
+                        statusCode: 302,
+                        headers: {
+                            Location: 'http://elsewhere.com/redirectTarget'
+                        }
+                    }
+                },
+                {
+                    request: 'HEAD http://elsewhere.com/redirectTarget',
+                    response: {
+                        statusCode: 302,
+                        headers: {
+                            Location: 'https://elsewhere.com/redirectTarget'
+                        }
+                    }
+                },
+                {
+                    request: 'HEAD https://elsewhere.com/redirectTarget',
+                    response: {
+                        statusCode: 200,
+                        headers: {
+                            'Content-Type': 'text/html'
+                        }
+                    }
+                }
+            ]);
+
+            const t = new TapRender();
+            sinon.spy(t, 'push');
+            await hyperlink({
+                root: 'https://example.com/',
+                inputUrls: [ 'https://example.com/' ]
+            }, t);
+
+            expect(t.close(), 'to satisfy', {fail: 1});
+            expect(t.push, 'to have a call satisfying', () => {
+                t.push(null, {
+                    ok: false,
+                    operator: 'mixed-content',
+                    actual: 'https://elsewhere.com/ --> http://elsewhere.com/redirectTarget --> https://elsewhere.com/redirectTarget',
+                    expected: 'https://elsewhere.com/ --> https://elsewhere.com/redirectTarget --> https://elsewhere.com/redirectTarget'
+                });
+            });
+        });
+    });
+
     describe('with a preconnect link', function () {
         describe('pointing to a host that is up', function () {
             it('should report no errors and inform that 1 host was checked', async function () {

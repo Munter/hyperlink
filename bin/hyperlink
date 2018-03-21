@@ -41,8 +41,8 @@ const commandLineOptions = optimist
         })
         .options('concurrency', {
             alias: 'c',
-            describe: 'The maximum number of assets that can be loading at once (defaults to 100)',
-            default: 100,
+            describe: 'The maximum number of assets that can be loading at once',
+            default: 25,
             type: 'integer'
         })
         .options('debug', {

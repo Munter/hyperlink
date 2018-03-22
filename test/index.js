@@ -79,6 +79,53 @@ describe('hyperlink', function () {
         }
     });
 
+    it('should not throw when populating missing files', async function () {
+        const root = `file://${process.cwd()}`;
+        const t = new TapRender();
+        sinon.spy(t, 'push');
+        await hyperlink({
+            recursive: true,
+            root,
+            inputUrls: [
+                {
+                    url: `${root}/index.html`,
+                    text: '<!doctype html><html><body><a href="broken.html">broken</a></body></html>'
+                }
+            ]
+        }, t);
+
+        expect(t.close(), 'to satisfy', {fail: 1, pass: 1});
+        expect(t.push, 'to have calls satisfying', () => {
+            t.push({
+                name: 'Crawling internal assets'
+            });
+
+            t.push(null, {
+                ok: true,
+                name: `loading index.html`
+            });
+
+            t.push(null, {
+                ok: false,
+                operator: 'error',
+                name: `Failed loading broken.html`,
+                actual: expect.it('to begin with', 'broken.html: ENOENT: no such file or directory')
+            });
+
+            t.push({
+                name: 'Crawling 0 outgoing urls'
+            });
+
+            t.push({
+                name: 'Connecting to 0 hosts (checking <link rel="preconnect" href="...">'
+            });
+
+            t.push({
+                name: 'Looking up 0 host names (checking <link rel="dns-prefetch" href="...">'
+            });
+        });
+    });
+
     describe('with document fragments', function () {
         it('should not complain when a referenced fragment exists in the target HTML', async function () {
             httpception([

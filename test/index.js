@@ -507,11 +507,11 @@ describe('hyperlink', function () {
                         headers: {
                             'Content-Type': 'text/html; charset=UTF-8'
                         },
-                        body: '<html><head></head><body><iframe src="https://elsewhere.com/"></iframe></body></html>'
+                        body: '<html><head></head><body><script src="https://elsewhere.com/"></script></body></html>'
                     }
                 },
                 {
-                    request: 'HEAD https://elsewhere.com/',
+                    request: 'GET https://elsewhere.com/',
                     response: {
                         statusCode: 302,
                         headers: {
@@ -520,7 +520,7 @@ describe('hyperlink', function () {
                     }
                 },
                 {
-                    request: 'HEAD http://elsewhere.com/redirectTarget',
+                    request: 'GET http://elsewhere.com/redirectTarget',
                     response: {
                         statusCode: 302,
                         headers: {
@@ -529,12 +529,13 @@ describe('hyperlink', function () {
                     }
                 },
                 {
-                    request: 'HEAD https://elsewhere.com/redirectTarget',
+                    request: 'GET https://elsewhere.com/redirectTarget',
                     response: {
                         statusCode: 200,
                         headers: {
-                            'Content-Type': 'text/html'
-                        }
+                            'Content-Type': 'application/javascript'
+                        },
+                        body: 'alert("foo");'
                     }
                 }
             ]);
@@ -551,8 +552,8 @@ describe('hyperlink', function () {
                 t.push(null, {
                     ok: false,
                     operator: 'mixed-content',
-                    actual: 'https://elsewhere.com/ --> http://elsewhere.com/redirectTarget --> https://elsewhere.com/redirectTarget',
-                    expected: 'https://elsewhere.com/ --> https://elsewhere.com/redirectTarget --> https://elsewhere.com/redirectTarget'
+                    actual: 'https://elsewhere.com/ --> http://elsewhere.com/redirectTarget',
+                    expected: 'https://elsewhere.com/ --> https://elsewhere.com/redirectTarget'
                 });
             });
         });

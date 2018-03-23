@@ -401,6 +401,11 @@ describe('hyperlink', function () {
                         }
                     },
                     {
+                        request: 'HEAD https://mycdn.com/404.eot',
+                        response: 404
+                    },
+                    // retry
+                    {
                         request: 'GET https://mycdn.com/404.eot',
                         response: 404
                     }
@@ -415,7 +420,11 @@ describe('hyperlink', function () {
 
                 expect(t.close(), 'to satisfy', {fail: 1});
                 expect(t.push, 'to have a call satisfying', () => {
-                    t.push(null, { name: 'Failed loading https://mycdn.com/404.eot' });
+                    t.push(null, {
+                        name: 'should respond with HTTP status 200',
+                        expected: '200 https://mycdn.com/404.eot',
+                        actual: '404 https://mycdn.com/404.eot'
+                    });
                 });
             });
         });

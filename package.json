@@ -5,9 +5,7 @@
   "main": "lib/index.js",
   "scripts": {
     "lint": "eslint . bin/hyperlink",
-    "test": "npm run lint && npm run test:unit && npm run test:integration",
-    "test:unit": "mocha",
-    "test:integration": "./bin/hyperlink testdata/missing-link.html",
+    "test": "npm run lint && mocha",
     "coverage": "nyc mocha",
     "preversion": "npm test",
     "travis": "npm run lint && npm run coverage"

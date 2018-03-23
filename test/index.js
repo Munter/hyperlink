@@ -22,7 +22,7 @@ describe('hyperlink', function () {
                 }
             },
             {
-                request: 'HEAD http://example.com/insecureScript.js',
+                request: 'GET http://example.com/insecureScript.js',
                 response: {
                     statusCode: 200,
                     headers: {
@@ -344,7 +344,7 @@ describe('hyperlink', function () {
 
         describe('when the other asset is at a different origin', function () {
             // This should obviously be fixed:
-            it.skip('should issue a warning', async function () {
+            it('should issue an error', async function () {
                 httpception([
                     {
                         request: 'GET https://example.com/styles.css',
@@ -357,7 +357,7 @@ describe('hyperlink', function () {
                         }
                     },
                     {
-                        request: 'HEAD https://somewhereelse.com/other.css',
+                        request: 'GET https://somewhereelse.com/other.css',
                         response: 404
                     }
                 ]);
@@ -380,6 +380,70 @@ describe('hyperlink', function () {
                         at: 'https://example.com/styles.css (1:10) '
                     });
                 });
+            });
+        });
+
+        describe('when the missing asset is referenced from an asset at a different origin (not via an anchor or iframe)', function () {
+            it('should issue an error', async function () {
+                httpception([
+                    {
+                        request: 'GET https://example.com/',
+                        response: {
+                            headers: { 'Content-Type': 'text/html' },
+                            body: '<html><head><link rel="stylesheet" href="https://mycdn.com/styles.css"></head><body></body></html>'
+                        }
+                    },
+                    {
+                        request: 'GET https://mycdn.com/styles.css',
+                        response: {
+                            headers: { 'Content-Type': 'text/css' },
+                            body: '@font-face { font-family: Foo; src: url(404.eot) format("embedded-opentype"); font-weight: 400; }'
+                        }
+                    },
+                    {
+                        request: 'GET https://mycdn.com/404.eot',
+                        response: 404
+                    }
+                ]);
+
+                const t = new TapRender();
+                sinon.spy(t, 'push');
+                await hyperlink({
+                    root: 'https://example.com/',
+                    inputUrls: [ 'https://example.com/' ]
+                }, t);
+
+                expect(t.close(), 'to satisfy', {fail: 1});
+                expect(t.push, 'to have a call satisfying', () => {
+                    t.push(null, { name: 'Failed loading https://mycdn.com/404.eot' });
+                });
+            });
+        });
+
+        describe('when an iframe at a different origin is referenced', function () {
+            it('should only HEAD the iframe asset and not try to follow links from it', async function () {
+                httpception([
+                    {
+                        request: 'GET https://example.com/',
+                        response: {
+                            headers: { 'Content-Type': 'text/html' },
+                            body: '<html><head><iframe src="https://mycdn.com/frame.html"></iframe></head><body></body></html>'
+                        }
+                    },
+                    {
+                        request: 'HEAD https://mycdn.com/frame.html',
+                        response: 200
+                    }
+                ]);
+
+                const t = new TapRender();
+                sinon.spy(t, 'push');
+                await hyperlink({
+                    root: 'https://example.com/',
+                    inputUrls: [ 'https://example.com/' ]
+                }, t);
+
+                expect(t.close(), 'to satisfy', {fail: 0});
             });
         });
     });
@@ -490,11 +554,11 @@ describe('hyperlink', function () {
                         headers: {
                             'Content-Type': 'text/html; charset=UTF-8'
                         },
-                        body: '<html><head></head><body><iframe src="https://elsewhere.com/"></iframe></body></html>'
+                        body: '<html><head></head><body><script src="https://elsewhere.com/"></script></body></html>'
                     }
                 },
                 {
-                    request: 'HEAD https://elsewhere.com/',
+                    request: 'GET https://elsewhere.com/',
                     response: {
                         statusCode: 302,
                         headers: {
@@ -503,7 +567,7 @@ describe('hyperlink', function () {
                     }
                 },
                 {
-                    request: 'HEAD http://elsewhere.com/redirectTarget',
+                    request: 'GET http://elsewhere.com/redirectTarget',
                     response: {
                         statusCode: 302,
                         headers: {
@@ -512,12 +576,13 @@ describe('hyperlink', function () {
                     }
                 },
                 {
-                    request: 'HEAD https://elsewhere.com/redirectTarget',
+                    request: 'GET https://elsewhere.com/redirectTarget',
                     response: {
                         statusCode: 200,
                         headers: {
-                            'Content-Type': 'text/html'
-                        }
+                            'Content-Type': 'application/javascript'
+                        },
+                        body: 'alert("foo");'
                     }
                 }
             ]);
@@ -534,8 +599,8 @@ describe('hyperlink', function () {
                 t.push(null, {
                     ok: false,
                     operator: 'mixed-content',
-                    actual: 'https://elsewhere.com/ --> http://elsewhere.com/redirectTarget --> https://elsewhere.com/redirectTarget',
-                    expected: 'https://elsewhere.com/ --> https://elsewhere.com/redirectTarget --> https://elsewhere.com/redirectTarget'
+                    actual: 'https://elsewhere.com/ --> http://elsewhere.com/redirectTarget',
+                    expected: 'https://elsewhere.com/ --> https://elsewhere.com/redirectTarget'
                 });
             });
         });

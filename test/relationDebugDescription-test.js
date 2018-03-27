@@ -5,12 +5,12 @@ var relationDebugDescription = require('../lib/relationDebugDescription');
 function getRelation(assetConfig) {
     assetConfig = assetConfig || {
         type: 'Html',
-        url: 'file://' + __dirname + '/index.html',
+        url: `file://${__dirname}/index.html`,
         text: '<!DOCTYPE html>\n<html lang="en">\n<head>\n    <meta charset="UTF-8">\n    <title>Document</title>\n</head>\n<body>\n    <a href="foo.html">foo</a>\n</body>\n</html>'
     };
 
     var assetGraph = new AssetGraph({ root: __dirname });
-    var defaultAsset = new AssetGraph[assetConfig.type](assetConfig);
+    var defaultAsset = new AssetGraph[assetConfig.type](assetConfig, assetGraph);
 
     assetGraph.addAsset(defaultAsset);
 
@@ -62,7 +62,7 @@ describe('relationDebugDescription', function () {
         return new AssetGraph({ root: __dirname })
             .loadAssets({
                 type: 'Html',
-                url: 'file://' + __dirname + '/index.html',
+                url: `file://${__dirname}/index.html`,
                 text: '<!doctype html><html><head><style>body { background: url(https://mntr.dk/invalid.png); }</style></head><body></body></html>'
             })
             .populate({ followRelations: { crossOrigin: false }})

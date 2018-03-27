@@ -102,13 +102,13 @@ describe('hyperlink', function () {
 
             t.push(null, {
                 ok: true,
-                name: `loading index.html`
+                name: `load index.html`
             });
 
             t.push(null, {
                 ok: false,
-                operator: 'error',
-                name: `Failed loading broken.html`,
+                operator: 'load',
+                name: `load broken.html`,
                 actual: expect.it('to begin with', 'broken.html: ENOENT: no such file or directory')
             });
 
@@ -333,8 +333,8 @@ describe('hyperlink', function () {
                 expect(t.push, 'to have a call satisfying', () => {
                     t.push(null, {
                         ok: false,
-                        operator: 'error',
-                        name: 'Failed loading https://example.com/other.css',
+                        operator: 'load',
+                        name: 'load https://example.com/other.css',
                         actual: 'https://example.com/other.css: HTTP 404 Not Found',
                         at: 'https://example.com/styles.css (1:10) '
                     });
@@ -374,8 +374,8 @@ describe('hyperlink', function () {
                 expect(t.push, 'to have a call satisfying', () => {
                     t.push(null, {
                         ok: false,
-                        operator: 'error',
-                        name: 'Failed loading https://somewhereelse.com/other.css',
+                        operator: 'load',
+                        name: 'load https://somewhereelse.com/other.css',
                         actual: 'https://somewhereelse.com/other.css: HTTP 404 Not Found',
                         at: 'https://example.com/styles.css (1:10) '
                     });
@@ -729,7 +729,7 @@ describe('hyperlink', function () {
             expect(t.push, 'to have a call satisfying', () => {
                 t.push(null, {
                     skip: true,
-                    name: 'Failed loading https://example.com/script.js'
+                    name: 'load https://example.com/script.js'
                 });
             });
         });

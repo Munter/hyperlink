@@ -35,7 +35,7 @@ const commandLineOptions = optimist
             default: false
         })
         .options('exclude', {
-            describe: 'Url pattern to exclude from the build. Supports * wildcards. You can create multiple of these: --exclude *.php --exclude http://example.com/*.gif',
+            describe: 'Url pattern to exclude from the build. **THIS OPTION IS DEPRECATED**',
             type: 'string',
             demand: false
         })
@@ -63,6 +63,11 @@ const excludePatterns = commandLineOptions.exclude && [].concat(commandLineOptio
 const followSourceMaps = commandLineOptions['source-maps'];
 let rootUrl = commandLineOptions.root && urlTools.urlOrFsPathToUrl(commandLineOptions.root, true);
 let inputUrls;
+
+if (excludePatterns) {
+    console.error('The --exclude option has been deprecated in hyperlink 4.x');
+    process.exit(1);
+}
 
 if (commandLineOptions._.length > 0) {
     inputUrls = commandLineOptions._.map(function (urlOrFsPath) {
@@ -96,7 +101,6 @@ t.pipe(process.stdout);
             canonicalRoot: canonicalRoot,
             inputUrls: inputUrls,
             followSourceMaps: followSourceMaps,
-            excludePatterns: excludePatterns,
             recursive: commandLineOptions.recursive,
             verbose: commandLineOptions.verbose,
             concurrency: commandLineOptions.concurrency,

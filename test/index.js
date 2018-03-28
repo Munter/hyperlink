@@ -697,4 +697,129 @@ describe('hyperlink', function () {
         });
     });
 
+
+    describe('with a todoFilter', function () {
+        it('should not mark as todo on non-match', async function () {
+            httpception([
+                {
+                    request: 'GET https://example.com/',
+                    response: {
+                        statusCode: 200,
+                        headers: {
+                            'Content-Type': 'text/html; charset=UTF-8'
+                        },
+                        body: '<html><head><script src="script.js"></script></head><body></body></html>'
+                    }
+                },
+                {
+                    request: 'GET https://example.com/script.js',
+                    response: 404
+                }
+            ]);
+
+            const t = new TapRender();
+            sinon.spy(t, 'push');
+            await hyperlink({
+                recursive: false,
+                root: 'https://example.com/',
+                inputUrls: [ 'https://example.com/' ],
+                todoFilter: function (report) {
+                    if (report.name === 'load https://foo.com/script.js') {
+                        return true;
+                    }
+                }
+            }, t);
+
+            expect(t.close(), 'to satisfy', {fail: 1, todo: 0});
+            expect(t.push, 'to have a call satisfying', () => {
+                t.push(null, {
+                    ok: false,
+                    todo: undefined,
+                    name: 'load https://example.com/script.js'
+                });
+            });
+        });
+
+        it('should mark as todo', async function () {
+            httpception([
+                {
+                    request: 'GET https://example.com/',
+                    response: {
+                        statusCode: 200,
+                        headers: {
+                            'Content-Type': 'text/html; charset=UTF-8'
+                        },
+                        body: '<html><head><script src="script.js"></script></head><body></body></html>'
+                    }
+                },
+                {
+                    request: 'GET https://example.com/script.js',
+                    response: 404
+                }
+            ]);
+
+            const t = new TapRender();
+            sinon.spy(t, 'push');
+            await hyperlink({
+                recursive: false,
+                root: 'https://example.com/',
+                inputUrls: [ 'https://example.com/' ],
+                todoFilter: function (report) {
+                    if (report.name === 'load https://example.com/script.js') {
+                        return true;
+                    }
+                }
+            }, t);
+
+            expect(t.close(), 'to satisfy', {fail: 0, todo: 1});
+            expect(t.push, 'to have a call satisfying', () => {
+                t.push(null, {
+                    ok: false,
+                    todo: true,
+                    name: 'load https://example.com/script.js'
+                });
+            });
+        });
+
+        it('should mark as todo with a message', async function () {
+            httpception([
+                {
+                    request: 'GET https://example.com/',
+                    response: {
+                        statusCode: 200,
+                        headers: {
+                            'Content-Type': 'text/html; charset=UTF-8'
+                        },
+                        body: '<html><head><script src="script.js"></script></head><body></body></html>'
+                    }
+                },
+                {
+                    request: 'GET https://example.com/script.js',
+                    response: 404
+                }
+            ]);
+
+            const t = new TapRender();
+            sinon.spy(t, 'push');
+            await hyperlink({
+                recursive: false,
+                root: 'https://example.com/',
+                inputUrls: [ 'https://example.com/' ],
+                todoFilter: function (report) {
+                    if (report.name === 'load https://example.com/script.js') {
+                        return 'todo this one';
+                    }
+                }
+            }, t);
+
+            expect(t.close(), 'to satisfy', {fail: 0, todo: 1});
+            expect(t.push, 'to have a call satisfying', () => {
+                t.push(null, {
+                    ok: false,
+                    todo: 'todo this one',
+                    name: 'load https://example.com/script.js'
+                });
+            });
+        });
+    });
 });

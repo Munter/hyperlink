@@ -43,7 +43,14 @@ describe('hyperlink', function () {
 
         expect(t.close(), 'to satisfy', {fail: 1});
         expect(t.push, 'to have a call satisfying', () => {
-            t.push(null, { name: 'URI should be secure - http://example.com/insecureScript.js' });
+            t.push(null, {
+                ok: false,
+                operator: 'mixed-content',
+                name: 'mixed-content http://example.com/insecureScript.js',
+                at: 'https://example.com/ (1:26) <script src="http://example.com/insecureScript.js">...</script>',
+                expected: 'https://example.com/insecureScript.js',
+                actual: 'http://example.com/insecureScript.js'
+            });
         });
     });
 
@@ -71,7 +78,7 @@ describe('hyperlink', function () {
                 inputUrls: [ `${root}1.css` ]
             }, t);
 
-            expect(t.close(), 'to satisfy', {fail: 0, pass: 100});
+            expect(t.close(), 'to satisfy', {fail: 0, pass: 199});
             expect(ag.findAssets({isLoaded: false}), 'to have length', 100);
             expect(ag.findAssets({isLoaded: true}), 'to have length', 0);
         } finally {
@@ -94,7 +101,7 @@ describe('hyperlink', function () {
             ]
         }, t);
 
-        expect(t.close(), 'to satisfy', {fail: 1, pass: 1});
+        expect(t.close(), 'to satisfy', {fail: 1, pass: 2});
         expect(t.push, 'to have calls satisfying', () => {
             t.push({
                 name: 'Crawling internal assets'
@@ -103,6 +110,13 @@ describe('hyperlink', function () {
             t.push(null, {
                 ok: true,
                 name: `load index.html`
+            });
+
+            t.push(null, {
+                ok: true,
+                operator: 'mixed-content',
+                name: `mixed-content file:///Users/munter/git/hyperlink/broken.html`,
+                at: 'index.html:1:37 <a href="broken.html">...</a>'
             });
 
             t.push(null, {
@@ -163,8 +177,8 @@ describe('hyperlink', function () {
             expect(t.push, 'to have a call satisfying', () => {
                 t.push(null, {
                     ok: true,
-                    operator: 'missing-fragment',
-                    name: 'Fragment check: https://example.com/ --> foo.html#bar'
+                    operator: 'fragment-check',
+                    name: 'fragment-check https://example.com/ --> foo.html#bar'
                 });
             });
         });
@@ -205,9 +219,9 @@ describe('hyperlink', function () {
             expect(t.push, 'to have a call satisfying', () => {
                 t.push(null, {
                     ok: false,
-                    operator: 'missing-fragment',
+                    operator: 'fragment-check',
                     expected: 'id="bar"',
-                    name: 'Fragment check: https://example.com/ --> foo.html#bar'
+                    name: 'fragment-check https://example.com/ --> foo.html#bar'
                 });
             });
         });
@@ -222,7 +236,7 @@ describe('hyperlink', function () {
             }, t);
             expect(t.push, 'to have no calls satisfying', () => {
                 t.push(null, {
-                    operator: 'missing-fragment'
+                    operator: 'fragment-check'
                 });
             });
         });
@@ -263,8 +277,8 @@ describe('hyperlink', function () {
             expect(t.push, 'to have a call satisfying', () => {
                 t.push(null, {
                     ok: false,
-                    operator: 'empty-fragment',
-                    name: 'Fragment check: https://example.com/ --> foo.html#',
+                    operator: 'fragment-check',
+                    name: 'fragment-check https://example.com/ --> foo.html#',
                     expected: 'Fragment identifiers in links to different documents should not be empty'
                 });
             });
@@ -295,7 +309,7 @@ describe('hyperlink', function () {
             expect(t.close(), 'to satisfy', {fail: 0});
             expect(t.push, 'to have no calls satisfying', () => {
                 t.push(null, {
-                    operator: 'empty-fragment'
+                    operator: 'fragment-check'
                 });
             });
         });
@@ -545,7 +559,7 @@ describe('hyperlink', function () {
                 inputUrls: [ 'https://example.com/' ]
             }, t);
 
-            expect(t.close(), 'to satisfy', {fail: 0, pass: 2});
+            expect(t.close(), 'to satisfy', {fail: 0, pass: 3});
             expect(t.push, 'to have a call satisfying', () => {
                 t.push(null, {
                     ok: true,
@@ -623,10 +637,10 @@ describe('hyperlink', function () {
                 const root = pathModule.resolve(__dirname, '..', 'testdata', 'preconnect', 'existing');
                 await hyperlink({
                     root,
-                    inputUrls: [ '/' ]
+                    inputUrls: [ 'index.html' ]
                 }, t);
 
-                expect(t.close(), 'to satisfy', {fail: 0, pass: 2});
+                expect(t.close(), 'to satisfy', {fail: 0, pass: 3});
                 expect(t.push, 'to have a call satisfying', () => {
                     t.push({
                         name: 'Connecting to 1 hosts (checking <link rel="preconnect" href="...">'
@@ -642,13 +656,13 @@ describe('hyperlink', function () {
                 const root = pathModule.resolve(__dirname, '..', 'testdata', 'preconnect', 'nonexistent');
                 await hyperlink({
                     root,
-                    inputUrls: [ '/' ]
+                    inputUrls: [ 'index.html' ]
                 }, t);
 
                 expect(t.close(), 'to satisfy', {fail: 1});
                 expect(t.push, 'to have a call satisfying', () => {
                     t.push(null, {
-                        actual: 'DNS Missing https://thisdomaindoesnotandshouldnotexistqhqwicqecqwe.com/',
+                        actual: 'DNS missing: thisdomaindoesnotandshouldnotexistqhqwicqecqwe.com',
                         at: 'testdata/preconnect/nonexistent/index.html:3:34 <link rel="preconnect" href="https://thisdomaindoesnotandshouldnotexistqhqwicqecqwe.com/">'
                     });
                 });
@@ -664,10 +678,10 @@ describe('hyperlink', function () {
                 const root = pathModule.resolve(__dirname, '..', 'testdata', 'dns-prefetch', 'existing');
                 await hyperlink({
                     root,
-                    inputUrls: [ '/' ]
+                    inputUrls: [ 'index.html' ]
                 }, t);
 
-                expect(t.close(), 'to satisfy', {fail: 0, pass: 2});
+                expect(t.close(), 'to satisfy', {fail: 0, pass: 3});
                 expect(t.push, 'to have a call satisfying', () => {
                     t.push({
                         name: 'Looking up 1 host names (checking <link rel="dns-prefetch" href="...">'
@@ -683,15 +697,296 @@ describe('hyperlink', function () {
                 const root = pathModule.resolve(__dirname, '..', 'testdata', 'dns-prefetch', 'nonexistent');
                 await hyperlink({
                     root,
-                    inputUrls: [ '/' ]
+                    inputUrls: [ 'index.html' ]
                 }, t);
 
-                expect(t.close(), 'to satisfy', {fail: 1});
+                expect(t.close(), 'to satisfy', {fail: 1, pass: 2});
                 expect(t.push, 'to have a call satisfying', () => {
                     t.push(null, {
-                        actual: 'DNS Missing http://thisdomaindoesnotandshouldnotexistqhqwicqecqwe.com/',
+                        actual: 'DNS missing: thisdomaindoesnotandshouldnotexistqhqwicqecqwe.com',
                         at: 'testdata/dns-prefetch/nonexistent/index.html:3:36 <link rel="dns-prefetch" href="//thisdomaindoesnotandshouldnotexistqhqwicqecqwe.com/">'
                     });
+                });
+            });
+        });
+    });
+
+    describe('with a skipFilter', function () {
+        it('should not skip on non-match', async function () {
+            httpception([
+                {
+                    request: 'GET https://example.com/',
+                    response: {
+                        statusCode: 200,
+                        headers: {
+                            'Content-Type': 'text/html; charset=UTF-8'
+                        },
+                        body: '<html><head><script src="script.js"></script></head><body></body></html>'
+                    }
+                },
+                {
+                    request: 'GET https://example.com/script.js',
+                    response: 404
+                }
+            ]);
+
+            const t = new TapRender();
+            sinon.spy(t, 'push');
+            await hyperlink({
+                recursive: false,
+                root: 'https://example.com/',
+                inputUrls: [ 'https://example.com/' ],
+                skipFilter: function (report) {
+                    if (report.name === 'load https://foo.com/script.js') {
+                        return true;
+                    }
+                }
+            }, t);
+
+            expect(t.close(), 'to satisfy', {fail: 1, skip: 0});
+            expect(t.push, 'to have a call satisfying', () => {
+                t.push(null, {
+                    ok: false,
+                    skip: undefined,
+                    operator: 'load',
+                    name: 'load https://example.com/script.js'
+                });
+            });
+        });
+
+        it('should skip an internal load', async function () {
+            httpception([
+                {
+                    request: 'GET https://example.com/',
+                    response: {
+                        statusCode: 200,
+                        headers: {
+                            'Content-Type': 'text/html; charset=UTF-8'
+                        },
+                        body: '<html><head><script src="script.js"></script></head><body></body></html>'
+                    }
+                }
+            ]);
+
+            const t = new TapRender();
+            sinon.spy(t, 'push');
+            await hyperlink({
+                recursive: false,
+                root: 'https://example.com/',
+                inputUrls: [ 'https://example.com/' ],
+                skipFilter: function (report) {
+                    if (report.name === 'load https://example.com/script.js') {
+                        return true;
+                    }
+                }
+            }, t);
+
+            expect(t.close(), 'to satisfy', {fail: 0, skip: 1});
+            expect(t.push, 'to have a call satisfying', () => {
+                t.push(null, {
+                    ok: undefined,
+                    skip: true,
+                    operator: 'load',
+                    name: 'load https://example.com/script.js'
+                });
+            });
+        });
+
+        it('should skip an internal load with a message', async function () {
+            httpception([
+                {
+                    request: 'GET https://example.com/',
+                    response: {
+                        statusCode: 200,
+                        headers: {
+                            'Content-Type': 'text/html; charset=UTF-8'
+                        },
+                        body: '<html><head><script src="script.js"></script></head><body></body></html>'
+                    }
+                }
+            ]);
+
+            const t = new TapRender();
+            sinon.spy(t, 'push');
+            await hyperlink({
+                recursive: false,
+                root: 'https://example.com/',
+                inputUrls: [ 'https://example.com/' ],
+                skipFilter: function (report) {
+                    if (report.name === 'load https://example.com/script.js') {
+                        return 'Skip this one';
+                    }
+                }
+            }, t);
+
+            expect(t.close(), 'to satisfy', {fail: 0, skip: 1});
+            expect(t.push, 'to have a call satisfying', () => {
+                t.push(null, {
+                    ok: undefined,
+                    skip: 'Skip this one',
+                    operator: 'load',
+                    name: 'load https://example.com/script.js'
+                });
+            });
+        });
+
+        it('should skip mixed-content warnings', async function () {
+            httpception([
+                {
+                    request: 'GET https://example.com/',
+                    response: {
+                        statusCode: 200,
+                        headers: {
+                            'Content-Type': 'text/html; charset=UTF-8'
+                        },
+                        body: '<html><head><script src="http://example.com/insecureScript.js"></script></head><body></body></html>'
+                    }
+                },
+                {
+                    request: 'GET http://example.com/insecureScript.js',
+                    response: {
+                        statusCode: 200,
+                        headers: {
+                            'Content-Type': 'application/javascript'
+                        },
+                        body: 'alert("hello, insecure world");'
+                    }
+                }
+            ]);
+
+            const t = new TapRender();
+            sinon.spy(t, 'push');
+            await hyperlink({
+                recursive: false,
+                root: 'https://example.com/',
+                inputUrls: [ 'https://example.com/' ],
+                skipFilter: report => report.name.includes('mixed-content')
+            }, t);
+
+            expect(t.close(), 'to satisfy', { count: 3, pass: 2, fail: 0, skip: 1, todo: 0 });
+            expect(t.push, 'to have a call satisfying', () => {
+                t.push(null, {
+                    skip: true,
+                    operator: 'mixed-content',
+                    name: 'mixed-content http://example.com/insecureScript.js',
+                    at: 'https://example.com/ (1:26) <script src="http://example.com/insecureScript.js">...</script>'
+                });
+            });
+        });
+
+        it('should skip a fragment-check', async function () {
+            httpception([
+                {
+                    request: 'GET https://example.com/',
+                    response: {
+                        statusCode: 200,
+                        headers: {
+                            'Content-Type': 'text/html; charset=UTF-8'
+                        },
+                        body: '<html><head></head><body><a href="#missingId">Broken fragment link</a></body></html>'
+                    }
+                }
+            ]);
+
+            const t = new TapRender();
+            sinon.spy(t, 'push');
+            await hyperlink({
+                recursive: false,
+                root: 'https://example.com/',
+                inputUrls: [ 'https://example.com/' ],
+                skipFilter: function (report) {
+                    if (report.name === 'fragment-check https://example.com/ --> #missingId') {
+                        return true;
+                    }
+                }
+            }, t);
+
+            expect(t.close(), 'to satisfy', { count: 3, pass: 2, fail: 0, skip: 1, todo: 0 });
+            expect(t.push, 'to have a call satisfying', () => {
+                t.push(null, {
+                    skip: true,
+                    operator: 'fragment-check',
+                    name: 'fragment-check https://example.com/ --> #missingId',
+                    expected: 'id="missingId"',
+                    at: 'https://example.com/ (1:35) <a href="#missingId">...</a>'
+                });
+            });
+        });
+
+        it('should skip an external-check', async function () {
+            httpception([
+                {
+                    request: 'GET https://example.com/',
+                    response: {
+                        statusCode: 200,
+                        headers: {
+                            'Content-Type': 'text/html; charset=UTF-8'
+                        },
+                        body: '<html><head></head><body><a href="https://knownfailure.com" class="external-helper-class">url to skip</a></body></html>'
+                    }
+                }
+            ]);
+
+            const t = new TapRender();
+            sinon.spy(t, 'push');
+            await hyperlink({
+                recursive: false,
+                root: 'https://example.com/',
+                inputUrls: [ 'https://example.com/' ],
+                skipFilter: report => report.at.includes('external-helper-class')
+            }, t);
+
+            expect(t.close(), 'to satisfy', { count: 3, pass: 1, fail: 0, skip: 2, todo: 0 });
+            expect(t.push, 'to have a call satisfying', () => {
+                t.push(null, {
+                    skip: true,
+                    operator: 'external-check',
+                    name: 'external-check https://knownfailure.com',
+                    at: 'https://example.com/ (1:35) <a href="https://knownfailure.com" class="external-helper-class">...</a>'
+                });
+            });
+        });
+
+        it('should skip a preconnect-check', async function () {
+            const t = new TapRender();
+            sinon.spy(t, 'push');
+
+            const root = pathModule.resolve(__dirname, '..', 'testdata', 'preconnect', 'nonexistent');
+            await hyperlink({
+                root,
+                inputUrls: [ 'index.html' ],
+                skipFilter: report => report.operator === 'preconnect-check'
+            }, t);
+
+            expect(t.close(), 'to satisfy', { count: 3, pass: 2, fail: 0, skip: 1, todo: 0 });
+            expect(t.push, 'to have a call satisfying', () => {
+                t.push(null, {
+                    skip: true,
+                    operator: 'preconnect-check',
+                    name: 'preconnect-check https://thisdomaindoesnotandshouldnotexistqhqwicqecqwe.com/',
+                    at: 'testdata/preconnect/nonexistent/index.html:3:34 <link rel="preconnect" href="https://thisdomaindoesnotandshouldnotexistqhqwicqecqwe.com/">'
+                });
+            });
+        });
+
+        it('should skip a dns-prefetch-check', async function () {
+            const t = new TapRender();
+            sinon.spy(t, 'push');
+
+            const root = pathModule.resolve(__dirname, '..', 'testdata', 'dns-prefetch', 'nonexistent');
+            await hyperlink({
+                root,
+                inputUrls: [ 'index.html' ],
+                skipFilter: report => report.operator === 'dns-prefetch-check'
+            }, t);
+
+            expect(t.close(), 'to satisfy', { count: 3, pass: 2, fail: 0, skip: 1, todo: 0 });
+            expect(t.push, 'to have a call satisfying', () => {
+                t.push(null, {
+                    skip: true,
+                    operator: 'dns-prefetch-check',
+                    name: 'dns-prefetch-check thisdomaindoesnotandshouldnotexistqhqwicqecqwe.com',
+                    at: 'testdata/dns-prefetch/nonexistent/index.html:3:36 <link rel="dns-prefetch" href="//thisdomaindoesnotandshouldnotexistqhqwicqecqwe.com/">'
                 });
             });
         });

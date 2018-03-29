@@ -34,6 +34,16 @@ const commandLineOptions = optimist
             type: 'boolean',
             default: false
         })
+        .options('skip', {
+            describe: 'Avoid running a test where the report matches the given pattern',
+            type: 'string',
+            demand: false
+        })
+        .options('todo', {
+            describe: 'Mark a failed tests as todo where the report matches the given pattern',
+            type: 'string',
+            demand: false
+        })
         .options('exclude', {
             describe: 'Url pattern to exclude from the build. **THIS OPTION IS DEPRECATED**',
             type: 'string',
@@ -59,12 +69,13 @@ if (commandLineOptions.h) {
 
 const urlTools = require('urltools');
 const canonicalRoot = commandLineOptions.canonicalroot && urlTools.ensureTrailingSlash(commandLineOptions.canonicalroot);
-const excludePatterns = commandLineOptions.exclude && [].concat(commandLineOptions.exclude);
+const skipPatterns = commandLineOptions.skip && [].concat(commandLineOptions.skip) || [];
+const todoPatterns = commandLineOptions.todo && [].concat(commandLineOptions.todo) || [];
 const followSourceMaps = commandLineOptions['source-maps'];
 let rootUrl = commandLineOptions.root && urlTools.urlOrFsPathToUrl(commandLineOptions.root, true);
 let inputUrls;
 
-if (excludePatterns) {
+if (commandLineOptions.exclude) {
     console.error('The --exclude option has been deprecated in hyperlink 4.x');
     process.exit(1);
 }
@@ -91,6 +102,9 @@ if (commandLineOptions._.length > 0) {
 const TapRender = require('tap-render');
 const hyperlink = require('../lib/index');
 
+const skipFilter = report => Object.values(report).some(value => skipPatterns.some(pattern => String(value).includes(pattern)));
+const todoFilter = report => Object.values(report).some(value => todoPatterns.some(pattern => String(value).includes(pattern)));
+
 const t = new TapRender();
 t.pipe(process.stdout);
 
@@ -102,6 +116,8 @@ t.pipe(process.stdout);
             inputUrls: inputUrls,
             followSourceMaps: followSourceMaps,
             recursive: commandLineOptions.recursive,
+            skipFilter,
+            todoFilter,
             verbose: commandLineOptions.verbose,
             concurrency: commandLineOptions.concurrency,
             memdebug: commandLineOptions.debug

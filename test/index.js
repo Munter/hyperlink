@@ -784,7 +784,7 @@ describe('hyperlink', function () {
             expect(t.close(), 'to satisfy', {fail: 0, skip: 1});
             expect(t.push, 'to have a call satisfying', () => {
                 t.push(null, {
-                    ok: undefined,
+                    ok: true,
                     skip: true,
                     operator: 'load',
                     name: 'load https://example.com/script.js'
@@ -822,7 +822,7 @@ describe('hyperlink', function () {
             expect(t.close(), 'to satisfy', {fail: 0, skip: 1});
             expect(t.push, 'to have a call satisfying', () => {
                 t.push(null, {
-                    ok: undefined,
+                    ok: true,
                     skip: 'Skip this one',
                     operator: 'load',
                     name: 'load https://example.com/script.js'

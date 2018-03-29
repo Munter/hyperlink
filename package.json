@@ -43,7 +43,7 @@
     "optimist": "^0.6.1",
     "pretty-bytes": "^4.0.2",
     "request": "^2.83.0",
-    "tap-render": "Munter/tap-render#0.1.7-patch2",
+    "tap-render": "Munter/tap-render#0.1.7-patch3",
     "urltools": "^0.3.1"
   },
   "devDependencies": {

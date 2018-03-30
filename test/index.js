@@ -54,6 +54,56 @@ describe('hyperlink', function () {
         });
     });
 
+    it('should complain if an asset loaded has an unexpected Content-Type', async function () {
+        httpception([
+            {
+                request: 'GET https://example.com/',
+                response: {
+                    statusCode: 200,
+                    headers: {
+                        'Content-Type': 'text/html; charset=UTF-8'
+                    },
+                    body: `
+                        <!DOCTYPE html>
+                        <html>
+                        <head>
+                            <link rel="stylesheet" href="styles.css">
+                        </head>
+                        <body>
+                        </body>
+                        </html>
+                    `
+                }
+            },
+            {
+                request: 'GET https://example.com/styles.css',
+                response: {
+                    headers: {
+                        'Content-Type': 'image/png'
+                    },
+                    body: 'div { color: maroon; }'
+                }
+            }
+        ]);
+
+        const t = new TapRender();
+        sinon.spy(t, 'push');
+        await hyperlink({
+            root: 'https://example.com/',
+            inputUrls: [ 'https://example.com/' ]
+        }, t);
+
+        expect(t.close(), 'to satisfy', {fail: 1});
+        expect(t.push, 'to have a call satisfying', () => {
+            t.push(null, {
+                ok: false,
+                operator: 'error',
+                actual: 'https://example.com/styles.css: Asset is used as both Css and Png',
+                at: 'https://example.com/ (5:58) <link rel="stylesheet" href="styles.css">'
+            });
+        });
+    });
+
     it('should complain if an asset being HEADed has an unexpected Content-Type', async function () {
         httpception([
             {

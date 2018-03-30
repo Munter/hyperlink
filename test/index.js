@@ -428,7 +428,8 @@ describe('hyperlink', function () {
                 expect(t.close(), 'to satisfy', {fail: 1});
                 expect(t.push, 'to have a call satisfying', () => {
                     t.push(null, {
-                        name: 'should respond with HTTP status 200',
+                        operator: 'external-check',
+                        name: 'external-check https://mycdn.com/404.eot',
                         expected: '200 https://mycdn.com/404.eot',
                         actual: '404 https://mycdn.com/404.eot'
                     });
@@ -508,7 +509,7 @@ describe('hyperlink', function () {
             expect(t.push, 'to have a call satisfying', () => {
                 t.push(null, {
                     ok: false,
-                    name: 'URI should have no redirects - https://elsewhere.com/'
+                    name: 'external-check https://elsewhere.com/'
                 });
             });
         });
@@ -556,7 +557,7 @@ describe('hyperlink', function () {
             expect(t.push, 'to have a call satisfying', () => {
                 t.push(null, {
                     ok: true,
-                    name: 'URI should have no redirects - https://elsewhere.com/'
+                    name: 'external-check https://elsewhere.com/'
                 });
             });
         });

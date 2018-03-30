@@ -734,4 +734,118 @@ describe('hyperlink', function () {
             });
         });
     });
+
+    describe('with followSourceMaps:true', function () {
+        it('should load the source map and HEAD the sources and file (if not already visited)', async function () {
+            httpception([
+                {
+                    request: 'GET https://example.com/',
+                    response: {
+                        statusCode: 200,
+                        headers: {
+                            'Content-Type': 'text/html; charset=UTF-8'
+                        },
+                        body: `
+                            <!DOCTYPE html>
+                            <html>
+                            <head>
+                                <link rel="stylesheet" href="styles.css">
+                            </head>
+                            <body></body>
+                            </html>
+                        `
+                    }
+                },
+                {
+                    request: 'GET https://example.com/styles.css',
+                    response: {
+                        headers: {
+                            'Content-Type': 'text/css'
+                        },
+                        body: 'div { color: maroon; }/*#sourceMappingURL=css.map*/'
+                    }
+                },
+                {
+                    request: 'GET https://example.com/css.map',
+                    response: {
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: {
+                            version: 3,
+                            sources: [ '/a.less' ],
+                            names: [],
+                            mappings: 'AAAA;EACE,eAAe;EACf,sBAAsB;CACvB;AACD;EACE,+CAA+C;EAC/C,uCAAuC;CACxC',
+                            file: 'styles.css'
+                        }
+                    }
+                },
+                {
+                    request: 'HEAD https://example.com/a.less',
+                    response: 200
+                }
+            ]);
+
+            const t = new TapRender();
+            sinon.spy(t, 'push');
+            await hyperlink({
+                followSourceMaps: true,
+                root: 'https://example.com/',
+                inputUrls: [ 'https://example.com/' ]
+            }, t);
+
+            expect(t.close(), 'to satisfy', {fail: 0});
+        });
+    });
+
+    describe('with followSourceMaps:false', function () {
+        it('should just HEAD the source map urls', async function () {
+            httpception([
+                {
+                    request: 'GET https://example.com/',
+                    response: {
+                        statusCode: 200,
+                        headers: {
+                            'Content-Type': 'text/html; charset=UTF-8'
+                        },
+                        body: `
+                            <!DOCTYPE html>
+                            <html>
+                            <head>
+                                <style>
+                                    body { color: maroon; }
+                                    /*#sourceMappingURL=css.map*/
+                                </style>
+                            </head>
+                            <body>
+                                <script>
+                                    alert("foo");
+                                    //#sourceMappingURL=js.map
+                                </script>
+                            </body>
+                            </html>
+                        `
+                    }
+                },
+                {
+                    request: 'HEAD https://example.com/css.map',
+                    response: 200
+                },
+                {
+                    request: 'HEAD https://example.com/js.map',
+                    response: 200
+                }
+            ]);
+
+            const t = new TapRender();
+            sinon.spy(t, 'push');
+            await hyperlink({
+                followSourceMaps: false,
+                root: 'https://example.com/',
+                inputUrls: [ 'https://example.com/' ]
+            }, t);
+
+            expect(t.close(), 'to satisfy', {fail: 0});
+        });
+    });
 });

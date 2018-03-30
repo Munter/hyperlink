@@ -115,7 +115,7 @@ describe('hyperlink', function () {
             t.push(null, {
                 ok: true,
                 operator: 'mixed-content',
-                name: `mixed-content file:///Users/munter/git/hyperlink/broken.html`,
+                name: `mixed-content ${root}/broken.html`,
                 at: 'index.html:1:37 <a href="broken.html">...</a>'
             });
 

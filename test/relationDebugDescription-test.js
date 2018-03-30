@@ -72,4 +72,19 @@ describe('relationDebugDescription', function () {
                 expect(result, 'to end with', 'index.html:1:58 inlined Css: url(https://mntr.dk/invalid.png)');
             });
     });
+
+    it('should escape newlines in output', async function() {
+        const ag = new AssetGraph();
+
+        await ag.loadAssets({
+            type: 'Html',
+            url: 'https://webpack.js.org',
+            text: `<a href="http://try.idonethis.com/developer
+?utm_campaign=opencollective&amp;utm_medium=github&amp;utm_source=angular-fullstack">newline link</a>`,
+        });
+
+        const result = relationDebugDescription(ag.findRelations({}, true)[0]);
+
+        expect(result, 'to be', 'https://webpack.js.org (2:102) <a href="http://try.idonethis.com/developer\\n?utm_campaign=opencollective&amp;utm_medium=github&amp;utm_source=angular-fullstack">...</a>');
+    });
 });

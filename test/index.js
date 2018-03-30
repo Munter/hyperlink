@@ -573,7 +573,8 @@ describe('hyperlink', function () {
                 expect(t.close(), 'to satisfy', {fail: 1});
                 expect(t.push, 'to have a call satisfying', () => {
                     t.push(null, {
-                        name: 'should respond with HTTP status 200',
+                        operator: 'external-check',
+                        name: 'external-check https://mycdn.com/404.eot',
                         expected: '200 https://mycdn.com/404.eot',
                         actual: '404 https://mycdn.com/404.eot'
                     });
@@ -658,7 +659,7 @@ describe('hyperlink', function () {
             expect(t.push, 'to have a call satisfying', () => {
                 t.push(null, {
                     ok: false,
-                    name: 'URI should have no redirects - https://elsewhere.com/'
+                    name: 'external-redirect https://elsewhere.com/'
                 });
             });
         });
@@ -702,11 +703,70 @@ describe('hyperlink', function () {
                 inputUrls: [ 'https://example.com/' ]
             }, t);
 
-            expect(t.close(), 'to satisfy', { count: 2, pass: 2, fail: 0, skip: 0, todo: 0 });
+            expect(t.close(), 'to satisfy', { count: 3, pass: 3, fail: 0, skip: 0, todo: 0 });
             expect(t.push, 'to have a call satisfying', () => {
                 t.push(null, {
                     ok: true,
-                    name: 'URI should have no redirects - https://elsewhere.com/'
+                    name: 'external-redirect https://elsewhere.com/'
+                });
+            });
+        });
+
+        it('should emit an error when an HtmlAnchor points at an external page that has long redirect chain', async function () {
+            httpception([
+                {
+                    request: 'GET https://example.com/',
+                    response: {
+                        statusCode: 200,
+                        headers: {
+                            'Content-Type': 'text/html; charset=UTF-8'
+                        },
+                        body: '<html><head></head><body><a href="https://elsewhere.com/">Link</a></body></html>'
+                    }
+                },
+                {
+                    request: 'HEAD https://elsewhere.com/',
+                    response: {
+                        statusCode: 302,
+                        headers: {
+                            Location: 'https://elsewhere.com/redirectTarget'
+                        }
+                    }
+                },
+                {
+                    request: 'HEAD https://elsewhere.com/redirectTarget',
+                    response: {
+                        statusCode: 302,
+                        headers: {
+                            Location: 'https://elsewhere.com/finalDestination'
+                        }
+                    }
+                },
+                {
+                    request: 'HEAD https://elsewhere.com/finalDestination',
+                    response: {
+                        statusCode: 200,
+                        headers: {
+                            'Content-Type': 'text/html'
+                        }
+                    }
+                }
+            ]);
+
+            const t = new TapRender();
+            sinon.spy(t, 'push');
+            await hyperlink({
+                root: 'https://example.com/',
+                inputUrls: [ 'https://example.com/' ]
+            }, t);
+
+            expect(t.close(), 'to satisfy', { count: 3, pass: 2, fail: 1, skip: 0, todo: 0 });
+            expect(t.push, 'to have a call satisfying', () => {
+                t.push(null, {
+                    ok: false,
+                    name: 'external-redirect https://elsewhere.com/',
+                    expected: '302 https://elsewhere.com/ --> 200 https://elsewhere.com/finalDestination',
+                    actual: '302 https://elsewhere.com/ --> 302 https://elsewhere.com/redirectTarget --> 200 https://elsewhere.com/finalDestination'
                 });
             });
         });

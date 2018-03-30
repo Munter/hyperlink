@@ -39,7 +39,6 @@
   "dependencies": {
     "assetgraph": "^4.3.1",
     "async": "^2.6.0",
-    "lodash": "^4.17.4",
     "optimist": "^0.6.1",
     "pretty-bytes": "^4.0.2",
     "request": "^2.83.0",

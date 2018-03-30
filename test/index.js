@@ -97,8 +97,10 @@ describe('hyperlink', function () {
         expect(t.push, 'to have a call satisfying', () => {
             t.push(null, {
                 ok: false,
-                operator: 'error',
-                actual: 'https://example.com/styles.css: Asset is used as both Css and Png',
+                operator: 'content-type-mismatch',
+                name: 'content-type-mismatch https://example.com/styles.css',
+                expected: 'text/css',
+                actual: 'Asset is used as both Css and Png',
                 at: 'https://example.com/ (5:58) <link rel="stylesheet" href="styles.css">'
             });
         });
@@ -145,8 +147,8 @@ describe('hyperlink', function () {
         expect(t.push, 'to have a call satisfying', () => {
             t.push(null, {
                 ok: false,
-                operator: 'error',
-                name: 'https://example.com/hey.png: Should have the expected Content-Type',
+                operator: 'content-type-mismatch',
+                name: 'content-type-mismatch https://example.com/hey.png',
                 expected: 'image/png',
                 actual: 'text/plain',
                 at: 'https://example.com/ (6:39) <img src="hey.png">'
@@ -191,8 +193,8 @@ describe('hyperlink', function () {
         expect(t.push, 'to have a call satisfying', () => {
             t.push(null, {
                 ok: false,
-                operator: 'error',
-                name: 'https://example.com/hey.png: No Content-Type response header',
+                operator: 'content-type-missing',
+                name: 'content-type-missing https://example.com/hey.png',
                 expected: 'image/png',
                 at: 'https://example.com/ (6:39) <img src="hey.png">'
             });

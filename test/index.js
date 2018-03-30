@@ -54,6 +54,75 @@ describe('hyperlink', function () {
         });
     });
 
+    it('should not follow links to unsupported protocols', async function () {
+        httpception([
+            {
+                request: 'GET https://example.com/',
+                response: {
+                    statusCode: 200,
+                    headers: {
+                        'Content-Type': 'text/html; charset=UTF-8'
+                    },
+                    body: `
+                        <a href="https://google.com">find something securely</a>
+                        <a href="http://google.com">find something insecurelysecurely</a>
+                        <a href="//google.com">find something in whatever way you're browsing now</a>
+
+                        <a href="mailto:recipient@hopefullynonexistingdomainname-whoreallyknows.tools">send me an email</a>
+                        <a href="tel:+4500000000">give me a call</a>
+                        <a href="fax:+4500000000">does anyone still use these?</a>
+                        <a href="gopher://gopher.yoyodyne.com/">this is just rediculous</a>
+                    `
+                }
+            },
+            {
+                request: 'HEAD https://google.com/',
+                response: {
+                    statusCode: 200,
+                    headers: {
+                        'Content-Type': 'text/html'
+                    }
+                }
+            },
+            {
+                request: 'HEAD http://google.com/',
+                response: {
+                    statusCode: 200,
+                    headers: {
+                        'Content-Type': 'text/html'
+                    }
+                }
+            }
+        ]);
+
+        const t = new TapRender();
+        sinon.spy(t, 'push');
+        await hyperlink({
+            root: 'https://example.com/',
+            inputUrls: [ 'https://example.com/' ]
+        }, t);
+
+        // expect(t.close(), 'to satisfy', { count: 1, pass: 1, fail: 0, skip: 0, todo: 0 });
+        expect(t.push, 'to have calls satisfying', () => {
+            t.push( { name: 'Crawling internal assets' } );
+            t.push(null, {
+                name: 'load https://example.com/',
+                ok: true
+            });
+            t.push( { name: 'Crawling 2 outgoing urls' } );
+            t.push(null, {
+                ok: true,
+                name: 'external-check https://google.com'
+            });
+            t.push(null, {
+                ok: true,
+                name: 'external-check http://google.com'
+            });
+            t.push({ name: 'Connecting to 0 hosts (checking <link rel="preconnect" href="...">' });
+            t.push({ name: 'Looking up 0 host names (checking <link rel="dns-prefetch" href="...">' });
+        });
+    });
+
     it('should complain if an asset loaded has an unexpected Content-Type', async function () {
         httpception([
             {

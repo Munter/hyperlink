@@ -54,6 +54,153 @@ describe('hyperlink', function () {
         });
     });
 
+    it('should complain if an asset loaded has an unexpected Content-Type', async function () {
+        httpception([
+            {
+                request: 'GET https://example.com/',
+                response: {
+                    statusCode: 200,
+                    headers: {
+                        'Content-Type': 'text/html; charset=UTF-8'
+                    },
+                    body: `
+                        <!DOCTYPE html>
+                        <html>
+                        <head>
+                            <link rel="stylesheet" href="styles.css">
+                        </head>
+                        <body>
+                        </body>
+                        </html>
+                    `
+                }
+            },
+            {
+                request: 'GET https://example.com/styles.css',
+                response: {
+                    headers: {
+                        'Content-Type': 'image/png'
+                    },
+                    body: 'div { color: maroon; }'
+                }
+            }
+        ]);
+
+        const t = new TapRender();
+        sinon.spy(t, 'push');
+        await hyperlink({
+            root: 'https://example.com/',
+            inputUrls: [ 'https://example.com/' ]
+        }, t);
+
+        expect(t.close(), 'to satisfy', {fail: 1});
+        expect(t.push, 'to have a call satisfying', () => {
+            t.push(null, {
+                ok: false,
+                operator: 'content-type-mismatch',
+                name: 'content-type-mismatch https://example.com/styles.css',
+                expected: 'text/css',
+                actual: 'Asset is used as both Css and Png',
+                at: 'https://example.com/ (5:58) <link rel="stylesheet" href="styles.css">'
+            });
+        });
+    });
+
+    it('should complain if an asset being HEADed has an unexpected Content-Type', async function () {
+        httpception([
+            {
+                request: 'GET https://example.com/',
+                response: {
+                    statusCode: 200,
+                    headers: {
+                        'Content-Type': 'text/html; charset=UTF-8'
+                    },
+                    body: `
+                        <!DOCTYPE html>
+                        <html>
+                        <head></head>
+                        <body>
+                            <img src="hey.png">
+                        </body>
+                        </html>
+                    `
+                }
+            },
+            {
+                request: 'HEAD https://example.com/hey.png',
+                response: {
+                    headers: {
+                        'Content-Type': 'text/plain'
+                    }
+                }
+            }
+        ]);
+
+        const t = new TapRender();
+        sinon.spy(t, 'push');
+        await hyperlink({
+            root: 'https://example.com/',
+            inputUrls: [ 'https://example.com/' ]
+        }, t);
+
+        expect(t.close(), 'to satisfy', {fail: 1});
+        expect(t.push, 'to have a call satisfying', () => {
+            t.push(null, {
+                ok: false,
+                operator: 'content-type-mismatch',
+                name: 'content-type-mismatch https://example.com/hey.png',
+                expected: 'image/png',
+                actual: 'text/plain',
+                at: 'https://example.com/ (6:39) <img src="hey.png">'
+            });
+        });
+    });
+
+    it('should complain if an asset being HEADed has no Content-Type', async function () {
+        httpception([
+            {
+                request: 'GET https://example.com/',
+                response: {
+                    statusCode: 200,
+                    headers: {
+                        'Content-Type': 'text/html; charset=UTF-8'
+                    },
+                    body: `
+                        <!DOCTYPE html>
+                        <html>
+                        <head></head>
+                        <body>
+                            <img src="hey.png">
+                        </body>
+                        </html>
+                    `
+                }
+            },
+            {
+                request: 'HEAD https://example.com/hey.png',
+                response: 200
+            }
+        ]);
+
+        const t = new TapRender();
+        sinon.spy(t, 'push');
+        await hyperlink({
+            root: 'https://example.com/',
+            inputUrls: [ 'https://example.com/' ]
+        }, t);
+
+        expect(t.close(), 'to satisfy', {fail: 1});
+        expect(t.push, 'to have a call satisfying', () => {
+            t.push(null, {
+                ok: false,
+                operator: 'content-type-missing',
+                name: 'content-type-missing https://example.com/hey.png',
+                expected: 'image/png',
+                at: 'https://example.com/ (6:39) <img src="hey.png">'
+            });
+        });
+    });
+
     it('should unload the assets as they are being processed', async function () {
         const server = require('http').createServer(
             (req, res) => {
@@ -449,8 +596,13 @@ describe('hyperlink', function () {
                     },
                     {
                         request: 'HEAD https://mycdn.com/frame.html',
-                        response: 200
-                    }
+                        response: {
+                            statusCode: 200,
+                            headers: {
+                                'Content-Type': 'text/html'
+                            }
+                        }
+                        }
                 ]);
 
                 const t = new TapRender();
@@ -1218,7 +1370,12 @@ describe('hyperlink', function () {
                 },
                 {
                     request: 'HEAD https://example.com/a.less',
-                    response: 200
+                    response: {
+                        statusCode: 200,
+                        headers: {
+                            'Content-Type': 'text/less'
+                        }
+                    }
                 }
             ]);
 
@@ -1265,11 +1422,21 @@ describe('hyperlink', function () {
                 },
                 {
                     request: 'HEAD https://example.com/css.map',
-                    response: 200
+                    response: {
+                        statusCode: 200,
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    }
                 },
                 {
                     request: 'HEAD https://example.com/js.map',
-                    response: 200
+                    response: {
+                        statusCode: 200,
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    }
                 }
             ]);
 

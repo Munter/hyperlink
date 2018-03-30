@@ -146,9 +146,54 @@ describe('hyperlink', function () {
             t.push(null, {
                 ok: false,
                 operator: 'error',
-                name: 'Should have the expected Content-Type',
+                name: 'https://example.com/hey.png: Should have the expected Content-Type',
                 expected: 'image/png',
                 actual: 'text/plain',
+                at: 'https://example.com/ (6:39) <img src="hey.png">'
+            });
+        });
+    });
+
+    it('should complain if an asset being HEADed has no Content-Type', async function () {
+        httpception([
+            {
+                request: 'GET https://example.com/',
+                response: {
+                    statusCode: 200,
+                    headers: {
+                        'Content-Type': 'text/html; charset=UTF-8'
+                    },
+                    body: `
+                        <!DOCTYPE html>
+                        <html>
+                        <head></head>
+                        <body>
+                            <img src="hey.png">
+                        </body>
+                        </html>
+                    `
+                }
+            },
+            {
+                request: 'HEAD https://example.com/hey.png',
+                response: 200
+            }
+        ]);
+
+        const t = new TapRender();
+        sinon.spy(t, 'push');
+        await hyperlink({
+            root: 'https://example.com/',
+            inputUrls: [ 'https://example.com/' ]
+        }, t);
+
+        expect(t.close(), 'to satisfy', {fail: 1});
+        expect(t.push, 'to have a call satisfying', () => {
+            t.push(null, {
+                ok: false,
+                operator: 'error',
+                name: 'https://example.com/hey.png: No Content-Type response header',
+                expected: 'image/png',
                 at: 'https://example.com/ (6:39) <img src="hey.png">'
             });
         });
@@ -548,8 +593,13 @@ describe('hyperlink', function () {
                     },
                     {
                         request: 'HEAD https://mycdn.com/frame.html',
-                        response: 200
-                    }
+                        response: {
+                            statusCode: 200,
+                            headers: {
+                                'Content-Type': 'text/html'
+                            }
+                        }
+                        }
                 ]);
 
                 const t = new TapRender();
@@ -1258,7 +1308,12 @@ describe('hyperlink', function () {
                 },
                 {
                     request: 'HEAD https://example.com/a.less',
-                    response: 200
+                    response: {
+                        statusCode: 200,
+                        headers: {
+                            'Content-Type': 'text/less'
+                        }
+                    }
                 }
             ]);
 
@@ -1305,11 +1360,21 @@ describe('hyperlink', function () {
                 },
                 {
                     request: 'HEAD https://example.com/css.map',
-                    response: 200
+                    response: {
+                        statusCode: 200,
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    }
                 },
                 {
                     request: 'HEAD https://example.com/js.map',
-                    response: 200
+                    response: {
+                        statusCode: 200,
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    }
                 }
             ]);
 

@@ -54,6 +54,56 @@ describe('hyperlink', function () {
         });
     });
 
+    it('should complain if an asset being HEADed has an unexpected Content-Type', async function () {
+        httpception([
+            {
+                request: 'GET https://example.com/',
+                response: {
+                    statusCode: 200,
+                    headers: {
+                        'Content-Type': 'text/html; charset=UTF-8'
+                    },
+                    body: `
+                        <!DOCTYPE html>
+                        <html>
+                        <head></head>
+                        <body>
+                            <img src="hey.png">
+                        </body>
+                        </html>
+                    `
+                }
+            },
+            {
+                request: 'HEAD https://example.com/hey.png',
+                response: {
+                    headers: {
+                        'Content-Type': 'text/plain'
+                    }
+                }
+            }
+        ]);
+
+        const t = new TapRender();
+        sinon.spy(t, 'push');
+        await hyperlink({
+            root: 'https://example.com/',
+            inputUrls: [ 'https://example.com/' ]
+        }, t);
+
+        expect(t.close(), 'to satisfy', {fail: 1});
+        expect(t.push, 'to have a call satisfying', () => {
+            t.push(null, {
+                ok: false,
+                operator: 'error',
+                name: 'Should have the expected Content-Type',
+                expected: 'image/png',
+                actual: 'text/plain',
+                at: 'https://example.com/ (6:39) <img src="hey.png">'
+            });
+        });
+    });
+
     it('should unload the assets as they are being processed', async function () {
         const server = require('http').createServer(
             (req, res) => {

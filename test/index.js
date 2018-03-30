@@ -46,10 +46,10 @@ describe('hyperlink', function () {
             t.push(null, {
                 ok: false,
                 operator: 'mixed-content',
-                name: 'mixed-content http://example.com/insecureScript.js',
+                name: 'mixed-content https://example.com/ --> http://example.com/insecureScript.js',
                 at: 'https://example.com/ (1:26) <script src="http://example.com/insecureScript.js">...</script>',
-                expected: 'https://example.com/insecureScript.js',
-                actual: 'http://example.com/insecureScript.js'
+                expected: 'https://example.com/ --> https://example.com/insecureScript.js',
+                actual: 'https://example.com/ --> http://example.com/insecureScript.js'
             });
         });
     });
@@ -78,7 +78,7 @@ describe('hyperlink', function () {
                 inputUrls: [ `${root}1.css` ]
             }, t);
 
-            expect(t.close(), 'to satisfy', {fail: 0, pass: 199});
+            expect(t.close(), 'to satisfy', {fail: 0, pass: 100});
             expect(ag.findAssets({isLoaded: false}), 'to have length', 100);
             expect(ag.findAssets({isLoaded: true}), 'to have length', 0);
         } finally {
@@ -101,7 +101,7 @@ describe('hyperlink', function () {
             ]
         }, t);
 
-        expect(t.close(), 'to satisfy', {fail: 1, pass: 2});
+        expect(t.close(), 'to satisfy', { count: 2, pass: 1, fail: 1, skip: 0, todo: 0 });
         expect(t.push, 'to have calls satisfying', () => {
             t.push({
                 name: 'Crawling internal assets'
@@ -110,13 +110,6 @@ describe('hyperlink', function () {
             t.push(null, {
                 ok: true,
                 name: `load index.html`
-            });
-
-            t.push(null, {
-                ok: true,
-                operator: 'mixed-content',
-                name: `mixed-content ${root}/broken.html`,
-                at: 'index.html:1:37 <a href="broken.html">...</a>'
             });
 
             t.push(null, {
@@ -559,7 +552,7 @@ describe('hyperlink', function () {
                 inputUrls: [ 'https://example.com/' ]
             }, t);
 
-            expect(t.close(), 'to satisfy', {fail: 0, pass: 3});
+            expect(t.close(), 'to satisfy', { count: 2, pass: 2, fail: 0, skip: 0, todo: 0 });
             expect(t.push, 'to have a call satisfying', () => {
                 t.push(null, {
                     ok: true,
@@ -640,7 +633,7 @@ describe('hyperlink', function () {
                     inputUrls: [ 'index.html' ]
                 }, t);
 
-                expect(t.close(), 'to satisfy', {fail: 0, pass: 3});
+                expect(t.close(), 'to satisfy', { count: 2, pass: 2, fail: 0, skip: 0, todo: 0 });
                 expect(t.push, 'to have a call satisfying', () => {
                     t.push({
                         name: 'Connecting to 1 hosts (checking <link rel="preconnect" href="...">'
@@ -681,7 +674,7 @@ describe('hyperlink', function () {
                     inputUrls: [ 'index.html' ]
                 }, t);
 
-                expect(t.close(), 'to satisfy', {fail: 0, pass: 3});
+                expect(t.close(), 'to satisfy', { count: 2, pass: 2, fail: 0, skip: 0, todo: 0 });
                 expect(t.push, 'to have a call satisfying', () => {
                     t.push({
                         name: 'Looking up 1 host names (checking <link rel="dns-prefetch" href="...">'
@@ -700,7 +693,7 @@ describe('hyperlink', function () {
                     inputUrls: [ 'index.html' ]
                 }, t);
 
-                expect(t.close(), 'to satisfy', {fail: 1, pass: 2});
+                expect(t.close(), 'to satisfy', { count: 2, pass: 1, fail: 1, skip: 0, todo: 0 });
                 expect(t.push, 'to have a call satisfying', () => {
                     t.push(null, {
                         actual: 'DNS missing: thisdomaindoesnotandshouldnotexistqhqwicqecqwe.com',
@@ -868,7 +861,7 @@ describe('hyperlink', function () {
                 t.push(null, {
                     skip: true,
                     operator: 'mixed-content',
-                    name: 'mixed-content http://example.com/insecureScript.js',
+                    name: 'mixed-content https://example.com/ --> http://example.com/insecureScript.js',
                     at: 'https://example.com/ (1:26) <script src="http://example.com/insecureScript.js">...</script>'
                 });
             });
@@ -901,7 +894,7 @@ describe('hyperlink', function () {
                 }
             }, t);
 
-            expect(t.close(), 'to satisfy', { count: 3, pass: 2, fail: 0, skip: 1, todo: 0 });
+            expect(t.close(), 'to satisfy', { count: 2, pass: 1, fail: 0, skip: 1, todo: 0 });
             expect(t.push, 'to have a call satisfying', () => {
                 t.push(null, {
                     skip: true,
@@ -936,7 +929,7 @@ describe('hyperlink', function () {
                 skipFilter: report => report.at.includes('external-helper-class')
             }, t);
 
-            expect(t.close(), 'to satisfy', { count: 3, pass: 1, fail: 0, skip: 2, todo: 0 });
+            expect(t.close(), 'to satisfy', { count: 2, pass: 1, fail: 0, skip: 1, todo: 0 });
             expect(t.push, 'to have a call satisfying', () => {
                 t.push(null, {
                     skip: true,
@@ -958,7 +951,7 @@ describe('hyperlink', function () {
                 skipFilter: report => report.operator === 'preconnect-check'
             }, t);
 
-            expect(t.close(), 'to satisfy', { count: 3, pass: 2, fail: 0, skip: 1, todo: 0 });
+            expect(t.close(), 'to satisfy', { count: 2, pass: 1, fail: 0, skip: 1, todo: 0 });
             expect(t.push, 'to have a call satisfying', () => {
                 t.push(null, {
                     skip: true,
@@ -980,7 +973,7 @@ describe('hyperlink', function () {
                 skipFilter: report => report.operator === 'dns-prefetch-check'
             }, t);
 
-            expect(t.close(), 'to satisfy', { count: 3, pass: 2, fail: 0, skip: 1, todo: 0 });
+            expect(t.close(), 'to satisfy', { count: 2, pass: 1, fail: 0, skip: 1, todo: 0 });
             expect(t.push, 'to have a call satisfying', () => {
                 t.push(null, {
                     skip: true,

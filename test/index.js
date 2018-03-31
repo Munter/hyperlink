@@ -332,7 +332,7 @@ describe('hyperlink', function () {
                 ok: false,
                 operator: 'load',
                 name: `load broken.html`,
-                actual: expect.it('to begin with', 'broken.html: ENOENT: no such file or directory')
+                actual: expect.it('to begin with', 'ENOENT: no such file or directory')
             });
 
             t.push({
@@ -558,7 +558,8 @@ describe('hyperlink', function () {
                         ok: false,
                         operator: 'load',
                         name: 'load https://example.com/other.css',
-                        actual: 'https://example.com/other.css: HTTP 404 Not Found',
+                        expected: '200 https://example.com/other.css',
+                        actual: 'HTTP 404 Not Found',
                         at: 'https://example.com/styles.css (1:10) '
                     });
                 });
@@ -599,7 +600,8 @@ describe('hyperlink', function () {
                         ok: false,
                         operator: 'load',
                         name: 'load https://somewhereelse.com/other.css',
-                        actual: 'https://somewhereelse.com/other.css: HTTP 404 Not Found',
+                        expected: '200 https://somewhereelse.com/other.css',
+                        actual: 'HTTP 404 Not Found',
                         at: 'https://example.com/styles.css (1:10) '
                     });
                 });

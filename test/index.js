@@ -359,7 +359,12 @@ describe('hyperlink', function () {
                 inputUrls: [ 'index.html' ]
             }, t);
 
-            expect(t.close(), 'to satisfy', { count: 3, pass: 3, fail: 0, skip: 0, todo: 0 });
+            expect(t.close(), 'to satisfy', { count: 8, pass: 8, fail: 0, skip: 0, todo: 0 });
+            expect(t.push, 'to have a call satisfying', () => {
+                t.push({
+                    name: 'Crawling 0 outgoing urls'
+                });
+            });
             expect(t.push, 'to have no calls satisfying', () => {
                 t.push(null, {
                     operator: 'fragment-check',
@@ -370,6 +375,23 @@ describe('hyperlink', function () {
                 t.push(null, {
                     operator: 'external-check',
                     name: 'external-check testdata/recursive/index.html --> hyperlink.gif'
+                });
+            });
+        });
+
+        it('should not execute tests on outgoing relations of other pages when recursion is enabled', async function () {
+            const t = new TapRender();
+            sinon.spy(t, 'push');
+            await hyperlink({
+                recursive: true,
+                root: pathModule.resolve(__dirname, '..', 'testdata', 'recursive'),
+                inputUrls: [ 'index.html' ]
+            }, t);
+
+            expect(t.close(), 'to satisfy', { count: 9, pass: 8, fail: 1, skip: 0, todo: 0 });
+            expect(t.push, 'to have a call satisfying', () => {
+                t.push({
+                    name: 'Crawling 0 outgoing urls'
                 });
             });
         });

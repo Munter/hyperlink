@@ -349,6 +349,32 @@ describe('hyperlink', function () {
         });
     });
 
+    describe('on a local file system', function () {
+        it('should not execute tests on outgoing relations of other pages when recursion is disabled', async function () {
+            const t = new TapRender();
+            sinon.spy(t, 'push');
+            await hyperlink({
+                recursive: false,
+                root: pathModule.resolve(__dirname, '..', 'testdata', 'recursive'),
+                inputUrls: [ 'index.html' ]
+            }, t);
+
+            expect(t.close(), 'to satisfy', { count: 3, pass: 3, fail: 0, skip: 0, todo: 0 });
+            expect(t.push, 'to have no calls satisfying', () => {
+                t.push(null, {
+                    operator: 'fragment-check',
+                    name: 'fragment-check testdata/recursive/page.html --> index.html#brokenfragment'
+                });
+            });
+            expect(t.push, 'to have no calls satisfying', () => {
+                t.push(null, {
+                    operator: 'external-check',
+                    name: 'external-check testdata/recursive/index.html --> hyperlink.gif'
+                });
+            });
+        });
+    });
+
     describe('with document fragments', function () {
         it('should not complain when a referenced fragment exists in the target HTML', async function () {
             httpception([

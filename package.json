@@ -27,13 +27,11 @@
   "bugs": {
     "url": "https://github.com/Munter/hyperlink/issues"
   },
-  "directories": {
-    "lib": "./lib",
-    "bin": "./bin"
+  "bin": {
+    "hyperlink": "lib/cli.js"
   },
   "files": [
-    "lib",
-    "bin"
+    "lib"
   ],
   "homepage": "https://github.com/Munter/hyperlink",
   "dependencies": {

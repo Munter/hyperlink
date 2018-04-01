@@ -119,7 +119,7 @@ describe('hyperlink', function() {
         name: 'load https://example.com/',
         ok: true
       });
-      t.push({ name: 'Crawling 2 outgoing urls' });
+      //            t.push( { name: 'Crawling 2 outgoing urls' } );
       t.push(null, {
         ok: true,
         name: 'external-check https://google.com'
@@ -240,7 +240,7 @@ describe('hyperlink', function() {
         ok: false,
         operator: 'content-type-mismatch',
         name: 'content-type-mismatch https://example.com/hey.png',
-        actual: 'Asset is used as both Image and Text',
+        actual: 'Asset is used as both Png and Text',
         at: 'https://example.com/ (6:25) <img src="hey.png">'
       });
     });
@@ -286,8 +286,9 @@ describe('hyperlink', function() {
     expect(t.push, 'to have a call satisfying', () => {
       t.push(null, {
         ok: false,
-        operator: 'content-type-missing',
-        name: 'content-type-missing https://example.com/hey.png',
+        operator: 'error',
+        actual:
+          'https://example.com/hey.png: No Content-Type response header received',
         at: 'https://example.com/ (6:25) <img src="hey.png">'
       });
     });
@@ -373,9 +374,9 @@ describe('hyperlink', function() {
         actual: expect.it('to begin with', 'ENOENT: no such file or directory')
       });
 
-      t.push({
-        name: 'Crawling 0 outgoing urls'
-      });
+      // t.push({
+      //     name: 'Crawling 0 outgoing urls'
+      // });
 
       t.push({
         name:
@@ -768,12 +769,12 @@ describe('hyperlink', function() {
           {
             request: 'HEAD https://mycdn.com/404.eot',
             response: 404
-          },
-          // retry
-          {
-            request: 'GET https://mycdn.com/404.eot',
-            response: 404
-          }
+          } /*,
+                    // retry
+                    {
+                        request: 'GET https://mycdn.com/404.eot',
+                        response: 404
+                    }*/
         ]);
 
         const t = new TapRender();
@@ -792,7 +793,7 @@ describe('hyperlink', function() {
             operator: 'external-check',
             name: 'external-check https://mycdn.com/404.eot',
             expected: '200 https://mycdn.com/404.eot',
-            actual: '404 https://mycdn.com/404.eot'
+            actual: 'HTTP 404 Not Found'
           });
         });
       });

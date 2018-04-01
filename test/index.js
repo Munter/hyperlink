@@ -65,7 +65,7 @@ describe('hyperlink', function () {
                     },
                     body: `
                         <a href="https://google.com">find something securely</a>
-                        <a href="http://google.com">find something insecurelysecurely</a>
+                        <a href="http://google.com">find something insecurely</a>
                         <a href="//google.com">find something in whatever way you're browsing now</a>
 
                         <a href="mailto:recipient@hopefullynonexistingdomainname-whoreallyknows.tools">send me an email</a>

@@ -189,7 +189,7 @@ describe('hyperlink', function() {
         name: 'content-type-mismatch https://example.com/styles.css',
         actual: 'Asset is used as both Css and Png',
         at:
-          'https://example.com/ (5:58) <link rel="stylesheet" href="styles.css">'
+          'https://example.com/ (5:44) <link rel="stylesheet" href="styles.css">'
       });
     });
   });
@@ -241,7 +241,7 @@ describe('hyperlink', function() {
         operator: 'content-type-mismatch',
         name: 'content-type-mismatch https://example.com/hey.png',
         actual: 'Asset is used as both Image and Text',
-        at: 'https://example.com/ (6:39) <img src="hey.png">'
+        at: 'https://example.com/ (6:25) <img src="hey.png">'
       });
     });
   });
@@ -288,7 +288,7 @@ describe('hyperlink', function() {
         ok: false,
         operator: 'content-type-missing',
         name: 'content-type-missing https://example.com/hey.png',
-        at: 'https://example.com/ (6:39) <img src="hey.png">'
+        at: 'https://example.com/ (6:25) <img src="hey.png">'
       });
     });
   });

@@ -1861,4 +1861,103 @@ describe('hyperlink', function() {
       expect(t.close(), 'to satisfy', { fail: 0 });
     });
   });
+
+  it('should retry a failed HEAD as a GET', async function() {
+    httpception([
+      {
+        request: 'GET https://example.com/',
+        response: {
+          statusCode: 200,
+          headers: {
+            'Content-Type': 'text/html; charset=UTF-8'
+          },
+          body: `
+            <!DOCTYPE html>
+            <html>
+            <head></head>
+            <body>
+              <img src="hey.png">
+            </body>
+            </html>
+          `
+        }
+      },
+      {
+        request: 'HEAD https://example.com/hey.png',
+        response: 503
+      },
+      {
+        request: 'GET https://example.com/hey.png',
+        response: {
+          statusCode: 200,
+          headers: {
+            'Content-Type': 'image/png'
+          },
+          body: Buffer.from('\x89PNG...')
+        }
+      }
+    ]);
+
+    const t = new TapRender();
+    await hyperlink(
+      {
+        root: 'https://example.com/',
+        inputUrls: ['https://example.com/']
+      },
+      t
+    );
+
+    expect(t.close(), 'to satisfy', { fail: 0 });
+  });
+
+  it('should give up after one retry', async function() {
+    httpception([
+      {
+        request: 'GET https://example.com/',
+        response: {
+          statusCode: 200,
+          headers: {
+            'Content-Type': 'text/html; charset=UTF-8'
+          },
+          body: `
+            <!DOCTYPE html>
+            <html>
+            <head></head>
+            <body>
+              <img src="hey.png">
+            </body>
+            </html>
+          `
+        }
+      },
+      {
+        request: 'HEAD https://example.com/hey.png',
+        response: 503
+      },
+      {
+        request: 'GET https://example.com/hey.png',
+        response: 503
+      }
+    ]);
+
+    const t = new TapRender();
+    sinon.spy(t, 'push');
+    await hyperlink(
+      {
+        root: 'https://example.com/',
+        inputUrls: ['https://example.com/']
+      },
+      t
+    );
+
+    expect(t.close(), 'to satisfy', { fail: 1 });
+    expect(t.push, 'to have a call satisfying', () => {
+      t.push(null, {
+        ok: false,
+        at: 'https://example.com/ (6:25) <img src="hey.png">',
+        expected: '200 https://example.com/hey.png',
+        actual: '503 https://example.com/hey.png'
+      });
+    });
+  });
 });

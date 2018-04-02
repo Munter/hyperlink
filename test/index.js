@@ -71,15 +71,15 @@ describe('hyperlink', function() {
             'Content-Type': 'text/html; charset=UTF-8'
           },
           body: `
-                        <a href="https://google.com">find something securely</a>
-                        <a href="http://google.com">find something insecurely</a>
-                        <a href="//google.com">find something in whatever way you're browsing now</a>
+            <a href="https://google.com">find something securely</a>
+            <a href="http://google.com">find something insecurely</a>
+            <a href="//google.com">find something in whatever way you're browsing now</a>
 
-                        <a href="mailto:recipient@hopefullynonexistingdomainname-whoreallyknows.tools">send me an email</a>
-                        <a href="tel:+4500000000">give me a call</a>
-                        <a href="fax:+4500000000">does anyone still use these?</a>
-                        <a href="gopher://gopher.yoyodyne.com/">this is just rediculous</a>
-                    `
+            <a href="mailto:recipient@hopefullynonexistingdomainname-whoreallyknows.tools">send me an email</a>
+            <a href="tel:+4500000000">give me a call</a>
+            <a href="fax:+4500000000">does anyone still use these?</a>
+            <a href="gopher://gopher.yoyodyne.com/">this is just rediculous</a>
+          `
         }
       },
       {
@@ -149,15 +149,15 @@ describe('hyperlink', function() {
             'Content-Type': 'text/html; charset=UTF-8'
           },
           body: `
-                        <!DOCTYPE html>
-                        <html>
-                        <head>
-                            <link rel="stylesheet" href="styles.css">
-                        </head>
-                        <body>
-                        </body>
-                        </html>
-                    `
+            <!DOCTYPE html>
+            <html>
+            <head>
+              <link rel="stylesheet" href="styles.css">
+            </head>
+            <body>
+            </body>
+            </html>
+          `
         }
       },
       {
@@ -204,14 +204,14 @@ describe('hyperlink', function() {
             'Content-Type': 'text/html; charset=UTF-8'
           },
           body: `
-                        <!DOCTYPE html>
-                        <html>
-                        <head></head>
-                        <body>
-                            <img src="hey.png">
-                        </body>
-                        </html>
-                    `
+            <!DOCTYPE html>
+            <html>
+            <head></head>
+            <body>
+              <img src="hey.png">
+            </body>
+            </html>
+          `
         }
       },
       {
@@ -256,14 +256,14 @@ describe('hyperlink', function() {
             'Content-Type': 'text/html; charset=UTF-8'
           },
           body: `
-                        <!DOCTYPE html>
-                        <html>
-                        <head></head>
-                        <body>
-                            <img src="hey.png">
-                        </body>
-                        </html>
-                    `
+            <!DOCTYPE html>
+            <html>
+            <head></head>
+            <body>
+              <img src="hey.png">
+            </body>
+            </html>
+          `
         }
       },
       {
@@ -1737,14 +1737,14 @@ describe('hyperlink', function() {
               'Content-Type': 'text/html; charset=UTF-8'
             },
             body: `
-                            <!DOCTYPE html>
-                            <html>
-                            <head>
-                                <link rel="stylesheet" href="styles.css">
-                            </head>
-                            <body></body>
-                            </html>
-                        `
+              <!DOCTYPE html>
+              <html>
+              <head>
+                <link rel="stylesheet" href="styles.css">
+              </head>
+              <body></body>
+              </html>
+            `
           }
         },
         {
@@ -1809,22 +1809,22 @@ describe('hyperlink', function() {
               'Content-Type': 'text/html; charset=UTF-8'
             },
             body: `
-                            <!DOCTYPE html>
-                            <html>
-                            <head>
-                                <style>
-                                    body { color: maroon; }
-                                    /*#sourceMappingURL=css.map*/
-                                </style>
-                            </head>
-                            <body>
-                                <script>
-                                    alert("foo");
-                                    //#sourceMappingURL=js.map
-                                </script>
-                            </body>
-                            </html>
-                        `
+              <!DOCTYPE html>
+              <html>
+              <head>
+                <style>
+                  body { color: maroon; }
+                  /*#sourceMappingURL=css.map*/
+                </style>
+              </head>
+              <body>
+                <script>
+                  alert("foo");
+                  //#sourceMappingURL=js.map
+                </script>
+              </body>
+              </html>
+            `
           }
         },
         {

@@ -119,7 +119,6 @@ describe('hyperlink', function() {
         name: 'load https://example.com/',
         ok: true
       });
-      //            t.push( { name: 'Crawling 2 outgoing urls' } );
       t.push(null, {
         ok: true,
         name: 'external-check https://google.com'
@@ -374,10 +373,6 @@ describe('hyperlink', function() {
         actual: expect.it('to begin with', 'ENOENT: no such file or directory')
       });
 
-      // t.push({
-      //     name: 'Crawling 0 outgoing urls'
-      // });
-
       t.push({
         name:
           'Connecting to 0 hosts (checking <link rel="preconnect" href="...">'
@@ -409,11 +404,6 @@ describe('hyperlink', function() {
         fail: 0,
         skip: 0,
         todo: 0
-      });
-      expect(t.push, 'to have a call satisfying', () => {
-        t.push({
-          name: 'Crawling 0 outgoing urls'
-        });
       });
       expect(t.push, 'to have no calls satisfying', () => {
         t.push(null, {
@@ -448,11 +438,6 @@ describe('hyperlink', function() {
         fail: 1,
         skip: 0,
         todo: 0
-      });
-      expect(t.push, 'to have a call satisfying', () => {
-        t.push({
-          name: 'Crawling 0 outgoing urls'
-        });
       });
     });
   });

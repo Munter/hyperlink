@@ -233,13 +233,22 @@ describe('hyperlink', function() {
       t
     );
 
-    expect(t.close(), 'to satisfy', { fail: 1 });
+    expect(t.close(), 'to satisfy', { fail: 2 });
     expect(t.push, 'to have a call satisfying', () => {
       t.push(null, {
         ok: false,
         operator: 'content-type-mismatch',
         name: 'content-type-mismatch https://example.com/hey.png',
         actual: 'Asset is used as both Png and Text',
+        at: 'https://example.com/ (6:25) <img src="hey.png">'
+      });
+    });
+    expect(t.push, 'to have a call satisfying', () => {
+      t.push(null, {
+        ok: false,
+        operator: 'content-type-mismatch',
+        name: 'content-type-mismatch https://example.com/hey.png',
+        actual: 'Asset is used as both Image and Text',
         at: 'https://example.com/ (6:25) <img src="hey.png">'
       });
     });

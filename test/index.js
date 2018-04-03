@@ -924,10 +924,9 @@ describe('hyperlink', function() {
         },
         t
       );
-
       expect(t.close(), 'to satisfy', {
-        count: 3,
-        pass: 3,
+        count: 4,
+        pass: 4,
         fail: 0,
         skip: 0,
         todo: 0

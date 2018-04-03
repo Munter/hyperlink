@@ -763,12 +763,11 @@ describe('hyperlink', function() {
           {
             request: 'HEAD https://mycdn.com/404.eot',
             response: 404
-          } /*,
-                    // retry
-                    {
-                        request: 'GET https://mycdn.com/404.eot',
-                        response: 404
-                    }*/
+          },
+          {
+            request: 'GET https://mycdn.com/404.eot',
+            response: 404
+          }
         ]);
 
         const t = new TapRender();
@@ -1951,7 +1950,7 @@ describe('hyperlink', function() {
         ok: false,
         at: 'https://example.com/ (6:25) <img src="hey.png">',
         expected: '200 https://example.com/hey.png',
-        actual: '503 https://example.com/hey.png'
+        actual: 'HTTP 503 Service Unavailable'
       });
     });
   });

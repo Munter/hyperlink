@@ -992,8 +992,8 @@ describe('hyperlink', function() {
       );
 
       expect(t.close(), 'to satisfy', {
-        count: 3,
-        pass: 2,
+        count: 5,
+        pass: 4,
         fail: 1,
         skip: 0,
         todo: 0
@@ -1001,6 +1001,8 @@ describe('hyperlink', function() {
       expect(t.push, 'to have a call satisfying', () => {
         t.push(null, {
           ok: false,
+          at:
+            'https://example.com/ (1:35) <a href="https://elsewhere.com/">...</a>',
           name: 'external-redirect https://elsewhere.com/',
           expected:
             '302 https://elsewhere.com/ --> 200 https://elsewhere.com/finalDestination',

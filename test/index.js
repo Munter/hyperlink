@@ -119,7 +119,6 @@ describe('hyperlink', function() {
         name: 'load https://example.com/',
         ok: true
       });
-      t.push({ name: 'Crawling 2 outgoing urls' });
       t.push(null, {
         ok: true,
         name: 'external-check https://google.com'
@@ -234,7 +233,16 @@ describe('hyperlink', function() {
       t
     );
 
-    expect(t.close(), 'to satisfy', { fail: 1 });
+    expect(t.close(), 'to satisfy', { fail: 2 });
+    expect(t.push, 'to have a call satisfying', () => {
+      t.push(null, {
+        ok: false,
+        operator: 'content-type-mismatch',
+        name: 'content-type-mismatch https://example.com/hey.png',
+        actual: 'Asset is used as both Png and Text',
+        at: 'https://example.com/ (6:25) <img src="hey.png">'
+      });
+    });
     expect(t.push, 'to have a call satisfying', () => {
       t.push(null, {
         ok: false,
@@ -288,6 +296,7 @@ describe('hyperlink', function() {
         ok: false,
         operator: 'content-type-missing',
         name: 'content-type-missing https://example.com/hey.png',
+        actual: 'No Content-Type response header received',
         at: 'https://example.com/ (6:25) <img src="hey.png">'
       });
     });
@@ -374,10 +383,6 @@ describe('hyperlink', function() {
       });
 
       t.push({
-        name: 'Crawling 0 outgoing urls'
-      });
-
-      t.push({
         name:
           'Connecting to 0 hosts (checking <link rel="preconnect" href="...">'
       });
@@ -408,11 +413,6 @@ describe('hyperlink', function() {
         fail: 0,
         skip: 0,
         todo: 0
-      });
-      expect(t.push, 'to have a call satisfying', () => {
-        t.push({
-          name: 'Crawling 0 outgoing urls'
-        });
       });
       expect(t.push, 'to have no calls satisfying', () => {
         t.push(null, {
@@ -447,11 +447,6 @@ describe('hyperlink', function() {
         fail: 1,
         skip: 0,
         todo: 0
-      });
-      expect(t.push, 'to have a call satisfying', () => {
-        t.push({
-          name: 'Crawling 0 outgoing urls'
-        });
       });
     });
   });
@@ -769,7 +764,6 @@ describe('hyperlink', function() {
             request: 'HEAD https://mycdn.com/404.eot',
             response: 404
           },
-          // retry
           {
             request: 'GET https://mycdn.com/404.eot',
             response: 404
@@ -792,7 +786,7 @@ describe('hyperlink', function() {
             operator: 'external-check',
             name: 'external-check https://mycdn.com/404.eot',
             expected: '200 https://mycdn.com/404.eot',
-            actual: '404 https://mycdn.com/404.eot'
+            actual: 'HTTP 404 Not Found'
           });
         });
       });
@@ -930,10 +924,9 @@ describe('hyperlink', function() {
         },
         t
       );
-
       expect(t.close(), 'to satisfy', {
-        count: 3,
-        pass: 3,
+        count: 4,
+        pass: 4,
         fail: 0,
         skip: 0,
         todo: 0
@@ -999,8 +992,8 @@ describe('hyperlink', function() {
       );
 
       expect(t.close(), 'to satisfy', {
-        count: 3,
-        pass: 2,
+        count: 5,
+        pass: 4,
         fail: 1,
         skip: 0,
         todo: 0
@@ -1008,6 +1001,8 @@ describe('hyperlink', function() {
       expect(t.push, 'to have a call satisfying', () => {
         t.push(null, {
           ok: false,
+          at:
+            'https://example.com/ (1:35) <a href="https://elsewhere.com/">...</a>',
           name: 'external-redirect https://elsewhere.com/',
           expected:
             '302 https://elsewhere.com/ --> 200 https://elsewhere.com/finalDestination',
@@ -1070,7 +1065,7 @@ describe('hyperlink', function() {
         t
       );
 
-      expect(t.close(), 'to satisfy', { fail: 1 });
+      expect(t.close(), 'to satisfy', { fail: 2 });
       expect(t.push, 'to have a call satisfying', () => {
         t.push(null, {
           ok: false,
@@ -1956,8 +1951,70 @@ describe('hyperlink', function() {
         ok: false,
         at: 'https://example.com/ (6:25) <img src="hey.png">',
         expected: '200 https://example.com/hey.png',
-        actual: '503 https://example.com/hey.png'
+        actual: 'HTTP 503 Service Unavailable'
       });
     });
+  });
+
+  it('should GET an asset that was previously HEADed if new, "non-external" relations show up', async function() {
+    httpception([
+      {
+        request: 'GET https://example.com/',
+        response: {
+          statusCode: 200,
+          headers: {
+            'Content-Type': 'text/html; charset=UTF-8'
+          },
+          body: `
+            <!DOCTYPE html>
+            <html>
+            <head></head>
+            <body>
+              <a href="otherpage.html">
+              <script src="script.js"></script>
+            </body>
+            </html>
+          `
+        }
+      },
+      {
+        request: 'HEAD https://example.com/otherpage.html',
+        response: {
+          headers: {
+            'Content-Type': 'text/html'
+          }
+        }
+      },
+      {
+        request: 'GET https://example.com/script.js',
+        response: {
+          headers: {
+            'Content-Type': 'application/javascript'
+          },
+          body: 'alert("Hello " + "/otherpage.html".toString("url"));'
+        }
+      },
+      {
+        request: 'GET https://example.com/otherpage.html',
+        response: {
+          headers: {
+            'Content-Type': 'text/html'
+          },
+          body: '<h1>Hello, world!</h1>'
+        }
+      }
+    ]);
+
+    const t = new TapRender();
+    sinon.spy(t, 'push');
+    await hyperlink(
+      {
+        root: 'https://example.com/',
+        inputUrls: ['https://example.com/']
+      },
+      t
+    );
+
+    expect(t.close(), 'to satisfy', { fail: 0 });
   });
 });

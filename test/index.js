@@ -1955,4 +1955,66 @@ describe('hyperlink', function() {
       });
     });
   });
+
+  it('should GET an asset that was previously HEADed if new, "non-external" relations show up', async function() {
+    httpception([
+      {
+        request: 'GET https://example.com/',
+        response: {
+          statusCode: 200,
+          headers: {
+            'Content-Type': 'text/html; charset=UTF-8'
+          },
+          body: `
+            <!DOCTYPE html>
+            <html>
+            <head></head>
+            <body>
+              <a href="otherpage.html">
+              <script src="script.js"></script>
+            </body>
+            </html>
+          `
+        }
+      },
+      {
+        request: 'HEAD https://example.com/otherpage.html',
+        response: {
+          headers: {
+            'Content-Type': 'text/html'
+          }
+        }
+      },
+      {
+        request: 'GET https://example.com/script.js',
+        response: {
+          headers: {
+            'Content-Type': 'application/javascript'
+          },
+          body: 'alert("Hello " + "/otherpage.html".toString("url"));'
+        }
+      },
+      {
+        request: 'GET https://example.com/otherpage.html',
+        response: {
+          headers: {
+            'Content-Type': 'text/html'
+          },
+          body: '<h1>Hello, world!</h1>'
+        }
+      }
+    ]);
+
+    const t = new TapRender();
+    sinon.spy(t, 'push');
+    await hyperlink(
+      {
+        root: 'https://example.com/',
+        inputUrls: ['https://example.com/']
+      },
+      t
+    );
+
+    expect(t.close(), 'to satisfy', { fail: 0 });
+  });
 });

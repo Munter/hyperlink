@@ -294,9 +294,9 @@ describe('hyperlink', function() {
     expect(t.push, 'to have a call satisfying', () => {
       t.push(null, {
         ok: false,
-        operator: 'error',
-        actual:
-          'https://example.com/hey.png: No Content-Type response header received',
+        operator: 'content-type-missing',
+        name: 'content-type-missing https://example.com/hey.png',
+        actual: 'No Content-Type response header received',
         at: 'https://example.com/ (6:25) <img src="hey.png">'
       });
     });

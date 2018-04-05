@@ -1065,7 +1065,7 @@ describe('hyperlink', function() {
         t
       );
 
-      expect(t.close(), 'to satisfy', { fail: 1 });
+      expect(t.close(), 'to satisfy', { fail: 2 });
       expect(t.push, 'to have a call satisfying', () => {
         t.push(null, {
           ok: false,

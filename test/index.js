@@ -689,7 +689,8 @@ describe('hyperlink', function() {
             operator: 'load',
             name: 'load https://example.com/other.css',
             expected: '200 https://example.com/other.css',
-            actual: 'HTTP 404 Not Found',
+            actual:
+              'HTTP 404 Not Found\nIncluding assets:\n    https://example.com/styles.css\n',
             at: 'https://example.com/styles.css (1:10) '
           });
         });
@@ -734,7 +735,8 @@ describe('hyperlink', function() {
             operator: 'load',
             name: 'load https://somewhereelse.com/other.css',
             expected: '200 https://somewhereelse.com/other.css',
-            actual: 'HTTP 404 Not Found',
+            actual:
+              'HTTP 404 Not Found\nIncluding assets:\n    https://example.com/styles.css\n',
             at: 'https://example.com/styles.css (1:10) '
           });
         });
@@ -786,7 +788,8 @@ describe('hyperlink', function() {
             operator: 'external-check',
             name: 'external-check https://mycdn.com/404.eot',
             expected: '200 https://mycdn.com/404.eot',
-            actual: 'HTTP 404 Not Found'
+            actual:
+              'HTTP 404 Not Found\nIncluding assets:\n    https://mycdn.com/styles.css\n'
           });
         });
       });
@@ -2005,7 +2008,8 @@ describe('hyperlink', function() {
         ok: false,
         at: 'https://example.com/ (6:25) <img src="hey.png">',
         expected: '200 https://example.com/hey.png',
-        actual: 'HTTP 503 Service Unavailable'
+        actual:
+          'HTTP 503 Service Unavailable\nIncluding assets:\n    https://example.com/\n'
       });
     });
   });

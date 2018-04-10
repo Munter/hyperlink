@@ -622,6 +622,55 @@ describe('hyperlink', function() {
       });
     });
 
+    it('should not issue an error when referencing an external asset with an existing fragment', async function() {
+      httpception([
+        {
+          request: 'GET https://example.com/',
+          response: {
+            statusCode: 200,
+            headers: {
+              'Content-Type': 'text/html; charset=UTF-8'
+            },
+            body:
+              '<html><head></head><body><a href="https://example2.com/foo.html#frag">Link</a></body></html>'
+          }
+        },
+        {
+          request: 'GET https://example2.com/foo.html',
+          response: {
+            statusCode: 200,
+            headers: {
+              'Content-Type': 'text/html; charset=UTF-8'
+            },
+            body:
+              '<html><head><link rel="stylesheet" href="dont-follow.css"></head><body><img src="dont-follow.png"><main id="frag">I exist</main></body></html>'
+          }
+        }
+      ]);
+
+      const t = new TapRender();
+      sinon.spy(t, 'push');
+      await hyperlink(
+        {
+          recursive: true,
+          root: 'https://example.com/',
+          inputUrls: ['https://example.com/']
+        },
+        t
+      );
+
+      expect(t.close(), 'to satisfy', { fail: 0 });
+      expect(t.push, 'to have a call satisfying', () => {
+        t.push(null, {
+          ok: true,
+          operator: 'fragment-check',
+          name:
+            'fragment-check https://example.com/ --> https://example2.com/foo.html#frag',
+          expected: 'id="frag"'
+        });
+      });
+    });
+
     it('should be fine when an asset references itself with an empty fragment', async function() {
       httpception([
         {

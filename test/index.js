@@ -643,7 +643,7 @@ describe('hyperlink', function() {
               'Content-Type': 'text/html; charset=UTF-8'
             },
             body:
-              '<html><head></head><body><main id="frag">I exist</main></body></html>'
+              '<html><head><link rel="stylesheet" href="dont-follow.css"></head><body><img src="dont-follow.png"><main id="frag">I exist</main></body></html>'
           }
         }
       ]);

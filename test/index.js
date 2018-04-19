@@ -1077,6 +1077,60 @@ describe('hyperlink', function() {
         });
       });
     });
+
+    it('should report a redirect cycle', async function() {
+      httpception([
+        {
+          request: 'GET https://example.com/',
+          response: {
+            statusCode: 200,
+            headers: {
+              'Content-Type': 'text/html; charset=UTF-8'
+            },
+            body:
+              '<html><head></head><body><script src="https://elsewhere.com/"></script></body></html>'
+          }
+        },
+        {
+          request: 'GET https://elsewhere.com/',
+          response: {
+            statusCode: 302,
+            headers: {
+              Location: 'https://elsewhere.com/redirectTarget'
+            }
+          }
+        },
+        {
+          request: 'GET https://elsewhere.com/redirectTarget',
+          response: {
+            statusCode: 302,
+            headers: {
+              Location: 'https://elsewhere.com/'
+            }
+          }
+        }
+      ]);
+
+      const t = new TapRender();
+      sinon.spy(t, 'push');
+      await hyperlink(
+        {
+          root: 'https://example.com/',
+          inputUrls: ['https://example.com/']
+        },
+        t
+      );
+
+      expect(t.close(), 'to satisfy', { fail: 1 });
+      expect(t.push, 'to have a call satisfying', () => {
+        t.push(null, {
+          ok: false,
+          operator: 'redirect-cycle',
+          actual:
+            '302 https://elsewhere.com/ --> 302 https://elsewhere.com/redirectTarget --> 302 https://elsewhere.com/'
+        });
+      });
+    });
   });
 
   describe('with a preconnect link', function() {

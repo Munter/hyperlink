@@ -41,53 +41,65 @@ Usage
 Command line usage and options:
 
 ```
-$ hyperlink [options] <htmlFile(s) | url(s)>
+hyperlink [options] <htmlFile(s) | url(s)>
 
 Options:
   -h, --help         Show this help                     [default: false]
   --root             Path to your web root (will be deduced from your
-                     input files if not specified)                      
-  --verbose, -v      Log all added assets and relations. VERY verbose.  
+                     input files if not specified)
+  --canonicalroot    URI root where the project being built will be
+                     deployed. Canonical URLs in local sources will be
+                     resolved to local URLs
+  --verbose, -v      Log all added assets and relations. VERY verbose.
   --recursive, -r    Crawl all HTML-pages linked with relative and root
-                     relative links. This stays inside your domain.     
-  --exclude          Url pattern to exclude from the build. Supports *
-                     wildcards. You can create multiple of these:
-                     --exclude *.php --exclude http://example.com/*.gif
-                                                                        
+                     relative links. This stays inside your domain.
+  --internal, -i     Only check links to assets within your own web root
+
+  --source-maps      Verify the correctness of links to source map
+                     files and sources.                 [default: false]
+  --skip             Avoid running a test where the report matches the
+                     given pattern
+  --todo             Mark a failed tests as todo where the report
+                     matches the given pattern
   --concurrency, -c  The maximum number of assets that can be loading
-                     at once (defaults to 100)            [default: 100]
+                     at once                               [default: 25]
 ```
 
 Hyperlink takes any number of input files or urls. It is recommended having these urls on the same domain or be part of the same web site.
 
 The `--root` option is only needed for resolving root relative urls in case you are not sending in pages located in the web root.
 
-The most common use case is to do `hyperlink path/to/index.html -r`, giving `hyperlink` your index file in your web root and having it recursively explore all linked pages and their referenced assets, internal and external.
+
+Common Use Cases
+----------------
+
+### Checking internal URL's only
+
+Running `hyperlink path/to/index.html --canonicalroot https://deployed.website.com/ -r --internal path/to/index.html` will recursively explore the internals links of your website to ensure internal integrity. It is recommended to make this a part of your build pipeline and block on errors, since any error is very likely to be actually user facing if our page is deployed.
+
+Running `hyperlink path/to/index.html --canonicalroot https://deployed.website.com/ -r path/to/index.html` will recursively explore **all** links of your website, internal and external, to ensure that you aren't linking to external resources that have been removed or are otherwiser failing. It is not recommended to block your build pipeline on a failure of external links, since they are out of your control. Run in this mode in a non-blocking way and fix the errors in the report at your leisure. It is recommended to to this regularly, since external assets can move or disappear without warning.
 
 
-Integrations
-------------
+Reporters
+---------
 
-Hyperlink is using the [TAP](https://testanything.org/) output format, which is sort of human readable, and very machine readable. Use the TAP output in your CI setup, or pipe the output through one of these awesome formatters to get improved human readability, an output Jenkins likes, or whatever you want: [tap-colorize](https://www.npmjs.com/package/tap-colorize) [tap-difflet](https://www.npmjs.com/package/tap-difflet) [tap-dot](https://www.npmjs.com/package/tap-dot) [tap-json](https://www.npmjs.com/package/tap-json) [tap-min](https://www.npmjs.com/package/tap-min) [tap-nyan](https://www.npmjs.com/package/tap-nyan) [tap-spec](https://www.npmjs.com/package/tap-spec) [tap-xunit](https://www.npmjs.com/package/tap-xunit)
+Hyperlink is using the [TAP](https://testanything.org/) output format, which is sort of human readable, and very machine readable. Use the TAP output in your CI setup, or pipe the output through one of these awesome reporters to get improved human readability or an output Jenkins likes
+
+These reporters are known to work well with hyperlink:
+- [tap-spot](https://www.npmjs.com/package/tap-spot): Minimal output for non-errors and human readable reports for errors marked as TODO or ERROR
 
 **Example:**
 
 ```
-$ hyperlink https://mntr.dk/ | tap-nyan
- 37  -_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-__,------,
- 1   -_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-__|  /\_/\
- 0   -_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_~|_( x .x)
-     -_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_ ""  ""
-  Failed Tests: There was 1 failure
-
-    ✗ Crawling 17 outgoing urls: URI should have no redirects - http://www.milwaukeepolicenews.com/
-
+$ hyperlink https://mntr.dk/ | tap-spot
 ```
+
+![](https://i.imgur.com/tvan2YY.png)
 
 [Tee](http://en.wikipedia.org/wiki/Tee_%28command%29) is a very useful program when you want to save and replay TAP outputs. In order to save the output to a file but still see the logs on stdout you might run a command line like so:
 
 ```
-hyperlink https://mntr.dk -r | tee mntr.dk.tap | tap-colorize
+hyperlink https://mntr.dk -r | tee mntr.dk.tap | tap-spot
 ```
 
 

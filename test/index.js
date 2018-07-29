@@ -2009,4 +2009,62 @@ describe('hyperlink', function() {
       });
     });
   });
+
+  describe('with internalOnly true', () => {
+    it('should not follow external links', async () => {
+      httpception([
+        {
+          request: 'GET https://example.com/',
+          response: {
+            statusCode: 200,
+            headers: {
+              'Content-Type': 'text/html; charset=UTF-8'
+            },
+            body: `
+              <!DOCTYPE html>
+              <html>
+              <head></head>
+              <body>
+                <a href="otherPage.html">Other Page</a>
+                <a href="https://broken-link.mntr.dk/foo/bar/baz">Broken</a>
+              </body>
+              </html>
+            `
+          }
+        },
+        {
+          request: 'GET https://example.com/otherPage.html',
+          response: {
+            statusCode: 200,
+            headers: {
+              'Content-Type': 'text/html; charset=UTF-8'
+            },
+            body: `
+              <!DOCTYPE html>
+              <html>
+              <head></head>
+              <body>
+                <a href="https://broken-link.mntr.dk/1/2/3#metameta">Broken</a>
+              </body>
+              </html>
+            `
+          }
+        }
+      ]);
+
+      const t = new TapRender();
+      sinon.spy(t, 'push');
+      await hyperlink(
+        {
+          root: 'https://example.com/',
+          inputUrls: ['https://example.com/'],
+          recursive: true,
+          internalOnly: true
+        },
+        t
+      );
+
+      expect(t.close(), 'to satisfy', { fail: 0 });
+    });
+  });
 });

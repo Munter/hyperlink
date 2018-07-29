@@ -51,7 +51,7 @@
     "httpception": "^1.0.2",
     "mocha": "^4.0.1",
     "nyc": "^11.3.0",
-    "prettier": "^1.11.1",
+    "prettier": "~1.14.0",
     "sinon": "^4.4.5",
     "unexpected": "^10.36.2",
     "unexpected-sinon": "^10.8.2"

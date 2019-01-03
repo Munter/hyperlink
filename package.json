@@ -48,7 +48,7 @@
     "eslint": "^4.18.2",
     "eslint-config-pretty-standard": "^1.3.0",
     "eslint-plugin-prettier": "^2.6.0",
-    "httpception": "^1.0.2",
+    "httpception": "^2.1.0",
     "mocha": "^4.0.1",
     "nyc": "^11.3.0",
     "prettier": "~1.14.0",

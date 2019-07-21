@@ -2256,4 +2256,223 @@ describe('hyperlink', function() {
       expect(t.close(), 'to satisfy', { fail: 1 });
     });
   });
+
+  describe('with Html responses in non-navigation relations', function() {
+    it('should not check outgoing relations from second Html asset on same origin', async function() {
+      const t = new TapRender();
+      // t.pipe(process.stdout);
+      sinon.spy(t, 'push');
+      await hyperlink(
+        {
+          root: pathModule.resolve(__dirname, '..', 'testdata', 'htmlInMeta'),
+          inputUrls: ['index.html'],
+          recursive: false,
+          internalOnly: false
+        },
+        t
+      );
+
+      expect(spyTapCalls(t.push), 'to satisfy', [
+        {
+          operator: 'load',
+          name: 'load testdata/htmlInMeta/index.html',
+          ok: true
+        },
+        {
+          operator: 'load',
+          name: 'load testdata/htmlInMeta/video.html',
+          ok: true
+        }
+      ]);
+      expect(t.close(), 'to satisfy', { success: 2, fail: 0 });
+    });
+
+    it('should not check outgoing relations from second Html asset on cross origin', async function() {
+      httpception([
+        {
+          request: 'GET https://crossorigin.hyperlink.io/video.html',
+          response: {
+            statusCode: 200,
+            headers: {
+              'Content-Type': 'text/html; charset=UTF-8'
+            },
+            body: '<a href="#broken">broken</a><img src="image.png" alt="">'
+          }
+        }
+      ]);
+
+      const t = new TapRender();
+      // t.pipe(process.stdout);
+      sinon.spy(t, 'push');
+      await hyperlink(
+        {
+          root: pathModule.resolve(__dirname, '..', 'testdata', 'htmlInMeta'),
+          inputUrls: ['crossorigin.html'],
+          recursive: false,
+          internalOnly: false
+        },
+        t
+      );
+
+      expect(spyTapCalls(t.push), 'to satisfy', [
+        {
+          operator: 'load',
+          name: 'load testdata/htmlInMeta/crossorigin.html',
+          ok: true
+        },
+        {
+          operator: 'load',
+          name: 'load https://crossorigin.hyperlink.io/video.html',
+          ok: true
+        }
+      ]);
+      expect(t.close(), 'to satisfy', { success: 2, fail: 0 });
+    });
+
+    describe('with --recursive', function() {
+      it('should check outgoing relations from second Html asset on same origin', async function() {
+        const t = new TapRender();
+        // t.pipe(process.stdout);
+        sinon.spy(t, 'push');
+        await hyperlink(
+          {
+            root: pathModule.resolve(__dirname, '..', 'testdata', 'htmlInMeta'),
+            inputUrls: ['index.html'],
+            recursive: true,
+            internalOnly: false
+          },
+          t
+        );
+
+        expect(spyTapCalls(t.push), 'to satisfy', [
+          {
+            operator: 'load',
+            name: 'load testdata/htmlInMeta/index.html',
+            ok: true
+          },
+          {
+            operator: 'load',
+            name: 'load testdata/htmlInMeta/video.html',
+            ok: true
+          }
+        ]);
+        expect(t.close(), 'to satisfy', { success: 2, fail: 0 });
+      });
+
+      it('should not check outgoing relations from second Html asset on cross origin', async function() {
+        httpception([
+          {
+            request: 'GET https://crossorigin.hyperlink.io/video.html',
+            response: {
+              statusCode: 200,
+              headers: {
+                'Content-Type': 'text/html; charset=UTF-8'
+              },
+              body: '<a href="#broken">broken</a><img src="image.png" alt="">'
+            }
+          }
+        ]);
+
+        const t = new TapRender();
+        // t.pipe(process.stdout);
+        sinon.spy(t, 'push');
+        await hyperlink(
+          {
+            root: pathModule.resolve(__dirname, '..', 'testdata', 'htmlInMeta'),
+            inputUrls: ['crossorigin.html'],
+            recursive: false,
+            internalOnly: false
+          },
+          t
+        );
+
+        expect(spyTapCalls(t.push), 'to satisfy', [
+          {
+            operator: 'load',
+            name: 'load testdata/htmlInMeta/crossorigin.html',
+            ok: true
+          },
+          {
+            operator: 'load',
+            name: 'load https://crossorigin.hyperlink.io/video.html',
+            ok: true
+          }
+        ]);
+        expect(t.close(), 'to satisfy', { success: 2, fail: 0 });
+      });
+    });
+
+    describe('with --internal', function() {
+      it('should not check outgoing relations from second Html asset on same origin', async function() {
+        const t = new TapRender();
+        // t.pipe(process.stdout);
+        sinon.spy(t, 'push');
+        await hyperlink(
+          {
+            root: pathModule.resolve(__dirname, '..', 'testdata', 'htmlInMeta'),
+            inputUrls: ['index.html'],
+            recursive: false,
+            internalOnly: true
+          },
+          t
+        );
+
+        expect(spyTapCalls(t.push), 'to satisfy', [
+          {
+            operator: 'load',
+            name: 'load testdata/htmlInMeta/index.html',
+            ok: true
+          },
+          {
+            operator: 'load',
+            name: 'load testdata/htmlInMeta/video.html',
+            ok: true
+          }
+        ]);
+        expect(t.close(), 'to satisfy', { success: 2, fail: 0 });
+      });
+
+      it('should not check outgoing relations from second Html asset on cross origin', async function() {
+        httpception([
+          {
+            request: 'GET https://crossorigin.hyperlink.io/video.html',
+            response: {
+              statusCode: 200,
+              headers: {
+                'Content-Type': 'text/html; charset=UTF-8'
+              },
+              body: '<a href="#broken">broken</a><img src="image.png" alt="">'
+            }
+          }
+        ]);
+
+        const t = new TapRender();
+        // t.pipe(process.stdout);
+        sinon.spy(t, 'push');
+        await hyperlink(
+          {
+            root: pathModule.resolve(__dirname, '..', 'testdata', 'htmlInMeta'),
+            inputUrls: ['crossorigin.html'],
+            recursive: false,
+            internalOnly: false
+          },
+          t
+        );
+
+        expect(spyTapCalls(t.push), 'to satisfy', [
+          {
+            operator: 'load',
+            name: 'load testdata/htmlInMeta/crossorigin.html',
+            ok: true
+          },
+          {
+            operator: 'load',
+            name: 'load https://crossorigin.hyperlink.io/video.html',
+            ok: true
+          }
+        ]);
+        expect(t.close(), 'to satisfy', { success: 2, fail: 0 });
+      });
+    });
+  });
 });

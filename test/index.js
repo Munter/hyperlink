@@ -2172,7 +2172,7 @@ describe('hyperlink', function() {
       expect(t.close(), 'to satisfy', { fail: 0 });
     });
 
-    it('should follow fragment links withing the same page', async () => {
+    it('should follow fragment links within the same page', async () => {
       const t = new TapRender();
       // t.pipe(process.stdout);
       sinon.spy(t, 'push');

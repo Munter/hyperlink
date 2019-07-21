@@ -2108,5 +2108,103 @@ describe('hyperlink', function() {
 
       expect(t.close(), 'to satisfy', { fail: 0 });
     });
+
+    it('should follow fragment links withing the same page', async () => {
+      const t = new TapRender();
+      // t.pipe(process.stdout);
+      sinon.spy(t, 'push');
+      await hyperlink(
+        {
+          root: pathModule.resolve(
+            __dirname,
+            '..',
+            'testdata',
+            'internalfragment'
+          ),
+          inputUrls: ['singlepage.html'],
+          recursive: true,
+          internalOnly: true
+        },
+        t
+      );
+
+      expect(
+        t.push
+          .withArgs(null)
+          .getCalls()
+          .map(c => c.args[1]),
+        'to satisfy',
+        [
+          {
+            operator: 'load',
+            name: 'load testdata/internalfragment/singlepage.html',
+            ok: true
+          },
+
+          {
+            operator: 'fragment-check',
+            name:
+              'fragment-check testdata/internalfragment/singlepage.html --> #broken',
+            expected: 'id="broken"',
+            at:
+              'testdata/internalfragment/singlepage.html:1:10 <a href="#broken">...</a>',
+            ok: false,
+            actual: null
+          }
+        ]
+      );
+      expect(t.close(), 'to satisfy', { fail: 1 });
+    });
+
+    it('should follow fragment links across pages', async () => {
+      const t = new TapRender();
+      // t.pipe(process.stdout);
+      sinon.spy(t, 'push');
+      await hyperlink(
+        {
+          root: pathModule.resolve(
+            __dirname,
+            '..',
+            'testdata',
+            'internalfragment'
+          ),
+          inputUrls: ['multi-page1.html'],
+          recursive: true,
+          internalOnly: true
+        },
+        t
+      );
+
+      expect(
+        t.push
+          .withArgs(null)
+          .getCalls()
+          .map(c => c.args[1]),
+        'to satisfy',
+        [
+          {
+            operator: 'load',
+            name: 'load testdata/internalfragment/multi-page1.html',
+            ok: true
+          },
+          {
+            operator: 'load',
+            name: 'load testdata/internalfragment/multi-page2.html',
+            ok: true
+          },
+          {
+            operator: 'fragment-check',
+            name:
+              'fragment-check testdata/internalfragment/multi-page2.html --> multi-page2.html#broken',
+            expected: 'id="broken"',
+            at:
+              'testdata/internalfragment/multi-page2.html:1:10 <a href="multi-page2.html#broken">...</a>',
+            ok: false,
+            actual: null
+          }
+        ]
+      );
+      expect(t.close(), 'to satisfy', { fail: 1 });
+    });
   });
 });

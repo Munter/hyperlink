@@ -1,12 +1,20 @@
 /*global describe, it, console:true*/
 const expect = require('unexpected')
   .clone()
+  .use(require('unexpected-set'))
   .use(require('unexpected-sinon'));
 const hyperlink = require('../lib/');
 const httpception = require('httpception');
 const TapRender = require('tap-render');
 const sinon = require('sinon');
 const pathModule = require('path');
+
+function spyTapCalls(spy) {
+  return spy
+    .withArgs(null)
+    .getCalls()
+    .map(c => c.args[1]);
+}
 
 describe('hyperlink', function() {
   it('should complain about insecure content warnings', async function() {
@@ -441,6 +449,60 @@ describe('hyperlink', function() {
         t
       );
 
+      expect(spyTapCalls(t.push), 'with set semantics to satisfy', [
+        {
+          operator: 'load',
+          name: 'load testdata/recursive/index.html',
+          ok: true
+        },
+        {
+          operator: 'load',
+          name: 'load testdata/recursive/style.css',
+          ok: true
+        },
+        {
+          operator: 'load',
+          name: 'load testdata/recursive/favicon.ico',
+          ok: true
+        },
+        {
+          operator: 'load',
+          name: 'load testdata/recursive/page.html',
+          ok: true
+        },
+        {
+          operator: 'load',
+          name: 'load testdata/recursive/hyperlink.gif',
+          ok: true
+        },
+        {
+          operator: 'load',
+          name: 'load testdata/recursive/bf176a25b4f8227fea804854c98dc5e2.png',
+          ok: true
+        },
+        {
+          operator: 'load',
+          name:
+            'load testdata/recursive/1ebd0482aadade65f20ec178219fe012.woff2',
+          ok: true
+        },
+        {
+          operator: 'load',
+          name: 'load testdata/recursive/314bbcd238d458622bbf32427346774f.woff',
+          ok: true
+        },
+        {
+          operator: 'fragment-check',
+          name:
+            'fragment-check testdata/recursive/page.html --> index.html#brokenfragment',
+          expected: 'id="brokenfragment"',
+          at:
+            'testdata/recursive/page.html:8:14 <a href="index.html#brokenfragment">...</a>',
+          ok: false,
+          actual: null
+        }
+      ]);
+
       expect(t.close(), 'to satisfy', {
         count: 9,
         pass: 8,
@@ -448,6 +510,7 @@ describe('hyperlink', function() {
         skip: 0,
         todo: 0
       });
+
       expect(t.push, 'to have a call satisfying', () => {
         t.push({
           name: 'Crawling 0 outgoing urls'
@@ -2128,31 +2191,24 @@ describe('hyperlink', function() {
         t
       );
 
-      expect(
-        t.push
-          .withArgs(null)
-          .getCalls()
-          .map(c => c.args[1]),
-        'to satisfy',
-        [
-          {
-            operator: 'load',
-            name: 'load testdata/internalfragment/singlepage.html',
-            ok: true
-          },
+      expect(spyTapCalls(t.push), 'to satisfy', [
+        {
+          operator: 'load',
+          name: 'load testdata/internalfragment/singlepage.html',
+          ok: true
+        },
 
-          {
-            operator: 'fragment-check',
-            name:
-              'fragment-check testdata/internalfragment/singlepage.html --> #broken',
-            expected: 'id="broken"',
-            at:
-              'testdata/internalfragment/singlepage.html:1:10 <a href="#broken">...</a>',
-            ok: false,
-            actual: null
-          }
-        ]
-      );
+        {
+          operator: 'fragment-check',
+          name:
+            'fragment-check testdata/internalfragment/singlepage.html --> #broken',
+          expected: 'id="broken"',
+          at:
+            'testdata/internalfragment/singlepage.html:1:10 <a href="#broken">...</a>',
+          ok: false,
+          actual: null
+        }
+      ]);
       expect(t.close(), 'to satisfy', { fail: 1 });
     });
 
@@ -2175,35 +2231,28 @@ describe('hyperlink', function() {
         t
       );
 
-      expect(
-        t.push
-          .withArgs(null)
-          .getCalls()
-          .map(c => c.args[1]),
-        'to satisfy',
-        [
-          {
-            operator: 'load',
-            name: 'load testdata/internalfragment/multi-page1.html',
-            ok: true
-          },
-          {
-            operator: 'load',
-            name: 'load testdata/internalfragment/multi-page2.html',
-            ok: true
-          },
-          {
-            operator: 'fragment-check',
-            name:
-              'fragment-check testdata/internalfragment/multi-page2.html --> multi-page2.html#broken',
-            expected: 'id="broken"',
-            at:
-              'testdata/internalfragment/multi-page2.html:1:10 <a href="multi-page2.html#broken">...</a>',
-            ok: false,
-            actual: null
-          }
-        ]
-      );
+      expect(spyTapCalls(t.push), 'to satisfy', [
+        {
+          operator: 'load',
+          name: 'load testdata/internalfragment/multi-page1.html',
+          ok: true
+        },
+        {
+          operator: 'load',
+          name: 'load testdata/internalfragment/multi-page2.html',
+          ok: true
+        },
+        {
+          operator: 'fragment-check',
+          name:
+            'fragment-check testdata/internalfragment/multi-page2.html --> multi-page2.html#broken',
+          expected: 'id="broken"',
+          at:
+            'testdata/internalfragment/multi-page2.html:1:10 <a href="multi-page2.html#broken">...</a>',
+          ok: false,
+          actual: null
+        }
+      ]);
       expect(t.close(), 'to satisfy', { fail: 1 });
     });
   });

@@ -54,6 +54,7 @@
     "prettier": "~1.14.0",
     "sinon": "^4.4.5",
     "unexpected": "^10.36.2",
+    "unexpected-set": "^2.0.0",
     "unexpected-sinon": "^10.8.2"
   }
 }

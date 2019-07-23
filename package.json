@@ -52,9 +52,9 @@
     "mocha": "^6.2.0",
     "nyc": "^14.1.1",
     "prettier": "~1.14.0",
-    "sinon": "^4.4.5",
+    "sinon": "^7.3.2",
     "unexpected": "^11.7.0",
     "unexpected-set": "^2.0.0",
-    "unexpected-sinon": "^10.8.2"
+    "unexpected-sinon": "^10.11.2"
   }
 }

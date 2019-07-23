@@ -106,7 +106,7 @@ describe('relationDebugDescription', function() {
         expect(
           result,
           'to end with',
-          'index.html:1:58 inlined Css: url(https://mntr.dk/invalid.png)'
+          'index.html:1:58 (inlined Css) url(https://mntr.dk/invalid.png)'
         );
       });
   });

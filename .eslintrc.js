@@ -1,6 +1,6 @@
 const config = {
   extends: ['standard', 'prettier', 'prettier/standard'],
-  plugins: ['import', 'mocha'],
+  plugins: ['import', 'mocha', 'prettier'],
   env: {
     mocha: true
   },
@@ -18,7 +18,8 @@ const config = {
     ],
     'mocha/no-exclusive-tests': 'error',
     'mocha/no-nested-tests': 'error',
-    'mocha/no-identical-title': 'error'
+    'mocha/no-identical-title': 'error',
+    'prettier/prettier': 'error'
   }
 };
 

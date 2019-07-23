@@ -3,7 +3,7 @@ Hyperlink
 [![NPM version](https://badge.fury.io/js/hyperlink.svg)](http://badge.fury.io/js/hyperlink)
 [![Build Status](https://travis-ci.org/Munter/hyperlink.svg?branch=master)](https://travis-ci.org/Munter/hyperlink)
 [![Coverage Status](https://coveralls.io/repos/github/Munter/hyperlink/badge.svg?branch=master)](https://coveralls.io/github/Munter/hyperlink?branch=master)
-[![Dependency Status](https://david-dm.org/Munter/hyperlink.svg)](https://david-dm.org/Munter/hyperlink)
+[![Dependency Status](https://david-dm.org/Munter/hyperlink.svg)](https://david-dm.org/Munter/hyperlink) [![Greenkeeper badge](https://badges.greenkeeper.io/Munter/hyperlink.svg)](https://greenkeeper.io/)
 
 Detect invalid and inefficient links on your webpages. Works with local files or websites, on the command line and as a node library.
 

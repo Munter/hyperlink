@@ -2258,6 +2258,18 @@ describe('hyperlink', function() {
   });
 
   describe('with Html responses in non-navigation relations', function() {
+    const videoHtml = `
+      <!DOCTYPE html>
+      <html>
+
+      <body>
+        <a href="#broken">broken</a>
+        <img src="image.png" alt="">
+      </body>
+
+      </html>
+    `;
+
     it('should not check outgoing relations from second Html asset on same origin', async function() {
       const t = new TapRender();
       // t.pipe(process.stdout);
@@ -2284,7 +2296,7 @@ describe('hyperlink', function() {
           ok: true
         }
       ]);
-      expect(t.close(), 'to satisfy', { success: 2, fail: 0 });
+      expect(t.close(), 'to satisfy', { pass: 2, fail: 0 });
     });
 
     it('should not check outgoing relations from second Html asset on cross origin', async function() {
@@ -2296,7 +2308,7 @@ describe('hyperlink', function() {
             headers: {
               'Content-Type': 'text/html; charset=UTF-8'
             },
-            body: '<a href="#broken">broken</a><img src="image.png" alt="">'
+            body: videoHtml
           }
         }
       ]);
@@ -2326,7 +2338,7 @@ describe('hyperlink', function() {
           ok: true
         }
       ]);
-      expect(t.close(), 'to satisfy', { success: 2, fail: 0 });
+      expect(t.close(), 'to satisfy', { pass: 2, fail: 0 });
     });
 
     describe('with --recursive', function() {
@@ -2354,9 +2366,20 @@ describe('hyperlink', function() {
             operator: 'load',
             name: 'load testdata/htmlInMeta/video.html',
             ok: true
+          },
+          {
+            operator: 'load',
+            name: 'load testdata/htmlInMeta/image.png',
+            ok: true
+          },
+          {
+            operator: 'fragment-check',
+            name: 'fragment-check testdata/htmlInMeta/video.html --> #broken',
+            expected: 'id="broken"',
+            ok: false
           }
         ]);
-        expect(t.close(), 'to satisfy', { success: 2, fail: 0 });
+        expect(t.close(), 'to satisfy', { count: 4, pass: 3, fail: 1 });
       });
 
       it('should not check outgoing relations from second Html asset on cross origin', async function() {
@@ -2368,7 +2391,7 @@ describe('hyperlink', function() {
               headers: {
                 'Content-Type': 'text/html; charset=UTF-8'
               },
-              body: '<a href="#broken">broken</a><img src="image.png" alt="">'
+              body: videoHtml
             }
           }
         ]);
@@ -2398,7 +2421,7 @@ describe('hyperlink', function() {
             ok: true
           }
         ]);
-        expect(t.close(), 'to satisfy', { success: 2, fail: 0 });
+        expect(t.close(), 'to satisfy', { pass: 2, fail: 0 });
       });
     });
 
@@ -2429,7 +2452,7 @@ describe('hyperlink', function() {
             ok: true
           }
         ]);
-        expect(t.close(), 'to satisfy', { success: 2, fail: 0 });
+        expect(t.close(), 'to satisfy', { pass: 2, fail: 0 });
       });
 
       it('should not check outgoing relations from second Html asset on cross origin', async function() {
@@ -2441,7 +2464,7 @@ describe('hyperlink', function() {
               headers: {
                 'Content-Type': 'text/html; charset=UTF-8'
               },
-              body: '<a href="#broken">broken</a><img src="image.png" alt="">'
+              body: videoHtml
             }
           }
         ]);
@@ -2471,7 +2494,7 @@ describe('hyperlink', function() {
             ok: true
           }
         ]);
-        expect(t.close(), 'to satisfy', { success: 2, fail: 0 });
+        expect(t.close(), 'to satisfy', { pass: 2, fail: 0 });
       });
     });
   });

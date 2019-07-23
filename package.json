@@ -4,7 +4,7 @@
   "description": "A node library and command line tool to test the integrity of your internal an external hyperlinks",
   "main": "lib/index.js",
   "scripts": {
-    "lint": "eslint . bin/hyperlink",
+    "lint": "eslint .",
     "test": "npm run lint && mocha",
     "coverage": "nyc mocha",
     "preversion": "npm test",
@@ -45,9 +45,9 @@
   },
   "devDependencies": {
     "coveralls": "^3.0.0",
-    "eslint": "^4.18.2",
-    "eslint-config-pretty-standard": "^1.3.0",
-    "eslint-plugin-prettier": "^2.6.0",
+    "eslint": "^6.1.0",
+    "eslint-config-pretty-standard": "^3.0.1",
+    "eslint-plugin-prettier": "^3.1.0",
     "httpception": "^2.1.0",
     "mocha": "^6.2.0",
     "nyc": "^11.3.0",

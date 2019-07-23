@@ -1,4 +1,3 @@
-/*global describe, it, console:true*/
 const expect = require('unexpected')
   .clone()
   .use(require('unexpected-sinon'));

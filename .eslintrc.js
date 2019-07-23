@@ -1,5 +1,17 @@
+const { rules, plugins, ...other } = require('eslint-config-pretty-standard');
+
+const filteredRules = Object.entries(rules)
+  .filter(([key, value]) => !key.startsWith('react/'))
+  .reduce((result, [key, value]) => {
+    result[key] = value;
+
+    return result;
+  }, {});
+
 const config = {
-  extends: ['pretty-standard']
+  plugins: [...plugins.filter(p => p !== 'react')],
+  rules: filteredRules,
+  ...other
 };
 
 if (process.stdin.isTTY) {

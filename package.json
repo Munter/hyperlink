@@ -8,6 +8,7 @@
     "test": "npm run lint && mocha",
     "coverage": "nyc mocha",
     "preversion": "npm test",
+    "version": "offline-github-changelog --next=${npm_package_version} > CHANGELOG.md && git add CHANGELOG.md",
     "travis": "npm run lint && npm run coverage"
   },
   "repository": {
@@ -57,6 +58,7 @@
     "httpception": "^3.0.0",
     "mocha": "^6.2.0",
     "nyc": "^14.1.1",
+    "offline-github-changelog": "^1.6.1",
     "prettier": "~1.18.2",
     "sinon": "^7.3.2",
     "unexpected": "^11.7.0",

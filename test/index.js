@@ -2114,6 +2114,47 @@ describe('hyperlink', function() {
     });
   });
 
+  it('should retry failed fragment links to Github urls with a prepended "user-content-"', async function() {
+    httpception({
+      request: 'GET https://github.com/assetgraph/assetgraph',
+      response: {
+        headers: {
+          'content-type': 'text/html'
+        },
+        body:
+          '<a id="user-content-tools-built-with-assetgraph" href="#tools-built-with-assetgraph"></a>'
+      }
+    });
+
+    const t = new TapRender();
+    // t.pipe(process.stderr);
+    sinon.spy(t, 'push');
+    await hyperlink(
+      {
+        root: 'https://github.com/assetgraph/assetgraph',
+        inputUrls: ['https://github.com/assetgraph/assetgraph']
+      },
+      t
+    );
+
+    expect(spyTapCalls(t.push), 'to satisfy', [
+      {
+        operator: 'load',
+        name: 'load https://github.com/assetgraph/assetgraph',
+        ok: true
+      },
+      {
+        operator: 'fragment-check',
+        name:
+          'fragment-check https://github.com/assetgraph/assetgraph --> #tools-built-with-assetgraph',
+        ok: true,
+        expected: 'id="tools-built-with-assetgraph"',
+        actual: 'id="user-content-tools-built-with-assetgraph"'
+      }
+    ]);
+    expect(t.close(), 'to satisfy', { pass: 2, fail: 0 });
+  });
+
   describe('with internalOnly true', () => {
     it('should not follow external links', async () => {
       httpception([

@@ -2295,6 +2295,42 @@ describe('hyperlink', function() {
       ]);
       expect(t.close(), 'to satisfy', { fail: 1 });
     });
+
+    it('should not follow fragment links to external pages', async () => {
+      httpception([
+        {
+          request: 'GET https://test.com',
+          response: {
+            headers: {
+              'content-type': 'text/html'
+            },
+            body:
+              '<a href="https://nodejs.org/api/events.html#events_class_eventemitter"></a>'
+          }
+        }
+      ]);
+
+      const t = new TapRender();
+      // t.pipe(process.stderr);
+      sinon.spy(t, 'push');
+      await hyperlink(
+        {
+          root: 'https://test.com',
+          inputUrls: ['https://test.com'],
+          internalOnly: true
+        },
+        t
+      );
+
+      expect(spyTapCalls(t.push), 'to satisfy', [
+        {
+          operator: 'load',
+          name: 'load https://test.com',
+          ok: true
+        }
+      ]);
+      expect(t.close(), 'to satisfy', { pass: 1, fail: 0 });
+    });
   });
 
   describe('with Html responses in non-navigation relations', function() {

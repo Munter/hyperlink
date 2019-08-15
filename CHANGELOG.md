@@ -1,3 +1,7 @@
+### v4.3.0 (2019-08-15)
+
+- [Update to Assetgraph 5.12.0. Now with runtime js import\(\) support](https://github.com/Munter/hyperlink/commit/e880d167f6ab261b88dddd1670e497b41b157be2) ([Peter Müller](mailto:munter@fumle.dk))
+
 ### v4.1.2 (2019-07-24)
 
 - [Update to assetgraph 5.11.0. Closes \#158](https://github.com/Munter/hyperlink/commit/3785c5204fdefe76340d1fba6b6b82bafa44b1fe) ([Peter Müller](mailto:munter@fumle.dk))

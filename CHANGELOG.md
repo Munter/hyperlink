@@ -1,4 +1,19 @@
-### v4.3.1 (2019-08-15)
+### v4.3.2 (2019-08-28)
+
+#### Pull requests
+
+- [#162](https://github.com/Munter/hyperlink/pull/162) Update eslint-config-standard to the latest version 🚀 ([greenkeeper[bot]](mailto:23040076+greenkeeper[bot]@users.noreply.github.com))
+- [#161](https://github.com/Munter/hyperlink/pull/161) Update assetgraph to the latest version 🚀 ([greenkeeper[bot]](mailto:23040076+greenkeeper[bot]@users.noreply.github.com))
+
+#### Commits to master
+
+- [Update travis config](https://github.com/Munter/hyperlink/commit/7e50eca7d7511319d76b20d46b4de589a25ab045) ([Peter Müller](mailto:munter@fumle.dk))
+- [Dev dependency maintenance](https://github.com/Munter/hyperlink/commit/ea42586de353fb6008bc7a9650fac54fd74bcc34) ([Peter Müller](mailto:munter@fumle.dk))
+- [Fix critical security issues](https://github.com/Munter/hyperlink/commit/66eef780058f3fd9724539906178250939e98aa0) ([Peter Müller](mailto:munter@fumle.dk))
+- [Sto using async keyword as a variable](https://github.com/Munter/hyperlink/commit/e3a5d0fa5cf7f0e93624cd976f678c2cc0ec862d) ([Peter Müller](mailto:munter@fumle.dk))
+- [Switch tap-render out with @munter\/tap-render](https://github.com/Munter/hyperlink/commit/080b5665efc7805132b752f0313b06ff5deda2fc) ([Peter Müller](mailto:munter@fumle.dk))
+
+### v4.3.1 (2019-08-16)
 
 - [Fix bug where fragment checks would be executed to links to external pages that were never loaded when runnin in internal mode](https://github.com/Munter/hyperlink/commit/55934904c5a1347054173c3325bdf1bdf34f8a69) ([Peter Müller](mailto:munter@fumle.dk))
 

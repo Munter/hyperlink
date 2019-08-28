@@ -47,22 +47,22 @@
   "devDependencies": {
     "coveralls": "^3.0.6",
     "eslint": "^6.2.2",
-    "eslint-config-prettier": "^6.0.0",
+    "eslint-config-prettier": "^6.1.0",
     "eslint-config-standard": "^14.0.0",
     "eslint-plugin-import": "^2.18.2",
-    "eslint-plugin-mocha": "^6.0.0",
+    "eslint-plugin-mocha": "^6.1.0",
     "eslint-plugin-node": "^9.1.0",
     "eslint-plugin-prettier": "^3.1.0",
     "eslint-plugin-promise": "^4.2.1",
-    "eslint-plugin-standard": "^4.0.0",
+    "eslint-plugin-standard": "^4.0.1",
     "httpception": "^3.0.0",
     "mocha": "^6.2.0",
     "nyc": "^14.1.1",
     "offline-github-changelog": "^1.6.1",
     "prettier": "~1.18.2",
     "sinon": "^7.4.1",
-    "unexpected": "^11.7.0",
-    "unexpected-set": "^2.0.0",
+    "unexpected": "^11.8.0",
+    "unexpected-set": "^2.0.1",
     "unexpected-sinon": "^10.11.2"
   }
 }

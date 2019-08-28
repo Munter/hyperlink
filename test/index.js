@@ -4,7 +4,7 @@ const expect = require('unexpected')
   .use(require('unexpected-sinon'));
 const hyperlink = require('../lib/');
 const httpception = require('httpception');
-const TapRender = require('tap-render');
+const TapRender = require('@munter/tap-render');
 const sinon = require('sinon');
 const pathModule = require('path');
 

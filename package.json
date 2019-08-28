@@ -36,12 +36,12 @@
   ],
   "homepage": "https://github.com/Munter/hyperlink",
   "dependencies": {
+    "@munter/tap-render": "^0.2.0",
     "assetgraph": "^6.0.0",
     "async": "^3.1.0",
     "optimist": "^0.6.1",
     "pretty-bytes": "^5.2.0",
     "request": "^2.88.0",
-    "tap-render": "Munter/tap-render#0.1.7-patch4",
     "urltools": "^0.4.1"
   },
   "devDependencies": {

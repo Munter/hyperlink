@@ -631,11 +631,13 @@ describe('hyperlink', function() {
           t
         );
 
-        expect(t.push, 'to have a call satisfying', () => {
+        expect(t.push, 'to have a call exhaustively satisfying', () => {
           t.push(null, {
             operator: 'fragment-redirect',
             name:
               'fragment-redirect testdata/fragmentAndRedirectWithoutSlash/index.html --> testdata/fragmentAndRedirectWithoutSlash/subdir#myFragment --> testdata/fragmentAndRedirectWithoutSlash/subdir/index.html',
+            actual: '/subdir#myFragment',
+            expected: '/subdir/#myFragment',
             at:
               'testdata/fragmentAndRedirectWithoutSlash/index.html:5:12 <a href="/subdir#myFragment">...</a>',
             ok: false
@@ -711,11 +713,13 @@ describe('hyperlink', function() {
           t
         );
 
-        expect(t.push, 'to have a call satisfying', () => {
+        expect(t.push, 'to have a call exhaustively satisfying', () => {
           t.push(null, {
             operator: 'fragment-redirect',
             name:
               'fragment-redirect https://example.com/ --> https://example.com/subdir#myFragment --> https://example.com/subdir/',
+            expected: '/subdir/#myFragment',
+            actual: '/subdir#myFragment',
             at:
               'https://example.com/ (1:50) <a href="/subdir#myFragment">...</a>',
             ok: false
@@ -765,11 +769,13 @@ describe('hyperlink', function() {
           t
         );
 
-        expect(t.push, 'to have a call satisfying', () => {
+        expect(t.push, 'to have a call exhaustively satisfying', () => {
           t.push(null, {
             operator: 'fragment-redirect',
             name:
               'fragment-redirect https://example.com/ --> https://example.com/subdir/#myFragment --> https://example.com/subdir2/',
+            expected: '/subdir2/#myFragment',
+            actual: '/subdir/#myFragment',
             at:
               'https://example.com/ (1:50) <a href="/subdir/#myFragment">...</a>',
             ok: false

@@ -1,3 +1,14 @@
+### v4.4.0 (2019-10-29)
+
+#### Pull requests
+
+- [#165](https://github.com/Munter/hyperlink/pull/165) Emit an error if a relation with a fragment gets redirected ([Andreas Lind](mailto:andreaslindpetersen@gmail.com), [Peter Müller](mailto:munter@fumle.dk))
+
+#### Commits to master
+
+- [Updated dependencies](https://github.com/Munter/hyperlink/commit/007c38e4f4cadc5059c9dd4867071abf42bab3c2) ([Peter Müller](mailto:munter@fumle.dk))
+- [chore\(package\): update eslint-plugin-node to version 10.0.0](https://github.com/Munter/hyperlink/commit/0e772a3c7b9404bcbdfde91dfe166d8ec3dc123d) ([greenkeeper[bot]](mailto:23040076+greenkeeper[bot]@users.noreply.github.com))
+
 ### v4.3.2 (2019-08-28)
 
 #### Pull requests

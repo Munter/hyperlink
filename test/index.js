@@ -613,6 +613,177 @@ describe('hyperlink', function() {
       });
     });
 
+    describe('with an implicit index.html in a subdir via FileRedirect', function() {
+      it('should complain about a fragment when there is no trailing slash on the href, even though the fragment exists', async function() {
+        const t = new TapRender();
+        sinon.spy(t, 'push');
+        await hyperlink(
+          {
+            recursive: false,
+            root: pathModule.resolve(
+              __dirname,
+              '..',
+              'testdata',
+              'fragmentAndRedirectWithoutSlash'
+            ),
+            inputUrls: ['index.html']
+          },
+          t
+        );
+
+        expect(t.push, 'to have a call exhaustively satisfying', () => {
+          t.push(null, {
+            operator: 'fragment-redirect',
+            name:
+              'fragment-redirect testdata/fragmentAndRedirectWithoutSlash/index.html --> testdata/fragmentAndRedirectWithoutSlash/subdir#myFragment --> testdata/fragmentAndRedirectWithoutSlash/subdir/index.html',
+            actual: '/subdir#myFragment',
+            expected: '/subdir/#myFragment',
+            at:
+              'testdata/fragmentAndRedirectWithoutSlash/index.html:5:12 <a href="/subdir#myFragment">...</a>',
+            ok: false
+          });
+        });
+      });
+
+      it('should not complain about a fragment when there is a trailing slash on the href', async function() {
+        const t = new TapRender();
+        sinon.spy(t, 'push');
+        await hyperlink(
+          {
+            recursive: false,
+            root: pathModule.resolve(
+              __dirname,
+              '..',
+              'testdata',
+              'fragmentAndRedirectWithSlash'
+            ),
+            inputUrls: ['index.html']
+          },
+          t
+        );
+
+        expect(t.push, 'to have no calls satisfying', () => {
+          t.push(null, {
+            operator: 'fragment-redirect'
+          });
+        });
+      });
+    });
+
+    describe('with an implicit index.html in a subdir via HttpRedirect', function() {
+      it('should complain about a fragment href pointing to a page that is redirected, even though the fragment exists', async function() {
+        httpception([
+          {
+            request: 'GET https://example.com/',
+            response: {
+              headers: {
+                'Content-Type': 'text/html'
+              },
+              body: `<!DOCTYPE html><html><head></head><body><a href="/subdir#myFragment"></a></body></html>`
+            }
+          },
+          {
+            request: 'GET https://example.com/subdir',
+            response: {
+              statusCode: 302,
+              headers: {
+                Location: 'https://example.com/subdir/'
+              }
+            }
+          },
+          {
+            request: 'GET https://example.com/subdir/',
+            response: {
+              headers: {
+                'Content-Type': 'text/html'
+              },
+              body: `<!DOCTYPE html><html><head></head><body><div id="myFragment"></div></body></html>`
+            }
+          }
+        ]);
+
+        const t = new TapRender();
+        sinon.spy(t, 'push');
+        await hyperlink(
+          {
+            recursive: true,
+            root: 'https://example.com/',
+            inputUrls: ['https://example.com/']
+          },
+          t
+        );
+
+        expect(t.push, 'to have a call exhaustively satisfying', () => {
+          t.push(null, {
+            operator: 'fragment-redirect',
+            name:
+              'fragment-redirect https://example.com/ --> https://example.com/subdir#myFragment --> https://example.com/subdir/',
+            expected: '/subdir/#myFragment',
+            actual: '/subdir#myFragment',
+            at:
+              'https://example.com/ (1:50) <a href="/subdir#myFragment">...</a>',
+            ok: false
+          });
+        });
+      });
+
+      it('should complain about a fragment href pointing to a page that is redirected, even though there is a trailing slash and the fragment exists', async function() {
+        httpception([
+          {
+            request: 'GET https://example.com/',
+            response: {
+              headers: {
+                'Content-Type': 'text/html'
+              },
+              body: `<!DOCTYPE html><html><head></head><body><a href="/subdir/#myFragment"></a></body></html>`
+            }
+          },
+          {
+            request: 'GET https://example.com/subdir/',
+            response: {
+              statusCode: 302,
+              headers: {
+                Location: 'https://example.com/subdir2/'
+              }
+            }
+          },
+          {
+            request: 'GET https://example.com/subdir2/',
+            response: {
+              headers: {
+                'Content-Type': 'text/html'
+              },
+              body: `<!DOCTYPE html><html><head></head><body><div id="myFragment"></div></body></html>`
+            }
+          }
+        ]);
+
+        const t = new TapRender();
+        sinon.spy(t, 'push');
+        await hyperlink(
+          {
+            recursive: true,
+            root: 'https://example.com/',
+            inputUrls: ['https://example.com/']
+          },
+          t
+        );
+
+        expect(t.push, 'to have a call exhaustively satisfying', () => {
+          t.push(null, {
+            operator: 'fragment-redirect',
+            name:
+              'fragment-redirect https://example.com/ --> https://example.com/subdir/#myFragment --> https://example.com/subdir2/',
+            expected: '/subdir2/#myFragment',
+            actual: '/subdir/#myFragment',
+            at:
+              'https://example.com/ (1:50) <a href="/subdir/#myFragment">...</a>',
+            ok: false
+          });
+        });
+      });
+    });
+
     it('should not complain about an #iefix fragment in a CSS file', async function() {
       const t = new TapRender();
       sinon.spy(t, 'push');
@@ -796,7 +967,7 @@ describe('hyperlink', function() {
             ok: false,
             operator: 'fragment-check',
             name:
-              'fragment-check testdata/fragmentIdentifier/index.html --> /subdir#definitely-broken',
+              'fragment-check testdata/fragmentIdentifier/index.html --> /subdir/#definitely-broken',
             expected: 'id="definitely-broken"'
           });
         }).and('to have no calls satisfying', () => {

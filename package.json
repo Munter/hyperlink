@@ -39,6 +39,7 @@
     "@munter/tap-render": "^0.2.0",
     "assetgraph": "^6.0.0",
     "async": "^3.1.0",
+    "hreftypes": "^1.0.0",
     "optimist": "^0.6.1",
     "pretty-bytes": "^5.2.0",
     "request": "^2.88.0",

@@ -5,7 +5,7 @@
   "main": "lib/index.js",
   "scripts": {
     "lint": "eslint .",
-    "test": "npm run lint && mocha",
+    "test": "mocha && npm run lint",
     "coverage": "nyc mocha",
     "preversion": "npm test",
     "version": "offline-github-changelog --next=${npm_package_version} > CHANGELOG.md && git add CHANGELOG.md",

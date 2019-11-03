@@ -2754,7 +2754,7 @@ describe('hyperlink', function() {
           statusCode: 301,
           headers: {
             location: 'https://webpack.js.org/concepts/',
-            contentType: 'text/html'
+            'Content-Type': 'text/html'
           },
           body: `<html>
 <head><title>301 Moved Permanently</title></head>

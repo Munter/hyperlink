@@ -2745,4 +2745,63 @@ describe('hyperlink', function() {
       });
     });
   });
+
+  describe('with HTTP response that is a redirect with HTML payload', () => {
+    it.only('should follow the redirect', async () => {
+      httpception({
+        request: 'GET https://webpack.js.org/concepts',
+        response: {
+          statusCode: 301,
+          headers: {
+            location: 'https://webpack.js.org/concepts/',
+            contentType: 'text/html'
+          },
+          body: `<html>
+<head><title>301 Moved Permanently</title></head>
+<body>
+<center><h1>301 Moved Permanently</h1></center>
+<hr><center>nginx</center>
+</body>
+</html>`
+        }
+      });
+
+      const t = new TapRender();
+      // t.pipe(process.stdout);
+      sinon.spy(t, 'push');
+      await hyperlink(
+        {
+          root: pathModule.resolve(
+            __dirname,
+            '..',
+            'testdata',
+            'htmlInRedirect'
+          ),
+          inputUrls: ['index.html'],
+          recursive: false,
+          internalOnly: false
+        },
+        t
+      );
+
+      expect(spyTapCalls(t.push), 'to satisfy', [
+        {
+          operator: 'load',
+          name: 'load testdata/htmlInRedirect/index.html',
+          ok: true
+        },
+        {
+          operator: 'load',
+          name: 'load https://webpack.js.org/concepts',
+          ok: true
+        },
+        {
+          operator: 'load',
+          name: 'load https://webpack.js.org/concepts/',
+          ok: true
+        }
+      ]);
+      expect(t.close(), 'to satisfy', { pass: 2, fail: 0 });
+    });
+  });
 });

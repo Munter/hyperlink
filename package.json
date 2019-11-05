@@ -5,7 +5,7 @@
   "main": "lib/index.js",
   "scripts": {
     "lint": "eslint .",
-    "test": "npm run lint && mocha",
+    "test": "mocha && npm run lint",
     "coverage": "nyc mocha",
     "preversion": "npm test",
     "version": "offline-github-changelog --next=${npm_package_version} > CHANGELOG.md && git add CHANGELOG.md",
@@ -37,7 +37,7 @@
   "homepage": "https://github.com/Munter/hyperlink",
   "dependencies": {
     "@munter/tap-render": "^0.2.0",
-    "assetgraph": "^6.0.0",
+    "assetgraph": "^6.0.1",
     "async": "^3.1.0",
     "hreftypes": "^1.0.0",
     "optimist": "^0.6.1",

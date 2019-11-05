@@ -2745,4 +2745,95 @@ describe('hyperlink', function() {
       });
     });
   });
+
+  describe('with HTTP response that is a redirect with HTML payload', () => {
+    it('should follow the redirect', async () => {
+      httpception([
+        {
+          request: 'GET https://webpack.js.org/concepts',
+          response: {
+            statusCode: 301,
+            headers: {
+              location: 'https://webpack.js.org/concepts/',
+              'Content-Type': 'text/html'
+            },
+            body: `<html>
+<head><title>301 Moved Permanently</title></head>
+<body>
+<center><h1>301 Moved Permanently</h1></center>
+<hr><center>nginx</center>
+</body>
+</html>`
+          }
+        },
+        {
+          request: 'GET https://webpack.js.org/concepts/',
+          response: {
+            statusCode: 200,
+            headers: {
+              'Content-Type': 'text/html'
+            },
+            body: '<html><head></head><body></body></html>'
+          }
+        }
+      ]);
+
+      const t = new TapRender();
+      // t.pipe(process.stdout);
+      sinon.spy(t, 'push');
+      await hyperlink(
+        {
+          root: pathModule.resolve(
+            __dirname,
+            '..',
+            'testdata',
+            'htmlInRedirect'
+          ),
+          inputUrls: ['index.html'],
+          recursive: false,
+          internalOnly: false
+        },
+        t
+      );
+
+      expect(spyTapCalls(t.push), 'to satisfy', [
+        {
+          operator: 'load',
+          name: 'load testdata/htmlInRedirect/index.html',
+          ok: true
+        },
+        {
+          operator: 'load',
+          name: 'load https://webpack.js.org/concepts',
+          ok: true
+        },
+        {
+          operator: 'load',
+          name: 'load https://webpack.js.org/concepts/',
+          ok: true
+        },
+        {
+          operator: 'fragment-redirect',
+          name:
+            'fragment-redirect testdata/htmlInRedirect/index.html --> https://webpack.js.org/concepts#foo --> https://webpack.js.org/concepts/',
+          expected: 'https://webpack.js.org/concepts/#foo',
+          actual: 'https://webpack.js.org/concepts#foo',
+          at:
+            'testdata/htmlInRedirect/index.html:1:10 <a href="https://webpack.js.org/concepts#foo">...</a>',
+          ok: false
+        },
+        {
+          operator: 'fragment-check',
+          name:
+            'fragment-check testdata/htmlInRedirect/index.html --> https://webpack.js.org/concepts#foo',
+          expected: 'id="foo"',
+          at:
+            'testdata/htmlInRedirect/index.html:1:10 <a href="https://webpack.js.org/concepts#foo">...</a>',
+          ok: false,
+          actual: null
+        }
+      ]);
+      expect(t.close(), 'to satisfy', { pass: 3, fail: 2 });
+    });
+  });
 });

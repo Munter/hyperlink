@@ -2836,4 +2836,30 @@ describe('hyperlink', function() {
       expect(t.close(), 'to satisfy', { pass: 3, fail: 2 });
     });
   });
+
+  it('should resolve local srcset images as internal', async function() {
+    const t = new TapRender();
+    sinon.spy(t, 'push');
+    await hyperlink(
+      {
+        recursive: false,
+        root: pathModule.resolve(
+          __dirname,
+          '..',
+          'testdata',
+          'pictureSourceSrcsetWebp'
+        ),
+        inputUrls: ['index.html']
+      },
+      t
+    );
+
+    expect(t.close(), 'to satisfy', {
+      count: 3,
+      pass: 3,
+      fail: 0,
+      skip: 0,
+      todo: 0
+    });
+  });
 });

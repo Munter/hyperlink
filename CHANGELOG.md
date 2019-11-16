@@ -1,3 +1,11 @@
+### v4.4.2 (2019-11-16)
+
+- [Fix bug where local srcset images would be categorized as external](https://github.com/Munter/hyperlink/commit/4613190b9bd75b29f24134e2a0aa985f37e1b421) ([Peter Müller](mailto:munter@fumle.dk))
+- [Add npmjs.com to weird hosts that add 'user-content-' in front of fragments](https://github.com/Munter/hyperlink/commit/5aae7eac33d29828d21cc601521be4443de3d0b2) ([Peter Müller](mailto:munter@fumle.dk))
+- [prettier --write '\*\*\/\*.js'](https://github.com/Munter/hyperlink/commit/48cccd31e1f53c85a80d929066efe3522d6fb821) ([Andreas Lind](mailto:andreaslindpetersen@gmail.com))
+- [chore\(package\): update prettier to version 1.19.1](https://github.com/Munter/hyperlink/commit/afb4df466fc3fe873c3c1bb96664721afdda2eb0) ([greenkeeper[bot]](mailto:23040076+greenkeeper[bot]@users.noreply.github.com))
+- [Trim 'index.html' away from fragment redirect expected URLs](https://github.com/Munter/hyperlink/commit/9973d693e7b1b6ec85441c2b93c044b85b2ef2d1) ([Peter Müller](mailto:munter@fumle.dk))
+
 ### v4.4.1 (2019-11-05)
 
 - [#166](https://github.com/Munter/hyperlink/pull/166) Fix error thrown when encountering HTTP redirects with HTML payload ([Andreas Lind](mailto:andreaslindpetersen@gmail.com), [Peter Müller](mailto:munter@fumle.dk))
@@ -253,7 +261,8 @@
 - [Update README.md](https://github.com/Munter/hyperlink/commit/a5aba3c81d1a7dd08308a44405d5352c722b124b) ([Peter Müller](mailto:munter@fumle.dk))
 - [Update README.md](https://github.com/Munter/hyperlink/commit/0b1b4d4de6c0cd7695760788d2fd04ee4ef23ef5) ([Peter Müller](mailto:munter@fumle.dk))
 
-### v1.0.1
+### v1.0.1 (2014-09-23)
+
 - [Updated dependencies](https://github.com/Munter/hyperlink/commit/a14cf427c1718fa9206712f70b827d161bbd111e) ([Peter Müller](mailto:munter@fumle.dk))
 
 ### v1.0.0 (2014-07-22)

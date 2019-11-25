@@ -1,3 +1,8 @@
+### v4.4.3 (2019-11-25)
+
+- [Update dependencies](https://github.com/Munter/hyperlink/commit/c942792c8783ac1478a9b25671461a5e0c5b4725) ([Peter Müller](mailto:munter@fumle.dk))
+- [Update assetgraph to 6.0.2](https://github.com/Munter/hyperlink/commit/73b1c5e5daf3679e15b5df17dba28f35be5e8ab7) ([Peter Müller](mailto:munter@fumle.dk))
+
 ### v4.4.2 (2019-11-16)
 
 - [Fix bug where local srcset images would be categorized as external](https://github.com/Munter/hyperlink/commit/4613190b9bd75b29f24134e2a0aa985f37e1b421) ([Peter Müller](mailto:munter@fumle.dk))

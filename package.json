@@ -61,7 +61,7 @@
     "nyc": "^14.1.1",
     "offline-github-changelog": "^1.6.1",
     "prettier": "~1.19.1",
-    "sinon": "^7.5.0",
+    "sinon": "^8.0.0",
     "unexpected": "^11.8.1",
     "unexpected-set": "^2.0.1",
     "unexpected-sinon": "^10.11.2"

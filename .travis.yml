@@ -4,7 +4,7 @@ cache: npm
 node_js:
   - 8
   - 10
-  - 12
+  - 11
 
 matrix:
   include:

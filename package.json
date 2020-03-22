@@ -9,7 +9,7 @@
     "coverage": "nyc mocha",
     "preversion": "npm test",
     "version": "offline-github-changelog --next=${npm_package_version} > CHANGELOG.md && git add CHANGELOG.md",
-    "travis": "npm run lint && npm run coverage"
+    "test:ci": "npm run coverage"
   },
   "repository": {
     "type": "git",

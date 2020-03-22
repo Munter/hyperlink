@@ -1,8 +1,8 @@
 const expect = require('unexpected');
 const linkedin = require('../../lib/known-culprits/linkedin');
 
-describe('linkedin', function() {
-  it('should match reports for external-check for linkedin.com', function() {
+describe('linkedin', function () {
+  it('should match reports for external-check for linkedin.com', function () {
     expect(
       linkedin({
         operator: 'external-check',
@@ -13,7 +13,7 @@ describe('linkedin', function() {
     );
   });
 
-  it('should not match reports for all external-check', function() {
+  it('should not match reports for all external-check', function () {
     expect(
       linkedin({
         operator: 'external-check',
@@ -23,7 +23,7 @@ describe('linkedin', function() {
     );
   });
 
-  it('should not match reports for linkedin.com with an operator different from external-check', function() {
+  it('should not match reports for linkedin.com with an operator different from external-check', function () {
     expect(
       linkedin({
         operator: 'load',

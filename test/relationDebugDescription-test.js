@@ -18,8 +18,8 @@ function getRelation(assetConfig) {
   return defaultAsset.outgoingRelations[0];
 }
 
-describe('relationDebugDescription', function() {
-  it('should throw when not passed an AssetGraph.Relation instance', function() {
+describe('relationDebugDescription', function () {
+  it('should throw when not passed an AssetGraph.Relation instance', function () {
     expect(
       relationDebugDescription,
       'to throw',
@@ -27,28 +27,28 @@ describe('relationDebugDescription', function() {
     );
 
     expect(
-      function() {
+      function () {
         relationDebugDescription(1);
       },
       'to throw',
       /relation argument must be an AssetGraph.Relation instance/
     );
     expect(
-      function() {
+      function () {
         relationDebugDescription('foo');
       },
       'to throw',
       /relation argument must be an AssetGraph.Relation instance/
     );
     expect(
-      function() {
+      function () {
         relationDebugDescription([]);
       },
       'to throw',
       /relation argument must be an AssetGraph.Relation instance/
     );
     expect(
-      function() {
+      function () {
         relationDebugDescription({});
       },
       'to throw',
@@ -56,7 +56,7 @@ describe('relationDebugDescription', function() {
     );
   });
 
-  it('should return asset.urlOrDescription when asset is not text', function() {
+  it('should return asset.urlOrDescription when asset is not text', function () {
     var relation = getRelation();
     relation.from.isText = false;
     var result = relationDebugDescription(relation);
@@ -64,14 +64,14 @@ describe('relationDebugDescription', function() {
     expect(result, 'to end with', 'index.html');
   });
 
-  it('should append line and char offsets to file-url assets', function() {
+  it('should append line and char offsets to file-url assets', function () {
     var relation = getRelation();
     var result = relationDebugDescription(relation);
 
     expect(result, 'to end with', 'index.html:8:14 <a href="foo.html">...</a>');
   });
 
-  it('should append line and char offsets to non-file-url assets', function() {
+  it('should append line and char offsets to non-file-url assets', function () {
     return new AssetGraph({ root: 'https://mntr.dk' })
       .loadAssets({
         type: 'Html',
@@ -80,7 +80,7 @@ describe('relationDebugDescription', function() {
           '<!DOCTYPE html>\n<html lang="en">\n<head>\n    <meta charset="UTF-8">\n    <title>Document</title>\n</head>\n<body>\n    <a href="foo.html">foo</a>\n</body>\n</html>'
       })
       .populate({ followRelations: { crossOrigin: false } })
-      .queue(function(assetGraph) {
+      .queue(function (assetGraph) {
         var relation = assetGraph.findRelations({}, true)[0];
         var result = relationDebugDescription(relation);
         expect(
@@ -91,7 +91,7 @@ describe('relationDebugDescription', function() {
       });
   });
 
-  it('should handle relations to inline assets', function() {
+  it('should handle relations to inline assets', function () {
     return new AssetGraph({ root: __dirname })
       .loadAssets({
         type: 'Html',
@@ -100,7 +100,7 @@ describe('relationDebugDescription', function() {
           '<!doctype html><html><head><style>body { background: url(https://mntr.dk/invalid.png); }</style></head><body></body></html>'
       })
       .populate({ followRelations: { crossOrigin: false } })
-      .queue(function(assetGraph) {
+      .queue(function (assetGraph) {
         var relation = assetGraph.findRelations({}, true)[1];
         var result = relationDebugDescription(relation);
         expect(
@@ -111,7 +111,7 @@ describe('relationDebugDescription', function() {
       });
   });
 
-  it('should escape newlines in output', async function() {
+  it('should escape newlines in output', async function () {
     const ag = new AssetGraph();
 
     await ag.loadAssets({

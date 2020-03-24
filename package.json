@@ -60,7 +60,7 @@
     "mocha": "^7.0.1",
     "nyc": "^15.0.0",
     "offline-github-changelog": "^1.6.1",
-    "prettier": "~2.0.1",
+    "prettier": "^2.0.2",
     "sinon": "^9.0.0",
     "unexpected": "^11.8.1",
     "unexpected-set": "^2.0.1",

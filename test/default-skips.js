@@ -1,13 +1,11 @@
-const expect = require('unexpected')
-  .clone()
-  .use(require('unexpected-sinon'));
+const expect = require('unexpected').clone().use(require('unexpected-sinon'));
 const hyperlink = require('../lib/');
 const httpception = require('httpception');
 const TapRender = require('@munter/tap-render');
 const sinon = require('sinon');
 
-describe('default-skips', function() {
-  it('should skip linkedin tests', async function() {
+describe('default-skips', function () {
+  it('should skip linkedin tests', async function () {
     httpception();
 
     const t = new TapRender();

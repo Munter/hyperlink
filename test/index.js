@@ -15,8 +15,8 @@ function spyTapCalls(spy) {
     .map(c => c.args[1]);
 }
 
-describe('hyperlink', function() {
-  it('should complain about insecure content warnings', async function() {
+describe('hyperlink', function () {
+  it('should complain about insecure content warnings', async function () {
     httpception([
       {
         request: 'GET https://example.com/',
@@ -68,7 +68,7 @@ describe('hyperlink', function() {
     });
   });
 
-  it('should not follow links to unsupported protocols', async function() {
+  it('should not follow links to unsupported protocols', async function () {
     httpception([
       {
         request: 'GET https://example.com/',
@@ -146,7 +146,7 @@ describe('hyperlink', function() {
     });
   });
 
-  it('should complain if an asset loaded has an unexpected Content-Type', async function() {
+  it('should complain if an asset loaded has an unexpected Content-Type', async function () {
     httpception([
       {
         request: 'GET https://example.com/',
@@ -201,7 +201,7 @@ describe('hyperlink', function() {
     });
   });
 
-  it('should complain if an asset being HEADed has an unexpected Content-Type', async function() {
+  it('should complain if an asset being HEADed has an unexpected Content-Type', async function () {
     httpception([
       {
         request: 'GET https://example.com/',
@@ -253,7 +253,7 @@ describe('hyperlink', function() {
     });
   });
 
-  it('should complain if an asset being HEADed has no Content-Type', async function() {
+  it('should complain if an asset being HEADed has no Content-Type', async function () {
     httpception([
       {
         request: 'GET https://example.com/',
@@ -300,7 +300,7 @@ describe('hyperlink', function() {
     });
   });
 
-  it('should unload the assets as they are being processed', async function() {
+  it('should unload the assets as they are being processed', async function () {
     const server = require('http')
       .createServer((req, res) => {
         res.writeHead(200, {
@@ -337,7 +337,7 @@ describe('hyperlink', function() {
     }
   });
 
-  it('should not throw when populating missing files', async function() {
+  it('should not throw when populating missing files', async function () {
     const root = `file://${process.cwd()}`;
     const t = new TapRender();
     sinon.spy(t, 'push');
@@ -396,8 +396,8 @@ describe('hyperlink', function() {
     });
   });
 
-  describe('on a local file system', function() {
-    it('should not execute tests on outgoing relations of other pages when recursion is disabled', async function() {
+  describe('on a local file system', function () {
+    it('should not execute tests on outgoing relations of other pages when recursion is disabled', async function () {
       const t = new TapRender();
       sinon.spy(t, 'push');
       await hyperlink(
@@ -436,7 +436,7 @@ describe('hyperlink', function() {
       });
     });
 
-    it('should not execute tests on outgoing relations of other pages when recursion is enabled', async function() {
+    it('should not execute tests on outgoing relations of other pages when recursion is enabled', async function () {
       const t = new TapRender();
       sinon.spy(t, 'push');
       await hyperlink(
@@ -518,8 +518,8 @@ describe('hyperlink', function() {
     });
   });
 
-  describe('with document fragments', function() {
-    it('should not complain when a referenced fragment exists in the target HTML', async function() {
+  describe('with document fragments', function () {
+    it('should not complain when a referenced fragment exists in the target HTML', async function () {
       httpception([
         {
           request: 'GET https://example.com/',
@@ -566,7 +566,7 @@ describe('hyperlink', function() {
       });
     });
 
-    it('should issue an error when a referenced fragment does not exist', async function() {
+    it('should issue an error when a referenced fragment does not exist', async function () {
       httpception([
         {
           request: 'GET https://example.com/',
@@ -613,8 +613,8 @@ describe('hyperlink', function() {
       });
     });
 
-    describe('with an implicit index.html in a subdir via FileRedirect', function() {
-      it('should complain about a fragment when there is no trailing slash on the href, even though the fragment exists', async function() {
+    describe('with an implicit index.html in a subdir via FileRedirect', function () {
+      it('should complain about a fragment when there is no trailing slash on the href, even though the fragment exists', async function () {
         const t = new TapRender();
         sinon.spy(t, 'push');
         await hyperlink(
@@ -645,7 +645,7 @@ describe('hyperlink', function() {
         });
       });
 
-      it('should not complain about a fragment when there is a trailing slash on the href', async function() {
+      it('should not complain about a fragment when there is a trailing slash on the href', async function () {
         const t = new TapRender();
         sinon.spy(t, 'push');
         await hyperlink(
@@ -670,8 +670,8 @@ describe('hyperlink', function() {
       });
     });
 
-    describe('with an implicit index.html in a subdir via HttpRedirect', function() {
-      it('should complain about a fragment href pointing to a page that is redirected, even though the fragment exists', async function() {
+    describe('with an implicit index.html in a subdir via HttpRedirect', function () {
+      it('should complain about a fragment href pointing to a page that is redirected, even though the fragment exists', async function () {
         httpception([
           {
             request: 'GET https://example.com/',
@@ -727,7 +727,7 @@ describe('hyperlink', function() {
         });
       });
 
-      it('should complain about a fragment href pointing to a page that is redirected, even though there is a trailing slash and the fragment exists', async function() {
+      it('should complain about a fragment href pointing to a page that is redirected, even though there is a trailing slash and the fragment exists', async function () {
         httpception([
           {
             request: 'GET https://example.com/',
@@ -784,7 +784,7 @@ describe('hyperlink', function() {
       });
     });
 
-    it('should not complain about an #iefix fragment in a CSS file', async function() {
+    it('should not complain about an #iefix fragment in a CSS file', async function () {
       const t = new TapRender();
       sinon.spy(t, 'push');
       const root = pathModule.resolve(
@@ -807,7 +807,7 @@ describe('hyperlink', function() {
       });
     });
 
-    it('should issue an error when referencing another asset with an empty fragment', async function() {
+    it('should issue an error when referencing another asset with an empty fragment', async function () {
       httpception([
         {
           request: 'GET https://example.com/',
@@ -855,7 +855,7 @@ describe('hyperlink', function() {
       });
     });
 
-    it('should not issue an error when referencing an external asset with an existing fragment', async function() {
+    it('should not issue an error when referencing an external asset with an existing fragment', async function () {
       httpception([
         {
           request: 'GET https://example.com/',
@@ -904,7 +904,7 @@ describe('hyperlink', function() {
       });
     });
 
-    it('should be fine when an asset references itself with an empty fragment', async function() {
+    it('should be fine when an asset references itself with an empty fragment', async function () {
       httpception([
         {
           request: 'GET https://example.com/',
@@ -937,8 +937,8 @@ describe('hyperlink', function() {
       });
     });
 
-    describe('on a local file system', function() {
-      it('should report missing fragments through a FileRedirect', async function() {
+    describe('on a local file system', function () {
+      it('should report missing fragments through a FileRedirect', async function () {
         const t = new TapRender();
         sinon.spy(t, 'push');
         await hyperlink(
@@ -980,9 +980,9 @@ describe('hyperlink', function() {
     });
   });
 
-  describe('with a relation that points at an asset that returns 404', function() {
-    describe('when the other asset within the same origin', function() {
-      it('should issue a warning', async function() {
+  describe('with a relation that points at an asset that returns 404', function () {
+    describe('when the other asset within the same origin', function () {
+      it('should issue a warning', async function () {
         httpception([
           {
             request: 'GET https://example.com/styles.css',
@@ -1025,9 +1025,9 @@ describe('hyperlink', function() {
       });
     });
 
-    describe('when the other asset is at a different origin', function() {
+    describe('when the other asset is at a different origin', function () {
       // This should obviously be fixed:
-      it('should issue an error', async function() {
+      it('should issue an error', async function () {
         httpception([
           {
             request: 'GET https://example.com/styles.css',
@@ -1070,8 +1070,8 @@ describe('hyperlink', function() {
       });
     });
 
-    describe('when the missing asset is referenced from an asset at a different origin (not via an anchor or iframe)', function() {
-      it('should issue an error', async function() {
+    describe('when the missing asset is referenced from an asset at a different origin (not via an anchor or iframe)', function () {
+      it('should issue an error', async function () {
         httpception([
           {
             request: 'GET https://example.com/',
@@ -1122,8 +1122,8 @@ describe('hyperlink', function() {
       });
     });
 
-    describe('when an iframe at a different origin is referenced', function() {
-      it('should only HEAD the iframe asset and not try to follow links from it', async function() {
+    describe('when an iframe at a different origin is referenced', function () {
+      it('should only HEAD the iframe asset and not try to follow links from it', async function () {
         httpception([
           {
             request: 'GET https://example.com/',
@@ -1159,8 +1159,8 @@ describe('hyperlink', function() {
     });
   });
 
-  describe('with HTTP redirects', function() {
-    it('should emit an error when an HtmlAnchor points at an external page that has a permanent redirect', async function() {
+  describe('with HTTP redirects', function () {
+    it('should emit an error when an HtmlAnchor points at an external page that has a permanent redirect', async function () {
       httpception([
         {
           request: 'GET https://example.com/',
@@ -1212,7 +1212,7 @@ describe('hyperlink', function() {
       });
     });
 
-    it('should not emit an error when an HtmlAnchor points at an external page that has a temporary redirect', async function() {
+    it('should not emit an error when an HtmlAnchor points at an external page that has a temporary redirect', async function () {
       httpception([
         {
           request: 'GET https://example.com/',
@@ -1270,7 +1270,7 @@ describe('hyperlink', function() {
       });
     });
 
-    it('should emit an error when an HtmlAnchor points at an external page that has long redirect chain', async function() {
+    it('should emit an error when an HtmlAnchor points at an external page that has long redirect chain', async function () {
       httpception([
         {
           request: 'GET https://example.com/',
@@ -1341,7 +1341,7 @@ describe('hyperlink', function() {
       });
     });
 
-    it('should emit an error when a sequence of redirects from a secure page includes an insecure url', async function() {
+    it('should emit an error when a sequence of redirects from a secure page includes an insecure url', async function () {
       httpception([
         {
           request: 'GET https://example.com/',
@@ -1408,9 +1408,9 @@ describe('hyperlink', function() {
     });
   });
 
-  describe('with a preconnect link', function() {
-    describe('pointing to a host that is up', function() {
-      it('should report no errors and inform that 1 host was checked', async function() {
+  describe('with a preconnect link', function () {
+    describe('pointing to a host that is up', function () {
+      it('should report no errors and inform that 1 host was checked', async function () {
         const t = new TapRender();
         sinon.spy(t, 'push');
         const root = pathModule.resolve(
@@ -1444,8 +1444,8 @@ describe('hyperlink', function() {
       });
     });
 
-    describe('pointing to a host that does not have a DNS entry', function() {
-      it('should issue an error', async function() {
+    describe('pointing to a host that does not have a DNS entry', function () {
+      it('should issue an error', async function () {
         const t = new TapRender();
         sinon.spy(t, 'push');
         const root = pathModule.resolve(
@@ -1476,9 +1476,9 @@ describe('hyperlink', function() {
     });
   });
 
-  describe('with a dns-prefetch link', function() {
-    describe('pointing to a host that is up', function() {
-      it('should report no errors and inform that 1 host was checked', async function() {
+  describe('with a dns-prefetch link', function () {
+    describe('pointing to a host that is up', function () {
+      it('should report no errors and inform that 1 host was checked', async function () {
         const t = new TapRender();
         sinon.spy(t, 'push');
         const root = pathModule.resolve(
@@ -1512,8 +1512,8 @@ describe('hyperlink', function() {
       });
     });
 
-    describe('pointing to a host that does not have a DNS entry', function() {
-      it('should issue an error', async function() {
+    describe('pointing to a host that does not have a DNS entry', function () {
+      it('should issue an error', async function () {
         const t = new TapRender();
         sinon.spy(t, 'push');
         const root = pathModule.resolve(
@@ -1550,8 +1550,8 @@ describe('hyperlink', function() {
     });
   });
 
-  describe('with a skipFilter', function() {
-    it('should not skip on non-match', async function() {
+  describe('with a skipFilter', function () {
+    it('should not skip on non-match', async function () {
       httpception([
         {
           request: 'GET https://example.com/',
@@ -1577,7 +1577,7 @@ describe('hyperlink', function() {
           recursive: false,
           root: 'https://example.com/',
           inputUrls: ['https://example.com/'],
-          skipFilter: function(report) {
+          skipFilter: function (report) {
             if (report.name === 'load https://foo.com/script.js') {
               return true;
             }
@@ -1597,7 +1597,7 @@ describe('hyperlink', function() {
       });
     });
 
-    it('should skip an internal load', async function() {
+    it('should skip an internal load', async function () {
       httpception([
         {
           request: 'GET https://example.com/',
@@ -1619,7 +1619,7 @@ describe('hyperlink', function() {
           recursive: false,
           root: 'https://example.com/',
           inputUrls: ['https://example.com/'],
-          skipFilter: function(report) {
+          skipFilter: function (report) {
             if (report.name === 'load https://example.com/script.js') {
               return true;
             }
@@ -1639,7 +1639,7 @@ describe('hyperlink', function() {
       });
     });
 
-    it('should skip an internal load with a message', async function() {
+    it('should skip an internal load with a message', async function () {
       httpception([
         {
           request: 'GET https://example.com/',
@@ -1661,7 +1661,7 @@ describe('hyperlink', function() {
           recursive: false,
           root: 'https://example.com/',
           inputUrls: ['https://example.com/'],
-          skipFilter: function(report) {
+          skipFilter: function (report) {
             if (report.name === 'load https://example.com/script.js') {
               return 'Skip this one';
             }
@@ -1681,7 +1681,7 @@ describe('hyperlink', function() {
       });
     });
 
-    it('should skip mixed-content warnings', async function() {
+    it('should skip mixed-content warnings', async function () {
       httpception([
         {
           request: 'GET https://example.com/',
@@ -1737,7 +1737,7 @@ describe('hyperlink', function() {
       });
     });
 
-    it('should skip a fragment-check', async function() {
+    it('should skip a fragment-check', async function () {
       httpception([
         {
           request: 'GET https://example.com/',
@@ -1759,7 +1759,7 @@ describe('hyperlink', function() {
           recursive: false,
           root: 'https://example.com/',
           inputUrls: ['https://example.com/'],
-          skipFilter: function(report) {
+          skipFilter: function (report) {
             if (
               report.name ===
               'fragment-check https://example.com/ --> #missingId'
@@ -1789,7 +1789,7 @@ describe('hyperlink', function() {
       });
     });
 
-    it('should skip an external-check', async function() {
+    it('should skip an external-check', async function () {
       httpception([
         {
           request: 'GET https://example.com/',
@@ -1834,7 +1834,7 @@ describe('hyperlink', function() {
       });
     });
 
-    it('should skip a preconnect-check', async function() {
+    it('should skip a preconnect-check', async function () {
       const t = new TapRender();
       sinon.spy(t, 'push');
 
@@ -1873,7 +1873,7 @@ describe('hyperlink', function() {
       });
     });
 
-    it('should skip a dns-prefetch-check', async function() {
+    it('should skip a dns-prefetch-check', async function () {
       const t = new TapRender();
       sinon.spy(t, 'push');
 
@@ -1913,8 +1913,8 @@ describe('hyperlink', function() {
     });
   });
 
-  describe('with a todoFilter', function() {
-    it('should not mark as todo on non-match', async function() {
+  describe('with a todoFilter', function () {
+    it('should not mark as todo on non-match', async function () {
       httpception([
         {
           request: 'GET https://example.com/',
@@ -1940,7 +1940,7 @@ describe('hyperlink', function() {
           recursive: false,
           root: 'https://example.com/',
           inputUrls: ['https://example.com/'],
-          todoFilter: function(report) {
+          todoFilter: function (report) {
             if (report.name === 'load https://foo.com/script.js') {
               return true;
             }
@@ -1959,7 +1959,7 @@ describe('hyperlink', function() {
       });
     });
 
-    it('should mark as todo', async function() {
+    it('should mark as todo', async function () {
       httpception([
         {
           request: 'GET https://example.com/',
@@ -1985,7 +1985,7 @@ describe('hyperlink', function() {
           recursive: false,
           root: 'https://example.com/',
           inputUrls: ['https://example.com/'],
-          todoFilter: function(report) {
+          todoFilter: function (report) {
             if (report.name === 'load https://example.com/script.js') {
               return true;
             }
@@ -2004,7 +2004,7 @@ describe('hyperlink', function() {
       });
     });
 
-    it('should mark as todo with a message', async function() {
+    it('should mark as todo with a message', async function () {
       httpception([
         {
           request: 'GET https://example.com/',
@@ -2030,7 +2030,7 @@ describe('hyperlink', function() {
           recursive: false,
           root: 'https://example.com/',
           inputUrls: ['https://example.com/'],
-          todoFilter: function(report) {
+          todoFilter: function (report) {
             if (report.name === 'load https://example.com/script.js') {
               return 'todo this one';
             }
@@ -2050,8 +2050,8 @@ describe('hyperlink', function() {
     });
   });
 
-  describe('with followSourceMaps:true', function() {
-    it('should load the source map and HEAD the sources and file (if not already visited)', async function() {
+  describe('with followSourceMaps:true', function () {
+    it('should load the source map and HEAD the sources and file (if not already visited)', async function () {
       httpception([
         {
           request: 'GET https://example.com/',
@@ -2122,8 +2122,8 @@ describe('hyperlink', function() {
     });
   });
 
-  describe('with followSourceMaps:false', function() {
-    it('should just HEAD the source map urls', async function() {
+  describe('with followSourceMaps:false', function () {
+    it('should just HEAD the source map urls', async function () {
       httpception([
         {
           request: 'GET https://example.com/',
@@ -2186,7 +2186,7 @@ describe('hyperlink', function() {
     });
   });
 
-  it('should retry a failed HEAD as a GET', async function() {
+  it('should retry a failed HEAD as a GET', async function () {
     httpception([
       {
         request: 'GET https://example.com/',
@@ -2234,7 +2234,7 @@ describe('hyperlink', function() {
     expect(t.close(), 'to satisfy', { fail: 0 });
   });
 
-  it('should give up after one retry', async function() {
+  it('should give up after one retry', async function () {
     httpception([
       {
         request: 'GET https://example.com/',
@@ -2285,7 +2285,7 @@ describe('hyperlink', function() {
     });
   });
 
-  it('should retry failed fragment links to Github urls with a prepended "user-content-"', async function() {
+  it('should retry failed fragment links to Github urls with a prepended "user-content-"', async function () {
     httpception({
       request: 'GET https://github.com/assetgraph/assetgraph',
       response: {
@@ -2504,7 +2504,7 @@ describe('hyperlink', function() {
     });
   });
 
-  describe('with Html responses in non-navigation relations', function() {
+  describe('with Html responses in non-navigation relations', function () {
     const videoHtml = `
       <!DOCTYPE html>
       <html>
@@ -2517,7 +2517,7 @@ describe('hyperlink', function() {
       </html>
     `;
 
-    it('should not check outgoing relations from second Html asset on same origin', async function() {
+    it('should not check outgoing relations from second Html asset on same origin', async function () {
       const t = new TapRender();
       // t.pipe(process.stdout);
       sinon.spy(t, 'push');
@@ -2546,7 +2546,7 @@ describe('hyperlink', function() {
       expect(t.close(), 'to satisfy', { pass: 2, fail: 0 });
     });
 
-    it('should not check outgoing relations from second Html asset on cross origin', async function() {
+    it('should not check outgoing relations from second Html asset on cross origin', async function () {
       httpception([
         {
           request: 'GET https://crossorigin.hyperlink.io/video.html',
@@ -2588,8 +2588,8 @@ describe('hyperlink', function() {
       expect(t.close(), 'to satisfy', { pass: 2, fail: 0 });
     });
 
-    describe('with --recursive', function() {
-      it('should check outgoing relations from second Html asset on same origin', async function() {
+    describe('with --recursive', function () {
+      it('should check outgoing relations from second Html asset on same origin', async function () {
         const t = new TapRender();
         // t.pipe(process.stdout);
         sinon.spy(t, 'push');
@@ -2629,7 +2629,7 @@ describe('hyperlink', function() {
         expect(t.close(), 'to satisfy', { count: 4, pass: 3, fail: 1 });
       });
 
-      it('should not check outgoing relations from second Html asset on cross origin', async function() {
+      it('should not check outgoing relations from second Html asset on cross origin', async function () {
         httpception([
           {
             request: 'GET https://crossorigin.hyperlink.io/video.html',
@@ -2672,8 +2672,8 @@ describe('hyperlink', function() {
       });
     });
 
-    describe('with --internal', function() {
-      it('should not check outgoing relations from second Html asset on same origin', async function() {
+    describe('with --internal', function () {
+      it('should not check outgoing relations from second Html asset on same origin', async function () {
         const t = new TapRender();
         // t.pipe(process.stdout);
         sinon.spy(t, 'push');
@@ -2702,7 +2702,7 @@ describe('hyperlink', function() {
         expect(t.close(), 'to satisfy', { pass: 2, fail: 0 });
       });
 
-      it('should not check outgoing relations from second Html asset on cross origin', async function() {
+      it('should not check outgoing relations from second Html asset on cross origin', async function () {
         httpception([
           {
             request: 'GET https://crossorigin.hyperlink.io/video.html',
@@ -2837,7 +2837,7 @@ describe('hyperlink', function() {
     });
   });
 
-  it('should resolve local srcset images as internal', async function() {
+  it('should resolve local srcset images as internal', async function () {
     const t = new TapRender();
     sinon.spy(t, 'push');
     await hyperlink(

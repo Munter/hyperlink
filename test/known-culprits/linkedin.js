@@ -6,7 +6,7 @@ describe('linkedin', function () {
     expect(
       linkedin({
         operator: 'external-check',
-        name: 'external-check https://dk.linkedin.com/foo'
+        name: 'external-check https://dk.linkedin.com/foo',
       }),
       'to be',
       'Linkedin.com always returns invalid HTTP 999 to block scrapers'
@@ -17,7 +17,7 @@ describe('linkedin', function () {
     expect(
       linkedin({
         operator: 'external-check',
-        name: 'external-check https://linkedout.com'
+        name: 'external-check https://linkedout.com',
       }),
       'to be false'
     );
@@ -27,7 +27,7 @@ describe('linkedin', function () {
     expect(
       linkedin({
         operator: 'load',
-        name: 'external-check https://dk.linkedin.com/foo'
+        name: 'external-check https://dk.linkedin.com/foo',
       }),
       'to be false'
     );

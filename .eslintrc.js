@@ -2,7 +2,7 @@ const config = {
   extends: ['standard', 'prettier', 'prettier/standard'],
   plugins: ['import', 'mocha', 'prettier'],
   env: {
-    mocha: true
+    mocha: true,
   },
   rules: {
     'import/no-extraneous-dependencies': [
@@ -10,17 +10,17 @@ const config = {
       {
         devDependencies: [
           '**/test/**/*.js',
-          '**/bootstrap-unexpected-markdown.js'
+          '**/bootstrap-unexpected-markdown.js',
         ],
         optionalDependencies: false,
-        peerDependencies: false
-      }
+        peerDependencies: false,
+      },
     ],
     'mocha/no-exclusive-tests': 'error',
     'mocha/no-nested-tests': 'error',
     'mocha/no-identical-title': 'error',
-    'prettier/prettier': 'error'
-  }
+    'prettier/prettier': 'error',
+  },
 };
 
 module.exports = config;

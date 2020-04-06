@@ -7,7 +7,7 @@ function getRelation(assetConfig) {
     type: 'Html',
     url: `file://${__dirname}/index.html`,
     text:
-      '<!DOCTYPE html>\n<html lang="en">\n<head>\n    <meta charset="UTF-8">\n    <title>Document</title>\n</head>\n<body>\n    <a href="foo.html">foo</a>\n</body>\n</html>'
+      '<!DOCTYPE html>\n<html lang="en">\n<head>\n    <meta charset="UTF-8">\n    <title>Document</title>\n</head>\n<body>\n    <a href="foo.html">foo</a>\n</body>\n</html>',
   };
 
   var assetGraph = new AssetGraph({ root: __dirname });
@@ -77,7 +77,7 @@ describe('relationDebugDescription', function () {
         type: 'Html',
         url: 'https://mntr.dk/index.html',
         text:
-          '<!DOCTYPE html>\n<html lang="en">\n<head>\n    <meta charset="UTF-8">\n    <title>Document</title>\n</head>\n<body>\n    <a href="foo.html">foo</a>\n</body>\n</html>'
+          '<!DOCTYPE html>\n<html lang="en">\n<head>\n    <meta charset="UTF-8">\n    <title>Document</title>\n</head>\n<body>\n    <a href="foo.html">foo</a>\n</body>\n</html>',
       })
       .populate({ followRelations: { crossOrigin: false } })
       .queue(function (assetGraph) {
@@ -97,7 +97,7 @@ describe('relationDebugDescription', function () {
         type: 'Html',
         url: `file://${__dirname}/index.html`,
         text:
-          '<!doctype html><html><head><style>body { background: url(https://mntr.dk/invalid.png); }</style></head><body></body></html>'
+          '<!doctype html><html><head><style>body { background: url(https://mntr.dk/invalid.png); }</style></head><body></body></html>',
       })
       .populate({ followRelations: { crossOrigin: false } })
       .queue(function (assetGraph) {
@@ -118,7 +118,7 @@ describe('relationDebugDescription', function () {
       type: 'Html',
       url: 'https://webpack.js.org',
       text: `<a href="http://try.idonethis.com/developer
-?utm_campaign=opencollective&amp;utm_medium=github&amp;utm_source=angular-fullstack">newline link</a>`
+?utm_campaign=opencollective&amp;utm_medium=github&amp;utm_source=angular-fullstack">newline link</a>`,
     });
 
     const result = relationDebugDescription(ag.findRelations({}, true)[0]);

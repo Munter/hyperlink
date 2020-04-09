@@ -12,7 +12,7 @@ function spyTapCalls(spy) {
   return spy
     .withArgs(null)
     .getCalls()
-    .map(c => c.args[1]);
+    .map((c) => c.args[1]);
 }
 
 describe('hyperlink', function () {
@@ -23,22 +23,22 @@ describe('hyperlink', function () {
         response: {
           statusCode: 200,
           headers: {
-            'Content-Type': 'text/html; charset=UTF-8'
+            'Content-Type': 'text/html; charset=UTF-8',
           },
           body:
-            '<html><head><script src="http://example.com/insecureScript.js"></script></head><body></body></html>'
-        }
+            '<html><head><script src="http://example.com/insecureScript.js"></script></head><body></body></html>',
+        },
       },
       {
         request: 'GET http://example.com/insecureScript.js',
         response: {
           statusCode: 200,
           headers: {
-            'Content-Type': 'application/javascript'
+            'Content-Type': 'application/javascript',
           },
-          body: 'alert("hello, insecure world");'
-        }
-      }
+          body: 'alert("hello, insecure world");',
+        },
+      },
     ]);
 
     const t = new TapRender();
@@ -47,7 +47,7 @@ describe('hyperlink', function () {
       {
         recursive: false,
         root: 'https://example.com/',
-        inputUrls: ['https://example.com/']
+        inputUrls: ['https://example.com/'],
       },
       t
     );
@@ -63,7 +63,7 @@ describe('hyperlink', function () {
           'https://example.com/ (1:26) <script src="http://example.com/insecureScript.js">...</script>',
         expected:
           'https://example.com/ --> https://example.com/insecureScript.js',
-        actual: 'https://example.com/ --> http://example.com/insecureScript.js'
+        actual: 'https://example.com/ --> http://example.com/insecureScript.js',
       });
     });
   });
@@ -75,7 +75,7 @@ describe('hyperlink', function () {
         response: {
           statusCode: 200,
           headers: {
-            'Content-Type': 'text/html; charset=UTF-8'
+            'Content-Type': 'text/html; charset=UTF-8',
           },
           body: `
             <a href="https://google.com">find something securely</a>
@@ -86,27 +86,27 @@ describe('hyperlink', function () {
             <a href="tel:+4500000000">give me a call</a>
             <a href="fax:+4500000000">does anyone still use these?</a>
             <a href="gopher://gopher.yoyodyne.com/">this is just rediculous</a>
-          `
-        }
+          `,
+        },
       },
       {
         request: 'HEAD https://google.com/',
         response: {
           statusCode: 200,
           headers: {
-            'Content-Type': 'text/html'
-          }
-        }
+            'Content-Type': 'text/html',
+          },
+        },
       },
       {
         request: 'HEAD http://google.com/',
         response: {
           statusCode: 200,
           headers: {
-            'Content-Type': 'text/html'
-          }
-        }
-      }
+            'Content-Type': 'text/html',
+          },
+        },
+      },
     ]);
 
     const t = new TapRender();
@@ -114,7 +114,7 @@ describe('hyperlink', function () {
     await hyperlink(
       {
         root: 'https://example.com/',
-        inputUrls: ['https://example.com/']
+        inputUrls: ['https://example.com/'],
       },
       t
     );
@@ -124,24 +124,24 @@ describe('hyperlink', function () {
       t.push({ name: 'Crawling internal assets' });
       t.push(null, {
         name: 'load https://example.com/',
-        ok: true
+        ok: true,
       });
       t.push({ name: 'Crawling 2 outgoing urls' });
       t.push(null, {
         ok: true,
-        name: 'external-check https://google.com'
+        name: 'external-check https://google.com',
       });
       t.push(null, {
         ok: true,
-        name: 'external-check http://google.com'
+        name: 'external-check http://google.com',
       });
       t.push({
         name:
-          'Connecting to 0 hosts (checking <link rel="preconnect" href="...">'
+          'Connecting to 0 hosts (checking <link rel="preconnect" href="...">',
       });
       t.push({
         name:
-          'Looking up 0 host names (checking <link rel="dns-prefetch" href="...">'
+          'Looking up 0 host names (checking <link rel="dns-prefetch" href="...">',
       });
     });
   });
@@ -153,7 +153,7 @@ describe('hyperlink', function () {
         response: {
           statusCode: 200,
           headers: {
-            'Content-Type': 'text/html; charset=UTF-8'
+            'Content-Type': 'text/html; charset=UTF-8',
           },
           body: `
             <!DOCTYPE html>
@@ -164,18 +164,18 @@ describe('hyperlink', function () {
             <body>
             </body>
             </html>
-          `
-        }
+          `,
+        },
       },
       {
         request: 'GET https://example.com/styles.css',
         response: {
           headers: {
-            'Content-Type': 'image/png'
+            'Content-Type': 'image/png',
           },
-          body: 'div { color: maroon; }'
-        }
-      }
+          body: 'div { color: maroon; }',
+        },
+      },
     ]);
 
     const t = new TapRender();
@@ -183,7 +183,7 @@ describe('hyperlink', function () {
     await hyperlink(
       {
         root: 'https://example.com/',
-        inputUrls: ['https://example.com/']
+        inputUrls: ['https://example.com/'],
       },
       t
     );
@@ -196,7 +196,7 @@ describe('hyperlink', function () {
         name: 'content-type-mismatch https://example.com/styles.css',
         actual: 'Asset is used as both Css and Png',
         at:
-          'https://example.com/ (5:44) <link rel="stylesheet" href="styles.css">'
+          'https://example.com/ (5:44) <link rel="stylesheet" href="styles.css">',
       });
     });
   });
@@ -208,7 +208,7 @@ describe('hyperlink', function () {
         response: {
           statusCode: 200,
           headers: {
-            'Content-Type': 'text/html; charset=UTF-8'
+            'Content-Type': 'text/html; charset=UTF-8',
           },
           body: `
             <!DOCTYPE html>
@@ -218,17 +218,17 @@ describe('hyperlink', function () {
               <img src="hey.png">
             </body>
             </html>
-          `
-        }
+          `,
+        },
       },
       {
         request: 'HEAD https://example.com/hey.png',
         response: {
           headers: {
-            'Content-Type': 'text/plain'
-          }
-        }
-      }
+            'Content-Type': 'text/plain',
+          },
+        },
+      },
     ]);
 
     const t = new TapRender();
@@ -236,7 +236,7 @@ describe('hyperlink', function () {
     await hyperlink(
       {
         root: 'https://example.com/',
-        inputUrls: ['https://example.com/']
+        inputUrls: ['https://example.com/'],
       },
       t
     );
@@ -248,7 +248,7 @@ describe('hyperlink', function () {
         operator: 'content-type-mismatch',
         name: 'content-type-mismatch https://example.com/hey.png',
         actual: 'Asset is used as both Image and Text',
-        at: 'https://example.com/ (6:25) <img src="hey.png">'
+        at: 'https://example.com/ (6:25) <img src="hey.png">',
       });
     });
   });
@@ -260,7 +260,7 @@ describe('hyperlink', function () {
         response: {
           statusCode: 200,
           headers: {
-            'Content-Type': 'text/html; charset=UTF-8'
+            'Content-Type': 'text/html; charset=UTF-8',
           },
           body: `
             <!DOCTYPE html>
@@ -270,13 +270,13 @@ describe('hyperlink', function () {
               <img src="hey.png">
             </body>
             </html>
-          `
-        }
+          `,
+        },
       },
       {
         request: 'HEAD https://example.com/hey.png',
-        response: 200
-      }
+        response: 200,
+      },
     ]);
 
     const t = new TapRender();
@@ -284,7 +284,7 @@ describe('hyperlink', function () {
     await hyperlink(
       {
         root: 'https://example.com/',
-        inputUrls: ['https://example.com/']
+        inputUrls: ['https://example.com/'],
       },
       t
     );
@@ -295,7 +295,7 @@ describe('hyperlink', function () {
         ok: false,
         operator: 'content-type-missing',
         name: 'content-type-missing https://example.com/hey.png',
-        at: 'https://example.com/ (6:25) <img src="hey.png">'
+        at: 'https://example.com/ (6:25) <img src="hey.png">',
       });
     });
   });
@@ -304,7 +304,7 @@ describe('hyperlink', function () {
     const server = require('http')
       .createServer((req, res) => {
         res.writeHead(200, {
-          'Content-Type': 'text/css'
+          'Content-Type': 'text/css',
         });
         const id = parseInt(req.url.match(/(\d+)\.css/));
         if (id < 100) {
@@ -324,7 +324,7 @@ describe('hyperlink', function () {
       const ag = await hyperlink(
         {
           root,
-          inputUrls: [`${root}1.css`]
+          inputUrls: [`${root}1.css`],
         },
         t
       );
@@ -349,9 +349,9 @@ describe('hyperlink', function () {
           {
             url: `${root}/index.html`,
             text:
-              '<!doctype html><html><body><a href="broken.html">broken</a></body></html>'
-          }
-        ]
+              '<!doctype html><html><body><a href="broken.html">broken</a></body></html>',
+          },
+        ],
       },
       t
     );
@@ -361,37 +361,37 @@ describe('hyperlink', function () {
       pass: 1,
       fail: 1,
       skip: 0,
-      todo: 0
+      todo: 0,
     });
     expect(t.push, 'to have calls satisfying', () => {
       t.push({
-        name: 'Crawling internal assets'
+        name: 'Crawling internal assets',
       });
 
       t.push(null, {
         ok: true,
-        name: `load index.html`
+        name: `load index.html`,
       });
 
       t.push(null, {
         ok: false,
         operator: 'load',
         name: `load broken.html`,
-        actual: expect.it('to begin with', 'ENOENT: no such file or directory')
+        actual: expect.it('to begin with', 'ENOENT: no such file or directory'),
       });
 
       t.push({
-        name: 'Crawling 0 outgoing urls'
-      });
-
-      t.push({
-        name:
-          'Connecting to 0 hosts (checking <link rel="preconnect" href="...">'
+        name: 'Crawling 0 outgoing urls',
       });
 
       t.push({
         name:
-          'Looking up 0 host names (checking <link rel="dns-prefetch" href="...">'
+          'Connecting to 0 hosts (checking <link rel="preconnect" href="...">',
+      });
+
+      t.push({
+        name:
+          'Looking up 0 host names (checking <link rel="dns-prefetch" href="...">',
       });
     });
   });
@@ -404,7 +404,7 @@ describe('hyperlink', function () {
         {
           recursive: false,
           root: pathModule.resolve(__dirname, '..', 'testdata', 'recursive'),
-          inputUrls: ['index.html']
+          inputUrls: ['index.html'],
         },
         t
       );
@@ -414,24 +414,25 @@ describe('hyperlink', function () {
         pass: 8,
         fail: 0,
         skip: 0,
-        todo: 0
+        todo: 0,
       });
       expect(t.push, 'to have a call satisfying', () => {
         t.push({
-          name: 'Crawling 0 outgoing urls'
+          name: 'Crawling 0 outgoing urls',
         });
       });
       expect(t.push, 'to have no calls satisfying', () => {
         t.push(null, {
           operator: 'fragment-check',
           name:
-            'fragment-check testdata/recursive/page.html --> index.html#brokenfragment'
+            'fragment-check testdata/recursive/page.html --> index.html#brokenfragment',
         });
       });
       expect(t.push, 'to have no calls satisfying', () => {
         t.push(null, {
           operator: 'external-check',
-          name: 'external-check testdata/recursive/index.html --> hyperlink.gif'
+          name:
+            'external-check testdata/recursive/index.html --> hyperlink.gif',
         });
       });
     });
@@ -443,7 +444,7 @@ describe('hyperlink', function () {
         {
           recursive: true,
           root: pathModule.resolve(__dirname, '..', 'testdata', 'recursive'),
-          inputUrls: ['index.html']
+          inputUrls: ['index.html'],
         },
         t
       );
@@ -452,43 +453,43 @@ describe('hyperlink', function () {
         {
           operator: 'load',
           name: 'load testdata/recursive/index.html',
-          ok: true
+          ok: true,
         },
         {
           operator: 'load',
           name: 'load testdata/recursive/style.css',
-          ok: true
+          ok: true,
         },
         {
           operator: 'load',
           name: 'load testdata/recursive/favicon.ico',
-          ok: true
+          ok: true,
         },
         {
           operator: 'load',
           name: 'load testdata/recursive/page.html',
-          ok: true
+          ok: true,
         },
         {
           operator: 'load',
           name: 'load testdata/recursive/hyperlink.gif',
-          ok: true
+          ok: true,
         },
         {
           operator: 'load',
           name: 'load testdata/recursive/bf176a25b4f8227fea804854c98dc5e2.png',
-          ok: true
+          ok: true,
         },
         {
           operator: 'load',
           name:
             'load testdata/recursive/1ebd0482aadade65f20ec178219fe012.woff2',
-          ok: true
+          ok: true,
         },
         {
           operator: 'load',
           name: 'load testdata/recursive/314bbcd238d458622bbf32427346774f.woff',
-          ok: true
+          ok: true,
         },
         {
           operator: 'fragment-check',
@@ -498,8 +499,8 @@ describe('hyperlink', function () {
           at:
             'testdata/recursive/page.html:8:14 <a href="index.html#brokenfragment">...</a>',
           ok: false,
-          actual: null
-        }
+          actual: null,
+        },
       ]);
 
       expect(t.close(), 'to satisfy', {
@@ -507,12 +508,12 @@ describe('hyperlink', function () {
         pass: 8,
         fail: 1,
         skip: 0,
-        todo: 0
+        todo: 0,
       });
 
       expect(t.push, 'to have a call satisfying', () => {
         t.push({
-          name: 'Crawling 0 outgoing urls'
+          name: 'Crawling 0 outgoing urls',
         });
       });
     });
@@ -526,23 +527,23 @@ describe('hyperlink', function () {
           response: {
             statusCode: 200,
             headers: {
-              'Content-Type': 'text/html; charset=UTF-8'
+              'Content-Type': 'text/html; charset=UTF-8',
             },
             body:
-              '<html><head></head><body><a href="foo.html#bar">Link</a></body></html>'
-          }
+              '<html><head></head><body><a href="foo.html#bar">Link</a></body></html>',
+          },
         },
         {
           request: 'GET https://example.com/foo.html',
           response: {
             statusCode: 200,
             headers: {
-              'Content-Type': 'text/html; charset=UTF-8'
+              'Content-Type': 'text/html; charset=UTF-8',
             },
             body:
-              '<html><head></head><body><a id="bar">Welcome!</a></body></html>'
-          }
-        }
+              '<html><head></head><body><a id="bar">Welcome!</a></body></html>',
+          },
+        },
       ]);
 
       const t = new TapRender();
@@ -551,7 +552,7 @@ describe('hyperlink', function () {
         {
           recursive: true,
           root: 'https://example.com/',
-          inputUrls: ['https://example.com/']
+          inputUrls: ['https://example.com/'],
         },
         t
       );
@@ -561,7 +562,7 @@ describe('hyperlink', function () {
         t.push(null, {
           ok: true,
           operator: 'fragment-check',
-          name: 'fragment-check https://example.com/ --> foo.html#bar'
+          name: 'fragment-check https://example.com/ --> foo.html#bar',
         });
       });
     });
@@ -573,22 +574,22 @@ describe('hyperlink', function () {
           response: {
             statusCode: 200,
             headers: {
-              'Content-Type': 'text/html; charset=UTF-8'
+              'Content-Type': 'text/html; charset=UTF-8',
             },
             body:
-              '<html><head></head><body><a href="foo.html#bar">Link</a></body></html>'
-          }
+              '<html><head></head><body><a href="foo.html#bar">Link</a></body></html>',
+          },
         },
         {
           request: 'GET https://example.com/foo.html',
           response: {
             statusCode: 200,
             headers: {
-              'Content-Type': 'text/html; charset=UTF-8'
+              'Content-Type': 'text/html; charset=UTF-8',
             },
-            body: '<html><head></head><body>No fragments here</body></html>'
-          }
-        }
+            body: '<html><head></head><body>No fragments here</body></html>',
+          },
+        },
       ]);
 
       const t = new TapRender();
@@ -597,7 +598,7 @@ describe('hyperlink', function () {
         {
           recursive: true,
           root: 'https://example.com/',
-          inputUrls: ['https://example.com/']
+          inputUrls: ['https://example.com/'],
         },
         t
       );
@@ -608,7 +609,7 @@ describe('hyperlink', function () {
           ok: false,
           operator: 'fragment-check',
           expected: 'id="bar"',
-          name: 'fragment-check https://example.com/ --> foo.html#bar'
+          name: 'fragment-check https://example.com/ --> foo.html#bar',
         });
       });
     });
@@ -626,7 +627,7 @@ describe('hyperlink', function () {
               'testdata',
               'fragmentAndRedirectWithoutSlash'
             ),
-            inputUrls: ['index.html']
+            inputUrls: ['index.html'],
           },
           t
         );
@@ -640,7 +641,7 @@ describe('hyperlink', function () {
             expected: '/subdir/#myFragment',
             at:
               'testdata/fragmentAndRedirectWithoutSlash/index.html:5:12 <a href="/subdir#myFragment">...</a>',
-            ok: false
+            ok: false,
           });
         });
       });
@@ -657,14 +658,14 @@ describe('hyperlink', function () {
               'testdata',
               'fragmentAndRedirectWithSlash'
             ),
-            inputUrls: ['index.html']
+            inputUrls: ['index.html'],
           },
           t
         );
 
         expect(t.push, 'to have no calls satisfying', () => {
           t.push(null, {
-            operator: 'fragment-redirect'
+            operator: 'fragment-redirect',
           });
         });
       });
@@ -677,29 +678,29 @@ describe('hyperlink', function () {
             request: 'GET https://example.com/',
             response: {
               headers: {
-                'Content-Type': 'text/html'
+                'Content-Type': 'text/html',
               },
-              body: `<!DOCTYPE html><html><head></head><body><a href="/subdir#myFragment"></a></body></html>`
-            }
+              body: `<!DOCTYPE html><html><head></head><body><a href="/subdir#myFragment"></a></body></html>`,
+            },
           },
           {
             request: 'GET https://example.com/subdir',
             response: {
               statusCode: 302,
               headers: {
-                Location: 'https://example.com/subdir/'
-              }
-            }
+                Location: 'https://example.com/subdir/',
+              },
+            },
           },
           {
             request: 'GET https://example.com/subdir/',
             response: {
               headers: {
-                'Content-Type': 'text/html'
+                'Content-Type': 'text/html',
               },
-              body: `<!DOCTYPE html><html><head></head><body><div id="myFragment"></div></body></html>`
-            }
-          }
+              body: `<!DOCTYPE html><html><head></head><body><div id="myFragment"></div></body></html>`,
+            },
+          },
         ]);
 
         const t = new TapRender();
@@ -708,7 +709,7 @@ describe('hyperlink', function () {
           {
             recursive: true,
             root: 'https://example.com/',
-            inputUrls: ['https://example.com/']
+            inputUrls: ['https://example.com/'],
           },
           t
         );
@@ -722,7 +723,7 @@ describe('hyperlink', function () {
             actual: '/subdir#myFragment',
             at:
               'https://example.com/ (1:50) <a href="/subdir#myFragment">...</a>',
-            ok: false
+            ok: false,
           });
         });
       });
@@ -733,29 +734,29 @@ describe('hyperlink', function () {
             request: 'GET https://example.com/',
             response: {
               headers: {
-                'Content-Type': 'text/html'
+                'Content-Type': 'text/html',
               },
-              body: `<!DOCTYPE html><html><head></head><body><a href="/subdir/#myFragment"></a></body></html>`
-            }
+              body: `<!DOCTYPE html><html><head></head><body><a href="/subdir/#myFragment"></a></body></html>`,
+            },
           },
           {
             request: 'GET https://example.com/subdir/',
             response: {
               statusCode: 302,
               headers: {
-                Location: 'https://example.com/subdir2/'
-              }
-            }
+                Location: 'https://example.com/subdir2/',
+              },
+            },
           },
           {
             request: 'GET https://example.com/subdir2/',
             response: {
               headers: {
-                'Content-Type': 'text/html'
+                'Content-Type': 'text/html',
               },
-              body: `<!DOCTYPE html><html><head></head><body><div id="myFragment"></div></body></html>`
-            }
-          }
+              body: `<!DOCTYPE html><html><head></head><body><div id="myFragment"></div></body></html>`,
+            },
+          },
         ]);
 
         const t = new TapRender();
@@ -764,7 +765,7 @@ describe('hyperlink', function () {
           {
             recursive: true,
             root: 'https://example.com/',
-            inputUrls: ['https://example.com/']
+            inputUrls: ['https://example.com/'],
           },
           t
         );
@@ -778,7 +779,7 @@ describe('hyperlink', function () {
             actual: '/subdir/#myFragment',
             at:
               'https://example.com/ (1:50) <a href="/subdir/#myFragment">...</a>',
-            ok: false
+            ok: false,
           });
         });
       });
@@ -796,13 +797,13 @@ describe('hyperlink', function () {
       await hyperlink(
         {
           root,
-          inputUrls: ['/']
+          inputUrls: ['/'],
         },
         t
       );
       expect(t.push, 'to have no calls satisfying', () => {
         t.push(null, {
-          operator: 'fragment-check'
+          operator: 'fragment-check',
         });
       });
     });
@@ -814,22 +815,22 @@ describe('hyperlink', function () {
           response: {
             statusCode: 200,
             headers: {
-              'Content-Type': 'text/html; charset=UTF-8'
+              'Content-Type': 'text/html; charset=UTF-8',
             },
             body:
-              '<html><head></head><body><a href="foo.html#">Link</a></body></html>'
-          }
+              '<html><head></head><body><a href="foo.html#">Link</a></body></html>',
+          },
         },
         {
           request: 'GET https://example.com/foo.html',
           response: {
             statusCode: 200,
             headers: {
-              'Content-Type': 'text/html; charset=UTF-8'
+              'Content-Type': 'text/html; charset=UTF-8',
             },
-            body: '<html><head></head><body>No fragments here</body></html>'
-          }
-        }
+            body: '<html><head></head><body>No fragments here</body></html>',
+          },
+        },
       ]);
 
       const t = new TapRender();
@@ -838,7 +839,7 @@ describe('hyperlink', function () {
         {
           recursive: true,
           root: 'https://example.com/',
-          inputUrls: ['https://example.com/']
+          inputUrls: ['https://example.com/'],
         },
         t
       );
@@ -850,7 +851,7 @@ describe('hyperlink', function () {
           operator: 'fragment-check',
           name: 'fragment-check https://example.com/ --> foo.html#',
           expected:
-            'Fragment identifiers in links to different documents should not be empty'
+            'Fragment identifiers in links to different documents should not be empty',
         });
       });
     });
@@ -862,23 +863,23 @@ describe('hyperlink', function () {
           response: {
             statusCode: 200,
             headers: {
-              'Content-Type': 'text/html; charset=UTF-8'
+              'Content-Type': 'text/html; charset=UTF-8',
             },
             body:
-              '<html><head></head><body><a href="https://example2.com/foo.html#frag">Link</a></body></html>'
-          }
+              '<html><head></head><body><a href="https://example2.com/foo.html#frag">Link</a></body></html>',
+          },
         },
         {
           request: 'GET https://example2.com/foo.html',
           response: {
             statusCode: 200,
             headers: {
-              'Content-Type': 'text/html; charset=UTF-8'
+              'Content-Type': 'text/html; charset=UTF-8',
             },
             body:
-              '<html><head><link rel="stylesheet" href="dont-follow.css"></head><body><img src="dont-follow.png"><main id="frag">I exist</main></body></html>'
-          }
-        }
+              '<html><head><link rel="stylesheet" href="dont-follow.css"></head><body><img src="dont-follow.png"><main id="frag">I exist</main></body></html>',
+          },
+        },
       ]);
 
       const t = new TapRender();
@@ -887,7 +888,7 @@ describe('hyperlink', function () {
         {
           recursive: true,
           root: 'https://example.com/',
-          inputUrls: ['https://example.com/']
+          inputUrls: ['https://example.com/'],
         },
         t
       );
@@ -899,7 +900,7 @@ describe('hyperlink', function () {
           operator: 'fragment-check',
           name:
             'fragment-check https://example.com/ --> https://example2.com/foo.html#frag',
-          expected: 'id="frag"'
+          expected: 'id="frag"',
         });
       });
     });
@@ -911,11 +912,11 @@ describe('hyperlink', function () {
           response: {
             statusCode: 200,
             headers: {
-              'Content-Type': 'text/html; charset=UTF-8'
+              'Content-Type': 'text/html; charset=UTF-8',
             },
-            body: '<html><head></head><body><a href="#">Link</a></body></html>'
-          }
-        }
+            body: '<html><head></head><body><a href="#">Link</a></body></html>',
+          },
+        },
       ]);
 
       const t = new TapRender();
@@ -924,7 +925,7 @@ describe('hyperlink', function () {
         {
           recursive: true,
           root: 'https://example.com/',
-          inputUrls: ['https://example.com/']
+          inputUrls: ['https://example.com/'],
         },
         t
       );
@@ -932,7 +933,7 @@ describe('hyperlink', function () {
       expect(t.close(), 'to satisfy', { fail: 0 });
       expect(t.push, 'to have no calls satisfying', () => {
         t.push(null, {
-          operator: 'fragment-check'
+          operator: 'fragment-check',
         });
       });
     });
@@ -950,7 +951,7 @@ describe('hyperlink', function () {
               'testdata',
               'fragmentIdentifier'
             ),
-            inputUrls: ['index.html']
+            inputUrls: ['index.html'],
           },
           t
         );
@@ -960,7 +961,7 @@ describe('hyperlink', function () {
           pass: 4,
           fail: 1,
           skip: 0,
-          todo: 0
+          todo: 0,
         });
         expect(t.push, 'to have a call satisfying', () => {
           t.push(null, {
@@ -968,12 +969,12 @@ describe('hyperlink', function () {
             operator: 'fragment-check',
             name:
               'fragment-check testdata/fragmentIdentifier/index.html --> /subdir/#definitely-broken',
-            expected: 'id="definitely-broken"'
+            expected: 'id="definitely-broken"',
           });
         }).and('to have no calls satisfying', () => {
           t.push(null, {
             name: expect.it('to contain', '#fine'),
-            ok: false
+            ok: false,
           });
         });
       });
@@ -989,15 +990,15 @@ describe('hyperlink', function () {
             response: {
               statusCode: 200,
               headers: {
-                'Content-Type': 'text/css'
+                'Content-Type': 'text/css',
               },
-              body: '@import "other.css";'
-            }
+              body: '@import "other.css";',
+            },
           },
           {
             request: 'GET https://example.com/other.css',
-            response: 404
-          }
+            response: 404,
+          },
         ]);
 
         const t = new TapRender();
@@ -1006,7 +1007,7 @@ describe('hyperlink', function () {
           {
             recursive: true,
             root: 'https://example.com/',
-            inputUrls: ['https://example.com/styles.css']
+            inputUrls: ['https://example.com/styles.css'],
           },
           t
         );
@@ -1019,7 +1020,7 @@ describe('hyperlink', function () {
             name: 'load https://example.com/other.css',
             expected: '200 https://example.com/other.css',
             actual: 'HTTP 404 Not Found',
-            at: 'https://example.com/styles.css (1:10) '
+            at: 'https://example.com/styles.css (1:10) ',
           });
         });
       });
@@ -1034,15 +1035,15 @@ describe('hyperlink', function () {
             response: {
               statusCode: 200,
               headers: {
-                'Content-Type': 'text/css'
+                'Content-Type': 'text/css',
               },
-              body: '@import "https://somewhereelse.com/other.css";'
-            }
+              body: '@import "https://somewhereelse.com/other.css";',
+            },
           },
           {
             request: 'GET https://somewhereelse.com/other.css',
-            response: 404
-          }
+            response: 404,
+          },
         ]);
 
         const t = new TapRender();
@@ -1051,7 +1052,7 @@ describe('hyperlink', function () {
           {
             recursive: true,
             root: 'https://example.com/',
-            inputUrls: ['https://example.com/styles.css']
+            inputUrls: ['https://example.com/styles.css'],
           },
           t
         );
@@ -1064,7 +1065,7 @@ describe('hyperlink', function () {
             name: 'load https://somewhereelse.com/other.css',
             expected: '200 https://somewhereelse.com/other.css',
             actual: 'HTTP 404 Not Found',
-            at: 'https://example.com/styles.css (1:10) '
+            at: 'https://example.com/styles.css (1:10) ',
           });
         });
       });
@@ -1078,26 +1079,26 @@ describe('hyperlink', function () {
             response: {
               headers: { 'Content-Type': 'text/html' },
               body:
-                '<html><head><link rel="stylesheet" href="https://mycdn.com/styles.css"></head><body></body></html>'
-            }
+                '<html><head><link rel="stylesheet" href="https://mycdn.com/styles.css"></head><body></body></html>',
+            },
           },
           {
             request: 'GET https://mycdn.com/styles.css',
             response: {
               headers: { 'Content-Type': 'text/css' },
               body:
-                '@font-face { font-family: Foo; src: url(404.eot) format("embedded-opentype"); font-weight: 400; }'
-            }
+                '@font-face { font-family: Foo; src: url(404.eot) format("embedded-opentype"); font-weight: 400; }',
+            },
           },
           {
             request: 'HEAD https://mycdn.com/404.eot',
-            response: 404
+            response: 404,
           },
           // retry
           {
             request: 'GET https://mycdn.com/404.eot',
-            response: 404
-          }
+            response: 404,
+          },
         ]);
 
         const t = new TapRender();
@@ -1105,7 +1106,7 @@ describe('hyperlink', function () {
         await hyperlink(
           {
             root: 'https://example.com/',
-            inputUrls: ['https://example.com/']
+            inputUrls: ['https://example.com/'],
           },
           t
         );
@@ -1116,7 +1117,7 @@ describe('hyperlink', function () {
             operator: 'external-check',
             name: 'external-check https://mycdn.com/404.eot',
             expected: '200 https://mycdn.com/404.eot',
-            actual: '404 https://mycdn.com/404.eot'
+            actual: '404 https://mycdn.com/404.eot',
           });
         });
       });
@@ -1130,18 +1131,18 @@ describe('hyperlink', function () {
             response: {
               headers: { 'Content-Type': 'text/html' },
               body:
-                '<html><head><iframe src="https://mycdn.com/frame.html"></iframe></head><body></body></html>'
-            }
+                '<html><head><iframe src="https://mycdn.com/frame.html"></iframe></head><body></body></html>',
+            },
           },
           {
             request: 'HEAD https://mycdn.com/frame.html',
             response: {
               statusCode: 200,
               headers: {
-                'Content-Type': 'text/html'
-              }
-            }
-          }
+                'Content-Type': 'text/html',
+              },
+            },
+          },
         ]);
 
         const t = new TapRender();
@@ -1149,7 +1150,7 @@ describe('hyperlink', function () {
         await hyperlink(
           {
             root: 'https://example.com/',
-            inputUrls: ['https://example.com/']
+            inputUrls: ['https://example.com/'],
           },
           t
         );
@@ -1167,30 +1168,30 @@ describe('hyperlink', function () {
           response: {
             statusCode: 200,
             headers: {
-              'Content-Type': 'text/html; charset=UTF-8'
+              'Content-Type': 'text/html; charset=UTF-8',
             },
             body:
-              '<html><head></head><body><a href="https://elsewhere.com/">Link</a></body></html>'
-          }
+              '<html><head></head><body><a href="https://elsewhere.com/">Link</a></body></html>',
+          },
         },
         {
           request: 'HEAD https://elsewhere.com/',
           response: {
             statusCode: 301,
             headers: {
-              Location: 'https://elsewhere.com/redirectTarget'
-            }
-          }
+              Location: 'https://elsewhere.com/redirectTarget',
+            },
+          },
         },
         {
           request: 'HEAD https://elsewhere.com/redirectTarget',
           response: {
             statusCode: 200,
             headers: {
-              'Content-Type': 'text/html'
-            }
-          }
-        }
+              'Content-Type': 'text/html',
+            },
+          },
+        },
       ]);
 
       const t = new TapRender();
@@ -1198,7 +1199,7 @@ describe('hyperlink', function () {
       await hyperlink(
         {
           root: 'https://example.com/',
-          inputUrls: ['https://example.com/']
+          inputUrls: ['https://example.com/'],
         },
         t
       );
@@ -1207,7 +1208,7 @@ describe('hyperlink', function () {
       expect(t.push, 'to have a call satisfying', () => {
         t.push(null, {
           ok: false,
-          name: 'external-redirect https://elsewhere.com/'
+          name: 'external-redirect https://elsewhere.com/',
         });
       });
     });
@@ -1219,30 +1220,30 @@ describe('hyperlink', function () {
           response: {
             statusCode: 200,
             headers: {
-              'Content-Type': 'text/html; charset=UTF-8'
+              'Content-Type': 'text/html; charset=UTF-8',
             },
             body:
-              '<html><head></head><body><a href="https://elsewhere.com/">Link</a></body></html>'
-          }
+              '<html><head></head><body><a href="https://elsewhere.com/">Link</a></body></html>',
+          },
         },
         {
           request: 'HEAD https://elsewhere.com/',
           response: {
             statusCode: 302,
             headers: {
-              Location: 'https://elsewhere.com/redirectTarget'
-            }
-          }
+              Location: 'https://elsewhere.com/redirectTarget',
+            },
+          },
         },
         {
           request: 'HEAD https://elsewhere.com/redirectTarget',
           response: {
             statusCode: 200,
             headers: {
-              'Content-Type': 'text/html'
-            }
-          }
-        }
+              'Content-Type': 'text/html',
+            },
+          },
+        },
       ]);
 
       const t = new TapRender();
@@ -1250,7 +1251,7 @@ describe('hyperlink', function () {
       await hyperlink(
         {
           root: 'https://example.com/',
-          inputUrls: ['https://example.com/']
+          inputUrls: ['https://example.com/'],
         },
         t
       );
@@ -1260,12 +1261,12 @@ describe('hyperlink', function () {
         pass: 3,
         fail: 0,
         skip: 0,
-        todo: 0
+        todo: 0,
       });
       expect(t.push, 'to have a call satisfying', () => {
         t.push(null, {
           ok: true,
-          name: 'external-redirect https://elsewhere.com/'
+          name: 'external-redirect https://elsewhere.com/',
         });
       });
     });
@@ -1277,39 +1278,39 @@ describe('hyperlink', function () {
           response: {
             statusCode: 200,
             headers: {
-              'Content-Type': 'text/html; charset=UTF-8'
+              'Content-Type': 'text/html; charset=UTF-8',
             },
             body:
-              '<html><head></head><body><a href="https://elsewhere.com/">Link</a></body></html>'
-          }
+              '<html><head></head><body><a href="https://elsewhere.com/">Link</a></body></html>',
+          },
         },
         {
           request: 'HEAD https://elsewhere.com/',
           response: {
             statusCode: 302,
             headers: {
-              Location: 'https://elsewhere.com/redirectTarget'
-            }
-          }
+              Location: 'https://elsewhere.com/redirectTarget',
+            },
+          },
         },
         {
           request: 'HEAD https://elsewhere.com/redirectTarget',
           response: {
             statusCode: 302,
             headers: {
-              Location: 'https://elsewhere.com/finalDestination'
-            }
-          }
+              Location: 'https://elsewhere.com/finalDestination',
+            },
+          },
         },
         {
           request: 'HEAD https://elsewhere.com/finalDestination',
           response: {
             statusCode: 200,
             headers: {
-              'Content-Type': 'text/html'
-            }
-          }
-        }
+              'Content-Type': 'text/html',
+            },
+          },
+        },
       ]);
 
       const t = new TapRender();
@@ -1317,7 +1318,7 @@ describe('hyperlink', function () {
       await hyperlink(
         {
           root: 'https://example.com/',
-          inputUrls: ['https://example.com/']
+          inputUrls: ['https://example.com/'],
         },
         t
       );
@@ -1327,7 +1328,7 @@ describe('hyperlink', function () {
         pass: 2,
         fail: 1,
         skip: 0,
-        todo: 0
+        todo: 0,
       });
       expect(t.push, 'to have a call satisfying', () => {
         t.push(null, {
@@ -1336,7 +1337,7 @@ describe('hyperlink', function () {
           expected:
             '302 https://elsewhere.com/ --> 200 https://elsewhere.com/finalDestination',
           actual:
-            '302 https://elsewhere.com/ --> 302 https://elsewhere.com/redirectTarget --> 200 https://elsewhere.com/finalDestination'
+            '302 https://elsewhere.com/ --> 302 https://elsewhere.com/redirectTarget --> 200 https://elsewhere.com/finalDestination',
         });
       });
     });
@@ -1348,40 +1349,40 @@ describe('hyperlink', function () {
           response: {
             statusCode: 200,
             headers: {
-              'Content-Type': 'text/html; charset=UTF-8'
+              'Content-Type': 'text/html; charset=UTF-8',
             },
             body:
-              '<html><head></head><body><script src="https://elsewhere.com/"></script></body></html>'
-          }
+              '<html><head></head><body><script src="https://elsewhere.com/"></script></body></html>',
+          },
         },
         {
           request: 'GET https://elsewhere.com/',
           response: {
             statusCode: 302,
             headers: {
-              Location: 'http://elsewhere.com/redirectTarget'
-            }
-          }
+              Location: 'http://elsewhere.com/redirectTarget',
+            },
+          },
         },
         {
           request: 'GET http://elsewhere.com/redirectTarget',
           response: {
             statusCode: 302,
             headers: {
-              Location: 'https://elsewhere.com/redirectTarget'
-            }
-          }
+              Location: 'https://elsewhere.com/redirectTarget',
+            },
+          },
         },
         {
           request: 'GET https://elsewhere.com/redirectTarget',
           response: {
             statusCode: 200,
             headers: {
-              'Content-Type': 'application/javascript'
+              'Content-Type': 'application/javascript',
             },
-            body: 'alert("foo");'
-          }
-        }
+            body: 'alert("foo");',
+          },
+        },
       ]);
 
       const t = new TapRender();
@@ -1389,7 +1390,7 @@ describe('hyperlink', function () {
       await hyperlink(
         {
           root: 'https://example.com/',
-          inputUrls: ['https://example.com/']
+          inputUrls: ['https://example.com/'],
         },
         t
       );
@@ -1402,7 +1403,7 @@ describe('hyperlink', function () {
           actual:
             'https://elsewhere.com/ --> http://elsewhere.com/redirectTarget',
           expected:
-            'https://elsewhere.com/ --> https://elsewhere.com/redirectTarget'
+            'https://elsewhere.com/ --> https://elsewhere.com/redirectTarget',
         });
       });
     });
@@ -1423,7 +1424,7 @@ describe('hyperlink', function () {
         await hyperlink(
           {
             root,
-            inputUrls: ['index.html']
+            inputUrls: ['index.html'],
           },
           t
         );
@@ -1433,12 +1434,12 @@ describe('hyperlink', function () {
           pass: 2,
           fail: 0,
           skip: 0,
-          todo: 0
+          todo: 0,
         });
         expect(t.push, 'to have a call satisfying', () => {
           t.push({
             name:
-              'Connecting to 1 hosts (checking <link rel="preconnect" href="...">'
+              'Connecting to 1 hosts (checking <link rel="preconnect" href="...">',
           });
         });
       });
@@ -1458,7 +1459,7 @@ describe('hyperlink', function () {
         await hyperlink(
           {
             root,
-            inputUrls: ['index.html']
+            inputUrls: ['index.html'],
           },
           t
         );
@@ -1469,7 +1470,7 @@ describe('hyperlink', function () {
             actual:
               'DNS missing: thisdomaindoesnotandshouldnotexistqhqwicqecqwe.com',
             at:
-              'testdata/preconnect/nonexistent/index.html:3:34 <link rel="preconnect" href="https://thisdomaindoesnotandshouldnotexistqhqwicqecqwe.com/">'
+              'testdata/preconnect/nonexistent/index.html:3:34 <link rel="preconnect" href="https://thisdomaindoesnotandshouldnotexistqhqwicqecqwe.com/">',
           });
         });
       });
@@ -1491,7 +1492,7 @@ describe('hyperlink', function () {
         await hyperlink(
           {
             root,
-            inputUrls: ['index.html']
+            inputUrls: ['index.html'],
           },
           t
         );
@@ -1501,12 +1502,12 @@ describe('hyperlink', function () {
           pass: 2,
           fail: 0,
           skip: 0,
-          todo: 0
+          todo: 0,
         });
         expect(t.push, 'to have a call satisfying', () => {
           t.push({
             name:
-              'Looking up 1 host names (checking <link rel="dns-prefetch" href="...">'
+              'Looking up 1 host names (checking <link rel="dns-prefetch" href="...">',
           });
         });
       });
@@ -1526,7 +1527,7 @@ describe('hyperlink', function () {
         await hyperlink(
           {
             root,
-            inputUrls: ['index.html']
+            inputUrls: ['index.html'],
           },
           t
         );
@@ -1536,14 +1537,14 @@ describe('hyperlink', function () {
           pass: 1,
           fail: 1,
           skip: 0,
-          todo: 0
+          todo: 0,
         });
         expect(t.push, 'to have a call satisfying', () => {
           t.push(null, {
             actual:
               'DNS missing: thisdomaindoesnotandshouldnotexistqhqwicqecqwe.com',
             at:
-              'testdata/dns-prefetch/nonexistent/index.html:3:36 <link rel="dns-prefetch" href="//thisdomaindoesnotandshouldnotexistqhqwicqecqwe.com/">'
+              'testdata/dns-prefetch/nonexistent/index.html:3:36 <link rel="dns-prefetch" href="//thisdomaindoesnotandshouldnotexistqhqwicqecqwe.com/">',
           });
         });
       });
@@ -1558,16 +1559,16 @@ describe('hyperlink', function () {
           response: {
             statusCode: 200,
             headers: {
-              'Content-Type': 'text/html; charset=UTF-8'
+              'Content-Type': 'text/html; charset=UTF-8',
             },
             body:
-              '<html><head><script src="script.js"></script></head><body></body></html>'
-          }
+              '<html><head><script src="script.js"></script></head><body></body></html>',
+          },
         },
         {
           request: 'GET https://example.com/script.js',
-          response: 404
-        }
+          response: 404,
+        },
       ]);
 
       const t = new TapRender();
@@ -1581,7 +1582,7 @@ describe('hyperlink', function () {
             if (report.name === 'load https://foo.com/script.js') {
               return true;
             }
-          }
+          },
         },
         t
       );
@@ -1592,7 +1593,7 @@ describe('hyperlink', function () {
           ok: false,
           skip: undefined,
           operator: 'load',
-          name: 'load https://example.com/script.js'
+          name: 'load https://example.com/script.js',
         });
       });
     });
@@ -1604,12 +1605,12 @@ describe('hyperlink', function () {
           response: {
             statusCode: 200,
             headers: {
-              'Content-Type': 'text/html; charset=UTF-8'
+              'Content-Type': 'text/html; charset=UTF-8',
             },
             body:
-              '<html><head><script src="script.js"></script></head><body></body></html>'
-          }
-        }
+              '<html><head><script src="script.js"></script></head><body></body></html>',
+          },
+        },
       ]);
 
       const t = new TapRender();
@@ -1623,7 +1624,7 @@ describe('hyperlink', function () {
             if (report.name === 'load https://example.com/script.js') {
               return true;
             }
-          }
+          },
         },
         t
       );
@@ -1634,7 +1635,7 @@ describe('hyperlink', function () {
           ok: true,
           skip: true,
           operator: 'load',
-          name: 'load https://example.com/script.js'
+          name: 'load https://example.com/script.js',
         });
       });
     });
@@ -1646,12 +1647,12 @@ describe('hyperlink', function () {
           response: {
             statusCode: 200,
             headers: {
-              'Content-Type': 'text/html; charset=UTF-8'
+              'Content-Type': 'text/html; charset=UTF-8',
             },
             body:
-              '<html><head><script src="script.js"></script></head><body></body></html>'
-          }
-        }
+              '<html><head><script src="script.js"></script></head><body></body></html>',
+          },
+        },
       ]);
 
       const t = new TapRender();
@@ -1665,7 +1666,7 @@ describe('hyperlink', function () {
             if (report.name === 'load https://example.com/script.js') {
               return 'Skip this one';
             }
-          }
+          },
         },
         t
       );
@@ -1676,7 +1677,7 @@ describe('hyperlink', function () {
           ok: true,
           skip: 'Skip this one',
           operator: 'load',
-          name: 'load https://example.com/script.js'
+          name: 'load https://example.com/script.js',
         });
       });
     });
@@ -1688,22 +1689,22 @@ describe('hyperlink', function () {
           response: {
             statusCode: 200,
             headers: {
-              'Content-Type': 'text/html; charset=UTF-8'
+              'Content-Type': 'text/html; charset=UTF-8',
             },
             body:
-              '<html><head><script src="http://example.com/insecureScript.js"></script></head><body></body></html>'
-          }
+              '<html><head><script src="http://example.com/insecureScript.js"></script></head><body></body></html>',
+          },
         },
         {
           request: 'GET http://example.com/insecureScript.js',
           response: {
             statusCode: 200,
             headers: {
-              'Content-Type': 'application/javascript'
+              'Content-Type': 'application/javascript',
             },
-            body: 'alert("hello, insecure world");'
-          }
-        }
+            body: 'alert("hello, insecure world");',
+          },
+        },
       ]);
 
       const t = new TapRender();
@@ -1713,7 +1714,7 @@ describe('hyperlink', function () {
           recursive: false,
           root: 'https://example.com/',
           inputUrls: ['https://example.com/'],
-          skipFilter: report => report.name.includes('mixed-content')
+          skipFilter: (report) => report.name.includes('mixed-content'),
         },
         t
       );
@@ -1723,7 +1724,7 @@ describe('hyperlink', function () {
         pass: 2,
         fail: 0,
         skip: 1,
-        todo: 0
+        todo: 0,
       });
       expect(t.push, 'to have a call satisfying', () => {
         t.push(null, {
@@ -1732,7 +1733,7 @@ describe('hyperlink', function () {
           name:
             'mixed-content https://example.com/ --> http://example.com/insecureScript.js',
           at:
-            'https://example.com/ (1:26) <script src="http://example.com/insecureScript.js">...</script>'
+            'https://example.com/ (1:26) <script src="http://example.com/insecureScript.js">...</script>',
         });
       });
     });
@@ -1744,12 +1745,12 @@ describe('hyperlink', function () {
           response: {
             statusCode: 200,
             headers: {
-              'Content-Type': 'text/html; charset=UTF-8'
+              'Content-Type': 'text/html; charset=UTF-8',
             },
             body:
-              '<html><head></head><body><a href="#missingId">Broken fragment link</a></body></html>'
-          }
-        }
+              '<html><head></head><body><a href="#missingId">Broken fragment link</a></body></html>',
+          },
+        },
       ]);
 
       const t = new TapRender();
@@ -1766,7 +1767,7 @@ describe('hyperlink', function () {
             ) {
               return true;
             }
-          }
+          },
         },
         t
       );
@@ -1776,7 +1777,7 @@ describe('hyperlink', function () {
         pass: 1,
         fail: 0,
         skip: 1,
-        todo: 0
+        todo: 0,
       });
       expect(t.push, 'to have a call satisfying', () => {
         t.push(null, {
@@ -1784,7 +1785,7 @@ describe('hyperlink', function () {
           operator: 'fragment-check',
           name: 'fragment-check https://example.com/ --> #missingId',
           expected: 'id="missingId"',
-          at: 'https://example.com/ (1:35) <a href="#missingId">...</a>'
+          at: 'https://example.com/ (1:35) <a href="#missingId">...</a>',
         });
       });
     });
@@ -1796,12 +1797,12 @@ describe('hyperlink', function () {
           response: {
             statusCode: 200,
             headers: {
-              'Content-Type': 'text/html; charset=UTF-8'
+              'Content-Type': 'text/html; charset=UTF-8',
             },
             body:
-              '<html><head></head><body><a href="https://knownfailure.com" class="external-helper-class">url to skip</a></body></html>'
-          }
-        }
+              '<html><head></head><body><a href="https://knownfailure.com" class="external-helper-class">url to skip</a></body></html>',
+          },
+        },
       ]);
 
       const t = new TapRender();
@@ -1811,7 +1812,7 @@ describe('hyperlink', function () {
           recursive: false,
           root: 'https://example.com/',
           inputUrls: ['https://example.com/'],
-          skipFilter: report => report.at.includes('external-helper-class')
+          skipFilter: (report) => report.at.includes('external-helper-class'),
         },
         t
       );
@@ -1821,7 +1822,7 @@ describe('hyperlink', function () {
         pass: 1,
         fail: 0,
         skip: 1,
-        todo: 0
+        todo: 0,
       });
       expect(t.push, 'to have a call satisfying', () => {
         t.push(null, {
@@ -1829,7 +1830,7 @@ describe('hyperlink', function () {
           operator: 'external-check',
           name: 'external-check https://knownfailure.com',
           at:
-            'https://example.com/ (1:35) <a href="https://knownfailure.com" class="external-helper-class">...</a>'
+            'https://example.com/ (1:35) <a href="https://knownfailure.com" class="external-helper-class">...</a>',
         });
       });
     });
@@ -1849,7 +1850,7 @@ describe('hyperlink', function () {
         {
           root,
           inputUrls: ['index.html'],
-          skipFilter: report => report.operator === 'preconnect-check'
+          skipFilter: (report) => report.operator === 'preconnect-check',
         },
         t
       );
@@ -1859,7 +1860,7 @@ describe('hyperlink', function () {
         pass: 1,
         fail: 0,
         skip: 1,
-        todo: 0
+        todo: 0,
       });
       expect(t.push, 'to have a call satisfying', () => {
         t.push(null, {
@@ -1868,7 +1869,7 @@ describe('hyperlink', function () {
           name:
             'preconnect-check https://thisdomaindoesnotandshouldnotexistqhqwicqecqwe.com/',
           at:
-            'testdata/preconnect/nonexistent/index.html:3:34 <link rel="preconnect" href="https://thisdomaindoesnotandshouldnotexistqhqwicqecqwe.com/">'
+            'testdata/preconnect/nonexistent/index.html:3:34 <link rel="preconnect" href="https://thisdomaindoesnotandshouldnotexistqhqwicqecqwe.com/">',
         });
       });
     });
@@ -1888,7 +1889,7 @@ describe('hyperlink', function () {
         {
           root,
           inputUrls: ['index.html'],
-          skipFilter: report => report.operator === 'dns-prefetch-check'
+          skipFilter: (report) => report.operator === 'dns-prefetch-check',
         },
         t
       );
@@ -1898,7 +1899,7 @@ describe('hyperlink', function () {
         pass: 1,
         fail: 0,
         skip: 1,
-        todo: 0
+        todo: 0,
       });
       expect(t.push, 'to have a call satisfying', () => {
         t.push(null, {
@@ -1907,7 +1908,7 @@ describe('hyperlink', function () {
           name:
             'dns-prefetch-check thisdomaindoesnotandshouldnotexistqhqwicqecqwe.com',
           at:
-            'testdata/dns-prefetch/nonexistent/index.html:3:36 <link rel="dns-prefetch" href="//thisdomaindoesnotandshouldnotexistqhqwicqecqwe.com/">'
+            'testdata/dns-prefetch/nonexistent/index.html:3:36 <link rel="dns-prefetch" href="//thisdomaindoesnotandshouldnotexistqhqwicqecqwe.com/">',
         });
       });
     });
@@ -1921,16 +1922,16 @@ describe('hyperlink', function () {
           response: {
             statusCode: 200,
             headers: {
-              'Content-Type': 'text/html; charset=UTF-8'
+              'Content-Type': 'text/html; charset=UTF-8',
             },
             body:
-              '<html><head><script src="script.js"></script></head><body></body></html>'
-          }
+              '<html><head><script src="script.js"></script></head><body></body></html>',
+          },
         },
         {
           request: 'GET https://example.com/script.js',
-          response: 404
-        }
+          response: 404,
+        },
       ]);
 
       const t = new TapRender();
@@ -1944,7 +1945,7 @@ describe('hyperlink', function () {
             if (report.name === 'load https://foo.com/script.js') {
               return true;
             }
-          }
+          },
         },
         t
       );
@@ -1954,7 +1955,7 @@ describe('hyperlink', function () {
         t.push(null, {
           ok: false,
           todo: undefined,
-          name: 'load https://example.com/script.js'
+          name: 'load https://example.com/script.js',
         });
       });
     });
@@ -1966,16 +1967,16 @@ describe('hyperlink', function () {
           response: {
             statusCode: 200,
             headers: {
-              'Content-Type': 'text/html; charset=UTF-8'
+              'Content-Type': 'text/html; charset=UTF-8',
             },
             body:
-              '<html><head><script src="script.js"></script></head><body></body></html>'
-          }
+              '<html><head><script src="script.js"></script></head><body></body></html>',
+          },
         },
         {
           request: 'GET https://example.com/script.js',
-          response: 404
-        }
+          response: 404,
+        },
       ]);
 
       const t = new TapRender();
@@ -1989,7 +1990,7 @@ describe('hyperlink', function () {
             if (report.name === 'load https://example.com/script.js') {
               return true;
             }
-          }
+          },
         },
         t
       );
@@ -1999,7 +2000,7 @@ describe('hyperlink', function () {
         t.push(null, {
           ok: false,
           todo: true,
-          name: 'load https://example.com/script.js'
+          name: 'load https://example.com/script.js',
         });
       });
     });
@@ -2011,16 +2012,16 @@ describe('hyperlink', function () {
           response: {
             statusCode: 200,
             headers: {
-              'Content-Type': 'text/html; charset=UTF-8'
+              'Content-Type': 'text/html; charset=UTF-8',
             },
             body:
-              '<html><head><script src="script.js"></script></head><body></body></html>'
-          }
+              '<html><head><script src="script.js"></script></head><body></body></html>',
+          },
         },
         {
           request: 'GET https://example.com/script.js',
-          response: 404
-        }
+          response: 404,
+        },
       ]);
 
       const t = new TapRender();
@@ -2034,7 +2035,7 @@ describe('hyperlink', function () {
             if (report.name === 'load https://example.com/script.js') {
               return 'todo this one';
             }
-          }
+          },
         },
         t
       );
@@ -2044,7 +2045,7 @@ describe('hyperlink', function () {
         t.push(null, {
           ok: false,
           todo: 'todo this one',
-          name: 'load https://example.com/script.js'
+          name: 'load https://example.com/script.js',
         });
       });
     });
@@ -2058,7 +2059,7 @@ describe('hyperlink', function () {
           response: {
             statusCode: 200,
             headers: {
-              'Content-Type': 'text/html; charset=UTF-8'
+              'Content-Type': 'text/html; charset=UTF-8',
             },
             body: `
               <!DOCTYPE html>
@@ -2068,23 +2069,23 @@ describe('hyperlink', function () {
               </head>
               <body></body>
               </html>
-            `
-          }
+            `,
+          },
         },
         {
           request: 'GET https://example.com/styles.css',
           response: {
             headers: {
-              'Content-Type': 'text/css'
+              'Content-Type': 'text/css',
             },
-            body: 'div { color: maroon; }/*#sourceMappingURL=css.map*/'
-          }
+            body: 'div { color: maroon; }/*#sourceMappingURL=css.map*/',
+          },
         },
         {
           request: 'GET https://example.com/css.map',
           response: {
             headers: {
-              'Content-Type': 'application/json'
+              'Content-Type': 'application/json',
             },
             body: {
               version: 3,
@@ -2092,19 +2093,19 @@ describe('hyperlink', function () {
               names: [],
               mappings:
                 'AAAA;EACE,eAAe;EACf,sBAAsB;CACvB;AACD;EACE,+CAA+C;EAC/C,uCAAuC;CACxC',
-              file: 'styles.css'
-            }
-          }
+              file: 'styles.css',
+            },
+          },
         },
         {
           request: 'HEAD https://example.com/a.less',
           response: {
             statusCode: 200,
             headers: {
-              'Content-Type': 'text/less'
-            }
-          }
-        }
+              'Content-Type': 'text/less',
+            },
+          },
+        },
       ]);
 
       const t = new TapRender();
@@ -2113,7 +2114,7 @@ describe('hyperlink', function () {
         {
           followSourceMaps: true,
           root: 'https://example.com/',
-          inputUrls: ['https://example.com/']
+          inputUrls: ['https://example.com/'],
         },
         t
       );
@@ -2130,7 +2131,7 @@ describe('hyperlink', function () {
           response: {
             statusCode: 200,
             headers: {
-              'Content-Type': 'text/html; charset=UTF-8'
+              'Content-Type': 'text/html; charset=UTF-8',
             },
             body: `
               <!DOCTYPE html>
@@ -2148,27 +2149,27 @@ describe('hyperlink', function () {
                 </script>
               </body>
               </html>
-            `
-          }
+            `,
+          },
         },
         {
           request: 'HEAD https://example.com/css.map',
           response: {
             statusCode: 200,
             headers: {
-              'Content-Type': 'application/json'
-            }
-          }
+              'Content-Type': 'application/json',
+            },
+          },
         },
         {
           request: 'HEAD https://example.com/js.map',
           response: {
             statusCode: 200,
             headers: {
-              'Content-Type': 'application/json'
-            }
-          }
-        }
+              'Content-Type': 'application/json',
+            },
+          },
+        },
       ]);
 
       const t = new TapRender();
@@ -2177,7 +2178,7 @@ describe('hyperlink', function () {
         {
           followSourceMaps: false,
           root: 'https://example.com/',
-          inputUrls: ['https://example.com/']
+          inputUrls: ['https://example.com/'],
         },
         t
       );
@@ -2193,7 +2194,7 @@ describe('hyperlink', function () {
         response: {
           statusCode: 200,
           headers: {
-            'Content-Type': 'text/html; charset=UTF-8'
+            'Content-Type': 'text/html; charset=UTF-8',
           },
           body: `
             <!DOCTYPE html>
@@ -2203,30 +2204,30 @@ describe('hyperlink', function () {
               <img src="hey.png">
             </body>
             </html>
-          `
-        }
+          `,
+        },
       },
       {
         request: 'HEAD https://example.com/hey.png',
-        response: 503
+        response: 503,
       },
       {
         request: 'GET https://example.com/hey.png',
         response: {
           statusCode: 200,
           headers: {
-            'Content-Type': 'image/png'
+            'Content-Type': 'image/png',
           },
-          body: Buffer.from('\x89PNG...')
-        }
-      }
+          body: Buffer.from('\x89PNG...'),
+        },
+      },
     ]);
 
     const t = new TapRender();
     await hyperlink(
       {
         root: 'https://example.com/',
-        inputUrls: ['https://example.com/']
+        inputUrls: ['https://example.com/'],
       },
       t
     );
@@ -2241,7 +2242,7 @@ describe('hyperlink', function () {
         response: {
           statusCode: 200,
           headers: {
-            'Content-Type': 'text/html; charset=UTF-8'
+            'Content-Type': 'text/html; charset=UTF-8',
           },
           body: `
             <!DOCTYPE html>
@@ -2251,17 +2252,17 @@ describe('hyperlink', function () {
               <img src="hey.png">
             </body>
             </html>
-          `
-        }
+          `,
+        },
       },
       {
         request: 'HEAD https://example.com/hey.png',
-        response: 503
+        response: 503,
       },
       {
         request: 'GET https://example.com/hey.png',
-        response: 503
-      }
+        response: 503,
+      },
     ]);
 
     const t = new TapRender();
@@ -2269,7 +2270,7 @@ describe('hyperlink', function () {
     await hyperlink(
       {
         root: 'https://example.com/',
-        inputUrls: ['https://example.com/']
+        inputUrls: ['https://example.com/'],
       },
       t
     );
@@ -2280,7 +2281,7 @@ describe('hyperlink', function () {
         ok: false,
         at: 'https://example.com/ (6:25) <img src="hey.png">',
         expected: '200 https://example.com/hey.png',
-        actual: '503 https://example.com/hey.png'
+        actual: '503 https://example.com/hey.png',
       });
     });
   });
@@ -2290,11 +2291,11 @@ describe('hyperlink', function () {
       request: 'GET https://github.com/assetgraph/assetgraph',
       response: {
         headers: {
-          'content-type': 'text/html'
+          'content-type': 'text/html',
         },
         body:
-          '<a id="user-content-tools-built-with-assetgraph" href="#tools-built-with-assetgraph"></a>'
-      }
+          '<a id="user-content-tools-built-with-assetgraph" href="#tools-built-with-assetgraph"></a>',
+      },
     });
 
     const t = new TapRender();
@@ -2303,7 +2304,7 @@ describe('hyperlink', function () {
     await hyperlink(
       {
         root: 'https://github.com/assetgraph/assetgraph',
-        inputUrls: ['https://github.com/assetgraph/assetgraph']
+        inputUrls: ['https://github.com/assetgraph/assetgraph'],
       },
       t
     );
@@ -2312,7 +2313,7 @@ describe('hyperlink', function () {
       {
         operator: 'load',
         name: 'load https://github.com/assetgraph/assetgraph',
-        ok: true
+        ok: true,
       },
       {
         operator: 'fragment-check',
@@ -2320,8 +2321,8 @@ describe('hyperlink', function () {
           'fragment-check https://github.com/assetgraph/assetgraph --> #tools-built-with-assetgraph',
         ok: true,
         expected: 'id="tools-built-with-assetgraph"',
-        actual: 'id="user-content-tools-built-with-assetgraph"'
-      }
+        actual: 'id="user-content-tools-built-with-assetgraph"',
+      },
     ]);
     expect(t.close(), 'to satisfy', { pass: 2, fail: 0 });
   });
@@ -2334,7 +2335,7 @@ describe('hyperlink', function () {
           response: {
             statusCode: 200,
             headers: {
-              'Content-Type': 'text/html; charset=UTF-8'
+              'Content-Type': 'text/html; charset=UTF-8',
             },
             body: `
               <!DOCTYPE html>
@@ -2345,15 +2346,15 @@ describe('hyperlink', function () {
                 <a href="https://broken-link.mntr.dk/foo/bar/baz">Broken</a>
               </body>
               </html>
-            `
-          }
+            `,
+          },
         },
         {
           request: 'GET https://example.com/otherPage.html',
           response: {
             statusCode: 200,
             headers: {
-              'Content-Type': 'text/html; charset=UTF-8'
+              'Content-Type': 'text/html; charset=UTF-8',
             },
             body: `
               <!DOCTYPE html>
@@ -2363,9 +2364,9 @@ describe('hyperlink', function () {
                 <a href="https://broken-link.mntr.dk/1/2/3#metameta">Broken</a>
               </body>
               </html>
-            `
-          }
-        }
+            `,
+          },
+        },
       ]);
 
       const t = new TapRender();
@@ -2375,7 +2376,7 @@ describe('hyperlink', function () {
           root: 'https://example.com/',
           inputUrls: ['https://example.com/'],
           recursive: true,
-          internalOnly: true
+          internalOnly: true,
         },
         t
       );
@@ -2397,7 +2398,7 @@ describe('hyperlink', function () {
           ),
           inputUrls: ['singlepage.html'],
           recursive: true,
-          internalOnly: true
+          internalOnly: true,
         },
         t
       );
@@ -2406,7 +2407,7 @@ describe('hyperlink', function () {
         {
           operator: 'load',
           name: 'load testdata/internalfragment/singlepage.html',
-          ok: true
+          ok: true,
         },
 
         {
@@ -2417,8 +2418,8 @@ describe('hyperlink', function () {
           at:
             'testdata/internalfragment/singlepage.html:1:10 <a href="#broken">...</a>',
           ok: false,
-          actual: null
-        }
+          actual: null,
+        },
       ]);
       expect(t.close(), 'to satisfy', { fail: 1 });
     });
@@ -2437,7 +2438,7 @@ describe('hyperlink', function () {
           ),
           inputUrls: ['multi-page1.html'],
           recursive: true,
-          internalOnly: true
+          internalOnly: true,
         },
         t
       );
@@ -2446,12 +2447,12 @@ describe('hyperlink', function () {
         {
           operator: 'load',
           name: 'load testdata/internalfragment/multi-page1.html',
-          ok: true
+          ok: true,
         },
         {
           operator: 'load',
           name: 'load testdata/internalfragment/multi-page2.html',
-          ok: true
+          ok: true,
         },
         {
           operator: 'fragment-check',
@@ -2461,8 +2462,8 @@ describe('hyperlink', function () {
           at:
             'testdata/internalfragment/multi-page2.html:1:10 <a href="multi-page2.html#broken">...</a>',
           ok: false,
-          actual: null
-        }
+          actual: null,
+        },
       ]);
       expect(t.close(), 'to satisfy', { fail: 1 });
     });
@@ -2473,12 +2474,12 @@ describe('hyperlink', function () {
           request: 'GET https://test.com',
           response: {
             headers: {
-              'content-type': 'text/html'
+              'content-type': 'text/html',
             },
             body:
-              '<a href="https://nodejs.org/api/events.html#events_class_eventemitter"></a>'
-          }
-        }
+              '<a href="https://nodejs.org/api/events.html#events_class_eventemitter"></a>',
+          },
+        },
       ]);
 
       const t = new TapRender();
@@ -2488,7 +2489,7 @@ describe('hyperlink', function () {
         {
           root: 'https://test.com',
           inputUrls: ['https://test.com'],
-          internalOnly: true
+          internalOnly: true,
         },
         t
       );
@@ -2497,8 +2498,8 @@ describe('hyperlink', function () {
         {
           operator: 'load',
           name: 'load https://test.com',
-          ok: true
-        }
+          ok: true,
+        },
       ]);
       expect(t.close(), 'to satisfy', { pass: 1, fail: 0 });
     });
@@ -2526,7 +2527,7 @@ describe('hyperlink', function () {
           root: pathModule.resolve(__dirname, '..', 'testdata', 'htmlInMeta'),
           inputUrls: ['index.html'],
           recursive: false,
-          internalOnly: false
+          internalOnly: false,
         },
         t
       );
@@ -2535,13 +2536,13 @@ describe('hyperlink', function () {
         {
           operator: 'load',
           name: 'load testdata/htmlInMeta/index.html',
-          ok: true
+          ok: true,
         },
         {
           operator: 'load',
           name: 'load testdata/htmlInMeta/video.html',
-          ok: true
-        }
+          ok: true,
+        },
       ]);
       expect(t.close(), 'to satisfy', { pass: 2, fail: 0 });
     });
@@ -2553,11 +2554,11 @@ describe('hyperlink', function () {
           response: {
             statusCode: 200,
             headers: {
-              'Content-Type': 'text/html; charset=UTF-8'
+              'Content-Type': 'text/html; charset=UTF-8',
             },
-            body: videoHtml
-          }
-        }
+            body: videoHtml,
+          },
+        },
       ]);
 
       const t = new TapRender();
@@ -2568,7 +2569,7 @@ describe('hyperlink', function () {
           root: pathModule.resolve(__dirname, '..', 'testdata', 'htmlInMeta'),
           inputUrls: ['crossorigin.html'],
           recursive: false,
-          internalOnly: false
+          internalOnly: false,
         },
         t
       );
@@ -2577,13 +2578,13 @@ describe('hyperlink', function () {
         {
           operator: 'load',
           name: 'load testdata/htmlInMeta/crossorigin.html',
-          ok: true
+          ok: true,
         },
         {
           operator: 'load',
           name: 'load https://crossorigin.hyperlink.io/video.html',
-          ok: true
-        }
+          ok: true,
+        },
       ]);
       expect(t.close(), 'to satisfy', { pass: 2, fail: 0 });
     });
@@ -2598,7 +2599,7 @@ describe('hyperlink', function () {
             root: pathModule.resolve(__dirname, '..', 'testdata', 'htmlInMeta'),
             inputUrls: ['index.html'],
             recursive: true,
-            internalOnly: false
+            internalOnly: false,
           },
           t
         );
@@ -2607,24 +2608,24 @@ describe('hyperlink', function () {
           {
             operator: 'load',
             name: 'load testdata/htmlInMeta/index.html',
-            ok: true
+            ok: true,
           },
           {
             operator: 'load',
             name: 'load testdata/htmlInMeta/video.html',
-            ok: true
+            ok: true,
           },
           {
             operator: 'load',
             name: 'load testdata/htmlInMeta/image.png',
-            ok: true
+            ok: true,
           },
           {
             operator: 'fragment-check',
             name: 'fragment-check testdata/htmlInMeta/video.html --> #broken',
             expected: 'id="broken"',
-            ok: false
-          }
+            ok: false,
+          },
         ]);
         expect(t.close(), 'to satisfy', { count: 4, pass: 3, fail: 1 });
       });
@@ -2636,11 +2637,11 @@ describe('hyperlink', function () {
             response: {
               statusCode: 200,
               headers: {
-                'Content-Type': 'text/html; charset=UTF-8'
+                'Content-Type': 'text/html; charset=UTF-8',
               },
-              body: videoHtml
-            }
-          }
+              body: videoHtml,
+            },
+          },
         ]);
 
         const t = new TapRender();
@@ -2651,7 +2652,7 @@ describe('hyperlink', function () {
             root: pathModule.resolve(__dirname, '..', 'testdata', 'htmlInMeta'),
             inputUrls: ['crossorigin.html'],
             recursive: false,
-            internalOnly: false
+            internalOnly: false,
           },
           t
         );
@@ -2660,13 +2661,13 @@ describe('hyperlink', function () {
           {
             operator: 'load',
             name: 'load testdata/htmlInMeta/crossorigin.html',
-            ok: true
+            ok: true,
           },
           {
             operator: 'load',
             name: 'load https://crossorigin.hyperlink.io/video.html',
-            ok: true
-          }
+            ok: true,
+          },
         ]);
         expect(t.close(), 'to satisfy', { pass: 2, fail: 0 });
       });
@@ -2682,7 +2683,7 @@ describe('hyperlink', function () {
             root: pathModule.resolve(__dirname, '..', 'testdata', 'htmlInMeta'),
             inputUrls: ['index.html'],
             recursive: false,
-            internalOnly: true
+            internalOnly: true,
           },
           t
         );
@@ -2691,13 +2692,13 @@ describe('hyperlink', function () {
           {
             operator: 'load',
             name: 'load testdata/htmlInMeta/index.html',
-            ok: true
+            ok: true,
           },
           {
             operator: 'load',
             name: 'load testdata/htmlInMeta/video.html',
-            ok: true
-          }
+            ok: true,
+          },
         ]);
         expect(t.close(), 'to satisfy', { pass: 2, fail: 0 });
       });
@@ -2709,11 +2710,11 @@ describe('hyperlink', function () {
             response: {
               statusCode: 200,
               headers: {
-                'Content-Type': 'text/html; charset=UTF-8'
+                'Content-Type': 'text/html; charset=UTF-8',
               },
-              body: videoHtml
-            }
-          }
+              body: videoHtml,
+            },
+          },
         ]);
 
         const t = new TapRender();
@@ -2724,7 +2725,7 @@ describe('hyperlink', function () {
             root: pathModule.resolve(__dirname, '..', 'testdata', 'htmlInMeta'),
             inputUrls: ['crossorigin.html'],
             recursive: false,
-            internalOnly: false
+            internalOnly: false,
           },
           t
         );
@@ -2733,13 +2734,13 @@ describe('hyperlink', function () {
           {
             operator: 'load',
             name: 'load testdata/htmlInMeta/crossorigin.html',
-            ok: true
+            ok: true,
           },
           {
             operator: 'load',
             name: 'load https://crossorigin.hyperlink.io/video.html',
-            ok: true
-          }
+            ok: true,
+          },
         ]);
         expect(t.close(), 'to satisfy', { pass: 2, fail: 0 });
       });
@@ -2755,7 +2756,7 @@ describe('hyperlink', function () {
             statusCode: 301,
             headers: {
               location: 'https://webpack.js.org/concepts/',
-              'Content-Type': 'text/html'
+              'Content-Type': 'text/html',
             },
             body: `<html>
 <head><title>301 Moved Permanently</title></head>
@@ -2763,19 +2764,19 @@ describe('hyperlink', function () {
 <center><h1>301 Moved Permanently</h1></center>
 <hr><center>nginx</center>
 </body>
-</html>`
-          }
+</html>`,
+          },
         },
         {
           request: 'GET https://webpack.js.org/concepts/',
           response: {
             statusCode: 200,
             headers: {
-              'Content-Type': 'text/html'
+              'Content-Type': 'text/html',
             },
-            body: '<html><head></head><body></body></html>'
-          }
-        }
+            body: '<html><head></head><body></body></html>',
+          },
+        },
       ]);
 
       const t = new TapRender();
@@ -2791,7 +2792,7 @@ describe('hyperlink', function () {
           ),
           inputUrls: ['index.html'],
           recursive: false,
-          internalOnly: false
+          internalOnly: false,
         },
         t
       );
@@ -2800,17 +2801,17 @@ describe('hyperlink', function () {
         {
           operator: 'load',
           name: 'load testdata/htmlInRedirect/index.html',
-          ok: true
+          ok: true,
         },
         {
           operator: 'load',
           name: 'load https://webpack.js.org/concepts',
-          ok: true
+          ok: true,
         },
         {
           operator: 'load',
           name: 'load https://webpack.js.org/concepts/',
-          ok: true
+          ok: true,
         },
         {
           operator: 'fragment-redirect',
@@ -2820,7 +2821,7 @@ describe('hyperlink', function () {
           actual: 'https://webpack.js.org/concepts#foo',
           at:
             'testdata/htmlInRedirect/index.html:1:10 <a href="https://webpack.js.org/concepts#foo">...</a>',
-          ok: false
+          ok: false,
         },
         {
           operator: 'fragment-check',
@@ -2830,8 +2831,8 @@ describe('hyperlink', function () {
           at:
             'testdata/htmlInRedirect/index.html:1:10 <a href="https://webpack.js.org/concepts#foo">...</a>',
           ok: false,
-          actual: null
-        }
+          actual: null,
+        },
       ]);
       expect(t.close(), 'to satisfy', { pass: 3, fail: 2 });
     });
@@ -2849,7 +2850,7 @@ describe('hyperlink', function () {
           'testdata',
           'pictureSourceSrcsetWebp'
         ),
-        inputUrls: ['index.html']
+        inputUrls: ['index.html'],
       },
       t
     );
@@ -2859,7 +2860,7 @@ describe('hyperlink', function () {
       pass: 3,
       fail: 0,
       skip: 0,
-      todo: 0
+      todo: 0,
     });
   });
 });

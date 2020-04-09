@@ -17,9 +17,9 @@ describe('default-skips', function () {
         inputUrls: [
           {
             type: 'Html',
-            text: '<a href="https://dk.linkedin.com/in/petermuller"></a>'
-          }
-        ]
+            text: '<a href="https://dk.linkedin.com/in/petermuller"></a>',
+          },
+        ],
       },
       t
     );
@@ -29,14 +29,14 @@ describe('default-skips', function () {
       pass: 1,
       fail: 0,
       skip: 1,
-      todo: 0
+      todo: 0,
     });
     expect(t.push, 'to have a call satisfying', () => {
       t.push(null, {
         ok: true,
         skip: expect.it('to be a string'),
         operator: 'external-check',
-        name: 'external-check https://dk.linkedin.com/in/petermuller'
+        name: 'external-check https://dk.linkedin.com/in/petermuller',
       });
     });
   });

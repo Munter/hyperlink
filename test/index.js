@@ -2838,6 +2838,62 @@ describe('hyperlink', function () {
     });
   });
 
+  describe('pretty-url feature', () => {
+    it('should resolve html files on disk from urls without .html extension', async function () {
+      const t = new TapRender();
+      sinon.spy(t, 'push');
+      await hyperlink(
+        {
+          recursive: true,
+          root: pathModule.resolve(__dirname, '..', 'testdata', 'pretty-url'),
+          inputUrls: ['index.html'],
+          pretty: true,
+        },
+        t
+      );
+
+      expect(t.close(), 'to satisfy', {
+        count: 5,
+        pass: 5,
+        fail: 0,
+        skip: 0,
+        todo: 0,
+      });
+      expect(t.push, 'to have a call satisfying', () => {
+        t.push({
+          name: 'Crawling 0 outgoing urls',
+        });
+      });
+    });
+
+    it('should fail to resolve html files on disk from urls without .html extension', async function () {
+      const t = new TapRender();
+      sinon.spy(t, 'push');
+      await hyperlink(
+        {
+          recursive: true,
+          root: pathModule.resolve(__dirname, '..', 'testdata', 'pretty-url'),
+          inputUrls: ['index.html'],
+          pretty: false,
+        },
+        t
+      );
+
+      expect(t.close(), 'to satisfy', {
+        count: 5,
+        pass: 3,
+        fail: 2,
+        skip: 0,
+        todo: 0,
+      });
+      expect(t.push, 'to have a call satisfying', () => {
+        t.push({
+          name: 'Crawling 0 outgoing urls',
+        });
+      });
+    });
+  });
+
   it('should resolve local srcset images as internal', async function () {
     const t = new TapRender();
     sinon.spy(t, 'push');

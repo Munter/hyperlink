@@ -1,5 +1,5 @@
-Hyperlink
-=========
+# Hyperlink
+
 [![NPM version](https://badge.fury.io/js/hyperlink.svg)](http://badge.fury.io/js/hyperlink)
 [![Build Status](https://travis-ci.org/Munter/hyperlink.svg?branch=master)](https://travis-ci.org/Munter/hyperlink)
 [![Coverage Status](https://coveralls.io/repos/github/Munter/hyperlink/badge.svg?branch=master)](https://coveralls.io/github/Munter/hyperlink?branch=master)
@@ -12,6 +12,7 @@ Because web performance is not only about making your own page run smoothly, but
 Read some more of the thoughts behind hyperlink in [Check your link rot](https://mntr.dk/2015/check-your-link-rot/).
 
 Hyperlink is known to:
+
 - Detect broken links to internal assets
 - Detect broken links to external assets
 - Detect broken links to fragment identifiers
@@ -21,12 +22,11 @@ Hyperlink is known to:
 - Detect mixed content warnings on TLS secured pages
 
 Todo:
+
 - Detect inefficient redirects to internal assets
 - Autocorrect inefficient redirects in local files
 
-
-Installation
-------------
+## Installation
 
 ```
 $ npm install -g hyperlink
@@ -34,9 +34,7 @@ $ npm install -g hyperlink
 
 Hyperlink exposes an executable `hyperlink` in your npm binaries folder.
 
-
-Usage
------
+## Usage
 
 Command line usage and options:
 
@@ -55,6 +53,8 @@ Options:
                      relative links. This stays inside your domain.
   --internal, -i     Only check links to assets within your own web root
 
+  --pretty, -p       Resolve "pretty" urls without .html extension to
+                     the .html file on disk             [default: false]
   --source-maps      Verify the correctness of links to source map
                      files and sources.                 [default: false]
   --skip             Avoid running a test where the report matches the
@@ -69,9 +69,7 @@ Hyperlink takes any number of input files or urls. It is recommended having thes
 
 The `--root` option is only needed for resolving root relative urls in case you are not sending in pages located in the web root.
 
-
-Common Use Cases
-----------------
+## Common Use Cases
 
 ### Checking internal URL's only
 
@@ -79,13 +77,12 @@ Running `hyperlink path/to/index.html --canonicalroot https://deployed.website.c
 
 Running `hyperlink path/to/index.html --canonicalroot https://deployed.website.com/ -r path/to/index.html` will recursively explore **all** links of your website, internal and external, to ensure that you aren't linking to external resources that have been removed or are otherwiser failing. It is not recommended to block your build pipeline on a failure of external links, since they are out of your control. Run in this mode in a non-blocking way and fix the errors in the report at your leisure. It is recommended to to this regularly, since external assets can move or disappear without warning.
 
-
-Reporters
----------
+## Reporters
 
 Hyperlink is using the [TAP](https://testanything.org/) output format, which is sort of human readable, and very machine readable. Use the TAP output in your CI setup, or pipe the output through one of these awesome reporters to get improved human readability or an output Jenkins likes
 
 These reporters are known to work well with hyperlink:
+
 - [tap-spot](https://www.npmjs.com/package/tap-spot): Minimal output for non-errors and human readable reports for errors marked as TODO or ERROR
 
 **Example:**
@@ -102,9 +99,7 @@ $ hyperlink https://mntr.dk/ | tap-spot
 hyperlink https://mntr.dk -r | tee mntr.dk.tap | tap-spot
 ```
 
-
-License
--------
+## License
 
 The MIT License (MIT)
 

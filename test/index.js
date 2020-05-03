@@ -978,6 +978,46 @@ describe('hyperlink', function () {
           });
         });
       });
+
+      it('should report missing name-attributes through a FileRedirect', async function () {
+        const t = new TapRender();
+        sinon.spy(t, 'push');
+        await hyperlink(
+          {
+            recursive: true,
+            root: pathModule.resolve(
+              __dirname,
+              '..',
+              'testdata',
+              'nameIdentifier'
+            ),
+            inputUrls: ['index.html'],
+          },
+          t
+        );
+
+        expect(t.close(), 'to satisfy', {
+          count: 5,
+          pass: 4,
+          fail: 1,
+          skip: 0,
+          todo: 0,
+        });
+        expect(t.push, 'to have a call satisfying', () => {
+          t.push(null, {
+            ok: false,
+            operator: 'fragment-check',
+            name:
+              'fragment-check testdata/nameIdentifier/index.html --> /subdir/#definitely-broken',
+            expected: 'id="definitely-broken"',
+          });
+        }).and('to have no calls satisfying', () => {
+          t.push(null, {
+            name: expect.it('to contain', '#fine'),
+            ok: false,
+          });
+        });
+      });
     });
   });
 

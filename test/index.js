@@ -2893,8 +2893,8 @@ describe('hyperlink', function () {
       );
 
       expect(t.close(), 'to satisfy', {
-        count: 5,
-        pass: 5,
+        count: 7,
+        pass: 7,
         fail: 0,
         skip: 0,
         todo: 0,
@@ -2930,6 +2930,30 @@ describe('hyperlink', function () {
         t.push({
           name: 'Crawling 0 outgoing urls',
         });
+      });
+    });
+
+    // Regression test for https://github.com/Munter/hyperlink/issues/182
+    it('should not break when discovering a second pretty link to a page that has already been processed', async function () {
+      const t = new TapRender();
+      sinon.spy(t, 'push');
+      await hyperlink(
+        {
+          recursive: true,
+          root: pathModule.resolve(
+            __dirname,
+            '..',
+            'testdata',
+            'prettyUrlIssue182'
+          ),
+          inputUrls: ['index.html'],
+          pretty: true,
+        },
+        t
+      );
+
+      expect(t.close(), 'to satisfy', {
+        fail: 0,
       });
     });
   });

@@ -1,3 +1,7 @@
+### v4.5.2 (2020-08-12)
+
+- [#184](https://github.com/Munter/hyperlink/pull/184) Update assetgraph dependency ([gchuf](mailto:gasper.cefarin@gmail.com))
+
 ### v4.5.1 (2020-08-11)
 
 - [#183](https://github.com/Munter/hyperlink/pull/183) Use FileRedirect relations for the pretty feature ([Andreas Lind](mailto:andreaslindpetersen@gmail.com))

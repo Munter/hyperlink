@@ -1,3 +1,7 @@
+### v4.5.3 (2020-10-05)
+
+- [Replace optimist with yargs, fixes \#185](https://github.com/Munter/hyperlink/commit/eafa7d0010b9d61a440057d9a990cb86e1b74ae8) ([Andreas Lind](mailto:andreas.lind@peakon.com))
+
 ### v4.5.2 (2020-08-12)
 
 - [#184](https://github.com/Munter/hyperlink/pull/184) Update assetgraph dependency ([gchuf](mailto:gasper.cefarin@gmail.com))

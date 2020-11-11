@@ -1,3 +1,7 @@
+### v4.6.0 (2020-11-11)
+
+- [Update assetgraph to ^6.3.0](https://github.com/Munter/hyperlink/commit/9441a659ea9f7738b74dbb4c33e2a19b6decbe44) ([Andreas Lind](mailto:andreaslindpetersen@gmail.com))
+
 ### v4.5.3 (2020-10-05)
 
 - [Replace optimist with yargs, fixes \#185](https://github.com/Munter/hyperlink/commit/eafa7d0010b9d61a440057d9a990cb86e1b74ae8) ([Andreas Lind](mailto:andreas.lind@peakon.com))
@@ -81,7 +85,20 @@
 
 - [Update to Assetgraph 5.12.0. Now with runtime js import\(\) support](https://github.com/Munter/hyperlink/commit/e880d167f6ab261b88dddd1670e497b41b157be2) ([Peter Müller](mailto:munter@fumle.dk))
 
+### v4.2.0 (2019-08-13)
+
+- [#159](https://github.com/Munter/hyperlink/pull/159) Feature\/handle GitHub readme fragments ([Peter Müller](mailto:munter@fumle.dk))
+
 ### v4.1.2 (2019-07-24)
+
+#### Pull requests
+
+- [#157](https://github.com/Munter/hyperlink/pull/157) Update dependencies to enable Greenkeeper 🌴 ([Peter Müller](mailto:munter@fumle.dk), [greenkeeper[bot]](mailto:23040076+greenkeeper[bot]@users.noreply.github.com))
+- [#155](https://github.com/Munter/hyperlink/pull/155) Stop recursing into Html where it shouldn't ([Peter Müller](mailto:munter@fumle.dk))
+- [#156](https://github.com/Munter/hyperlink/pull/156) Output valid TAP details without any stray colons that cause par… ([Peter Müller](mailto:munter@fumle.dk))
+- [#153](https://github.com/Munter/hyperlink/pull/153) Run fragment-check when `internal` flag is true ([Peter Müller](mailto:munter@fumle.dk))
+
+#### Commits to master
 
 - [Update to assetgraph 5.11.0. Closes \#158](https://github.com/Munter/hyperlink/commit/3785c5204fdefe76340d1fba6b6b82bafa44b1fe) ([Peter Müller](mailto:munter@fumle.dk))
 - [Auto generate CHANGELOG.md](https://github.com/Munter/hyperlink/commit/6046ea5a581cab0142998f0a940331ef7b308d46) ([Peter Müller](mailto:munter@fumle.dk))

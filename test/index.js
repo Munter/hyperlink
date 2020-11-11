@@ -517,6 +517,27 @@ describe('hyperlink', function () {
         });
       });
     });
+
+    it('should handle a JavaScript import', async function () {
+      const t = new TapRender();
+      sinon.spy(t, 'push');
+      await hyperlink(
+        {
+          recursive: false,
+          root: pathModule.resolve(__dirname, '..', 'testdata', 'import'),
+          inputUrls: ['index.html'],
+        },
+        t
+      );
+
+      expect(t.close(), 'to satisfy', {
+        count: 4,
+        pass: 4,
+        fail: 0,
+        skip: 0,
+        todo: 0,
+      });
+    });
   });
 
   describe('with document fragments', function () {

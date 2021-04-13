@@ -1,4 +1,9 @@
-### v4.6.0 (2020-11-11)
+### v4.6.1 (2021-04-13)
+
+- [#192](https://github.com/Munter/hyperlink/pull/192) Make it clearer that --skip and --todo are substrings ([Aarni Koskela](mailto:akx@iki.fi))
+- [#193](https://github.com/Munter/hyperlink/pull/193) Remove antiquated JSHint files ([Aarni Koskela](mailto:akx@iki.fi))
+
+### v4.6.0 (2020-11-12)
 
 - [Update assetgraph to ^6.3.0](https://github.com/Munter/hyperlink/commit/9441a659ea9f7738b74dbb4c33e2a19b6decbe44) ([Andreas Lind](mailto:andreaslindpetersen@gmail.com))
 

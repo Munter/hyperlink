@@ -2983,4 +2983,25 @@ describe('hyperlink', function () {
       todo: 0,
     });
   });
+
+  it('should not follow JavaScriptFetch relations', async function () {
+    const t = new TapRender();
+    sinon.spy(t, 'push');
+    await hyperlink(
+      {
+        recursive: false,
+        root: pathModule.resolve(__dirname, '..', 'testdata', 'fetch'),
+        inputUrls: ['index.html'],
+      },
+      t
+    );
+
+    expect(t.close(), 'to satisfy', {
+      count: 1,
+      pass: 1,
+      fail: 0,
+      skip: 0,
+      todo: 0,
+    });
+  });
 });

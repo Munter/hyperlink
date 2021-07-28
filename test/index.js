@@ -2959,4 +2959,69 @@ describe('hyperlink', function () {
       todo: 0,
     });
   });
+
+  it('should not follow relations from Html assets across origins. Regression test https://github.com/Munter/hyperlink/issues/181', async () => {
+    httpception([
+      {
+        request: 'https://example.com/index.html',
+        response: {
+          headers: {
+            'content-type': 'text/html',
+          },
+          body: `<embed src="https://example.com/embed.html">`,
+        },
+      },
+      {
+        request: 'https://example.com/embed.html',
+        response: {
+          statusCode: 301,
+          headers: {
+            'content-type': 'text/html',
+            location: 'https://otherplace.com/embed.html',
+          },
+        },
+      },
+      {
+        request: 'https://otherplace.com/embed.html',
+        response: {
+          statusCode: 301,
+          headers: {
+            'content-type': 'text/html',
+            location: 'https://otherplace.com/pageindex',
+          },
+        },
+      },
+      {
+        request: 'https://otherplace.com/pageindex',
+        response: {
+          statusCode: 200,
+          headers: {
+            'content-type': 'text/html',
+          },
+          body: `<a href="https://otherplace.com/dontfollowthis.html">bad</a>`,
+        },
+      },
+    ]);
+
+    const t = new TapRender();
+    t.pipe(process.stdout);
+    sinon.spy(t, 'push');
+    await hyperlink(
+      {
+        recursive: true,
+        internalOnly: true,
+        root: 'https://example.com',
+        inputUrls: ['index.html'],
+      },
+      t
+    );
+
+    expect(t.close(), 'to satisfy', {
+      count: 4,
+      pass: 4,
+      fail: 0,
+      skip: 0,
+      todo: 0,
+    });
+  });
 });

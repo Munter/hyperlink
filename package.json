@@ -38,6 +38,7 @@
   "dependencies": {
     "@munter/tap-render": "^0.2.0",
     "assetgraph": "^7.1.0",
+    "assetgraph-plugin-sitemap": "^1.0.0",
     "async": "^3.1.0",
     "hreftypes": "^1.0.1",
     "pretty-bytes": "^5.2.0",

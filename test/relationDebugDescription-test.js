@@ -6,8 +6,7 @@ function getRelation(assetConfig) {
   assetConfig = assetConfig || {
     type: 'Html',
     url: `file://${__dirname}/index.html`,
-    text:
-      '<!DOCTYPE html>\n<html lang="en">\n<head>\n    <meta charset="UTF-8">\n    <title>Document</title>\n</head>\n<body>\n    <a href="foo.html">foo</a>\n</body>\n</html>',
+    text: '<!DOCTYPE html>\n<html lang="en">\n<head>\n    <meta charset="UTF-8">\n    <title>Document</title>\n</head>\n<body>\n    <a href="foo.html">foo</a>\n</body>\n</html>',
   };
 
   var assetGraph = new AssetGraph({ root: __dirname });
@@ -76,8 +75,7 @@ describe('relationDebugDescription', function () {
       .loadAssets({
         type: 'Html',
         url: 'https://mntr.dk/index.html',
-        text:
-          '<!DOCTYPE html>\n<html lang="en">\n<head>\n    <meta charset="UTF-8">\n    <title>Document</title>\n</head>\n<body>\n    <a href="foo.html">foo</a>\n</body>\n</html>',
+        text: '<!DOCTYPE html>\n<html lang="en">\n<head>\n    <meta charset="UTF-8">\n    <title>Document</title>\n</head>\n<body>\n    <a href="foo.html">foo</a>\n</body>\n</html>',
       })
       .populate({ followRelations: { crossOrigin: false } })
       .queue(function (assetGraph) {
@@ -96,8 +94,7 @@ describe('relationDebugDescription', function () {
       .loadAssets({
         type: 'Html',
         url: `file://${__dirname}/index.html`,
-        text:
-          '<!doctype html><html><head><style>body { background: url(https://mntr.dk/invalid.png); }</style></head><body></body></html>',
+        text: '<!doctype html><html><head><style>body { background: url(https://mntr.dk/invalid.png); }</style></head><body></body></html>',
       })
       .populate({ followRelations: { crossOrigin: false } })
       .queue(function (assetGraph) {

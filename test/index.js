@@ -25,8 +25,7 @@ describe('hyperlink', function () {
           headers: {
             'Content-Type': 'text/html; charset=UTF-8',
           },
-          body:
-            '<html><head><script src="http://example.com/insecureScript.js"></script></head><body></body></html>',
+          body: '<html><head><script src="http://example.com/insecureScript.js"></script></head><body></body></html>',
         },
       },
       {
@@ -57,10 +56,8 @@ describe('hyperlink', function () {
       t.push(null, {
         ok: false,
         operator: 'mixed-content',
-        name:
-          'mixed-content https://example.com/ --> http://example.com/insecureScript.js',
-        at:
-          'https://example.com/ (1:26) <script src="http://example.com/insecureScript.js">...</script>',
+        name: 'mixed-content https://example.com/ --> http://example.com/insecureScript.js',
+        at: 'https://example.com/ (1:26) <script src="http://example.com/insecureScript.js">...</script>',
         expected:
           'https://example.com/ --> https://example.com/insecureScript.js',
         actual: 'https://example.com/ --> http://example.com/insecureScript.js',
@@ -136,12 +133,10 @@ describe('hyperlink', function () {
         name: 'external-check http://google.com',
       });
       t.push({
-        name:
-          'Connecting to 0 hosts (checking <link rel="preconnect" href="...">',
+        name: 'Connecting to 0 hosts (checking <link rel="preconnect" href="...">',
       });
       t.push({
-        name:
-          'Looking up 0 host names (checking <link rel="dns-prefetch" href="...">',
+        name: 'Looking up 0 host names (checking <link rel="dns-prefetch" href="...">',
       });
     });
   });
@@ -195,8 +190,7 @@ describe('hyperlink', function () {
         operator: 'content-type-mismatch',
         name: 'content-type-mismatch https://example.com/styles.css',
         actual: 'Asset is used as both Css and Png',
-        at:
-          'https://example.com/ (5:44) <link rel="stylesheet" href="styles.css">',
+        at: 'https://example.com/ (5:44) <link rel="stylesheet" href="styles.css">',
       });
     });
   });
@@ -348,8 +342,7 @@ describe('hyperlink', function () {
         inputUrls: [
           {
             url: `${root}/index.html`,
-            text:
-              '<!doctype html><html><body><a href="broken.html">broken</a></body></html>',
+            text: '<!doctype html><html><body><a href="broken.html">broken</a></body></html>',
           },
         ],
       },
@@ -385,13 +378,11 @@ describe('hyperlink', function () {
       });
 
       t.push({
-        name:
-          'Connecting to 0 hosts (checking <link rel="preconnect" href="...">',
+        name: 'Connecting to 0 hosts (checking <link rel="preconnect" href="...">',
       });
 
       t.push({
-        name:
-          'Looking up 0 host names (checking <link rel="dns-prefetch" href="...">',
+        name: 'Looking up 0 host names (checking <link rel="dns-prefetch" href="...">',
       });
     });
   });
@@ -424,15 +415,13 @@ describe('hyperlink', function () {
       expect(t.push, 'to have no calls satisfying', () => {
         t.push(null, {
           operator: 'fragment-check',
-          name:
-            'fragment-check testdata/recursive/page.html --> index.html#brokenfragment',
+          name: 'fragment-check testdata/recursive/page.html --> index.html#brokenfragment',
         });
       });
       expect(t.push, 'to have no calls satisfying', () => {
         t.push(null, {
           operator: 'external-check',
-          name:
-            'external-check testdata/recursive/index.html --> hyperlink.gif',
+          name: 'external-check testdata/recursive/index.html --> hyperlink.gif',
         });
       });
     });
@@ -482,8 +471,7 @@ describe('hyperlink', function () {
         },
         {
           operator: 'load',
-          name:
-            'load testdata/recursive/1ebd0482aadade65f20ec178219fe012.woff2',
+          name: 'load testdata/recursive/1ebd0482aadade65f20ec178219fe012.woff2',
           ok: true,
         },
         {
@@ -493,11 +481,9 @@ describe('hyperlink', function () {
         },
         {
           operator: 'fragment-check',
-          name:
-            'fragment-check testdata/recursive/page.html --> index.html#brokenfragment',
+          name: 'fragment-check testdata/recursive/page.html --> index.html#brokenfragment',
           expected: 'id="brokenfragment"',
-          at:
-            'testdata/recursive/page.html:8:14 <a href="index.html#brokenfragment">...</a>',
+          at: 'testdata/recursive/page.html:8:14 <a href="index.html#brokenfragment">...</a>',
           ok: false,
           actual: null,
         },
@@ -529,8 +515,7 @@ describe('hyperlink', function () {
             headers: {
               'Content-Type': 'text/html; charset=UTF-8',
             },
-            body:
-              '<html><head></head><body><a href="foo.html#bar">Link</a></body></html>',
+            body: '<html><head></head><body><a href="foo.html#bar">Link</a></body></html>',
           },
         },
         {
@@ -540,8 +525,7 @@ describe('hyperlink', function () {
             headers: {
               'Content-Type': 'text/html; charset=UTF-8',
             },
-            body:
-              '<html><head></head><body><a id="bar">Welcome!</a></body></html>',
+            body: '<html><head></head><body><a id="bar">Welcome!</a></body></html>',
           },
         },
       ]);
@@ -576,8 +560,7 @@ describe('hyperlink', function () {
             headers: {
               'Content-Type': 'text/html; charset=UTF-8',
             },
-            body:
-              '<html><head></head><body><a href="foo.html#bar">Link</a></body></html>',
+            body: '<html><head></head><body><a href="foo.html#bar">Link</a></body></html>',
           },
         },
         {
@@ -635,12 +618,10 @@ describe('hyperlink', function () {
         expect(t.push, 'to have a call exhaustively satisfying', () => {
           t.push(null, {
             operator: 'fragment-redirect',
-            name:
-              'fragment-redirect testdata/fragmentAndRedirectWithoutSlash/index.html --> testdata/fragmentAndRedirectWithoutSlash/subdir#myFragment --> testdata/fragmentAndRedirectWithoutSlash/subdir/index.html',
+            name: 'fragment-redirect testdata/fragmentAndRedirectWithoutSlash/index.html --> testdata/fragmentAndRedirectWithoutSlash/subdir#myFragment --> testdata/fragmentAndRedirectWithoutSlash/subdir/index.html',
             actual: '/subdir#myFragment',
             expected: '/subdir/#myFragment',
-            at:
-              'testdata/fragmentAndRedirectWithoutSlash/index.html:5:12 <a href="/subdir#myFragment">...</a>',
+            at: 'testdata/fragmentAndRedirectWithoutSlash/index.html:5:12 <a href="/subdir#myFragment">...</a>',
             ok: false,
           });
         });
@@ -717,12 +698,10 @@ describe('hyperlink', function () {
         expect(t.push, 'to have a call exhaustively satisfying', () => {
           t.push(null, {
             operator: 'fragment-redirect',
-            name:
-              'fragment-redirect https://example.com/ --> https://example.com/subdir#myFragment --> https://example.com/subdir/',
+            name: 'fragment-redirect https://example.com/ --> https://example.com/subdir#myFragment --> https://example.com/subdir/',
             expected: '/subdir/#myFragment',
             actual: '/subdir#myFragment',
-            at:
-              'https://example.com/ (1:50) <a href="/subdir#myFragment">...</a>',
+            at: 'https://example.com/ (1:50) <a href="/subdir#myFragment">...</a>',
             ok: false,
           });
         });
@@ -773,12 +752,10 @@ describe('hyperlink', function () {
         expect(t.push, 'to have a call exhaustively satisfying', () => {
           t.push(null, {
             operator: 'fragment-redirect',
-            name:
-              'fragment-redirect https://example.com/ --> https://example.com/subdir/#myFragment --> https://example.com/subdir2/',
+            name: 'fragment-redirect https://example.com/ --> https://example.com/subdir/#myFragment --> https://example.com/subdir2/',
             expected: '/subdir2/#myFragment',
             actual: '/subdir/#myFragment',
-            at:
-              'https://example.com/ (1:50) <a href="/subdir/#myFragment">...</a>',
+            at: 'https://example.com/ (1:50) <a href="/subdir/#myFragment">...</a>',
             ok: false,
           });
         });
@@ -817,8 +794,7 @@ describe('hyperlink', function () {
             headers: {
               'Content-Type': 'text/html; charset=UTF-8',
             },
-            body:
-              '<html><head></head><body><a href="foo.html#">Link</a></body></html>',
+            body: '<html><head></head><body><a href="foo.html#">Link</a></body></html>',
           },
         },
         {
@@ -865,8 +841,7 @@ describe('hyperlink', function () {
             headers: {
               'Content-Type': 'text/html; charset=UTF-8',
             },
-            body:
-              '<html><head></head><body><a href="https://example2.com/foo.html#frag">Link</a></body></html>',
+            body: '<html><head></head><body><a href="https://example2.com/foo.html#frag">Link</a></body></html>',
           },
         },
         {
@@ -876,8 +851,7 @@ describe('hyperlink', function () {
             headers: {
               'Content-Type': 'text/html; charset=UTF-8',
             },
-            body:
-              '<html><head><link rel="stylesheet" href="dont-follow.css"></head><body><img src="dont-follow.png"><main id="frag">I exist</main></body></html>',
+            body: '<html><head><link rel="stylesheet" href="dont-follow.css"></head><body><img src="dont-follow.png"><main id="frag">I exist</main></body></html>',
           },
         },
       ]);
@@ -898,8 +872,7 @@ describe('hyperlink', function () {
         t.push(null, {
           ok: true,
           operator: 'fragment-check',
-          name:
-            'fragment-check https://example.com/ --> https://example2.com/foo.html#frag',
+          name: 'fragment-check https://example.com/ --> https://example2.com/foo.html#frag',
           expected: 'id="frag"',
         });
       });
@@ -967,8 +940,7 @@ describe('hyperlink', function () {
           t.push(null, {
             ok: false,
             operator: 'fragment-check',
-            name:
-              'fragment-check testdata/fragmentIdentifier/index.html --> /subdir/#definitely-broken',
+            name: 'fragment-check testdata/fragmentIdentifier/index.html --> /subdir/#definitely-broken',
             expected: 'id="definitely-broken"',
           });
         }).and('to have no calls satisfying', () => {
@@ -1007,8 +979,7 @@ describe('hyperlink', function () {
           t.push(null, {
             ok: false,
             operator: 'fragment-check',
-            name:
-              'fragment-check testdata/nameIdentifier/index.html --> /subdir/#definitely-broken',
+            name: 'fragment-check testdata/nameIdentifier/index.html --> /subdir/#definitely-broken',
             expected: 'id="definitely-broken"',
           });
         }).and('to have no calls satisfying', () => {
@@ -1118,16 +1089,14 @@ describe('hyperlink', function () {
             request: 'GET https://example.com/',
             response: {
               headers: { 'Content-Type': 'text/html' },
-              body:
-                '<html><head><link rel="stylesheet" href="https://mycdn.com/styles.css"></head><body></body></html>',
+              body: '<html><head><link rel="stylesheet" href="https://mycdn.com/styles.css"></head><body></body></html>',
             },
           },
           {
             request: 'GET https://mycdn.com/styles.css',
             response: {
               headers: { 'Content-Type': 'text/css' },
-              body:
-                '@font-face { font-family: Foo; src: url(404.eot) format("embedded-opentype"); font-weight: 400; }',
+              body: '@font-face { font-family: Foo; src: url(404.eot) format("embedded-opentype"); font-weight: 400; }',
             },
           },
           {
@@ -1170,8 +1139,7 @@ describe('hyperlink', function () {
             request: 'GET https://example.com/',
             response: {
               headers: { 'Content-Type': 'text/html' },
-              body:
-                '<html><head><iframe src="https://mycdn.com/frame.html"></iframe></head><body></body></html>',
+              body: '<html><head><iframe src="https://mycdn.com/frame.html"></iframe></head><body></body></html>',
             },
           },
           {
@@ -1210,8 +1178,7 @@ describe('hyperlink', function () {
             headers: {
               'Content-Type': 'text/html; charset=UTF-8',
             },
-            body:
-              '<html><head></head><body><a href="https://elsewhere.com/">Link</a></body></html>',
+            body: '<html><head></head><body><a href="https://elsewhere.com/">Link</a></body></html>',
           },
         },
         {
@@ -1262,8 +1229,7 @@ describe('hyperlink', function () {
             headers: {
               'Content-Type': 'text/html; charset=UTF-8',
             },
-            body:
-              '<html><head></head><body><a href="https://elsewhere.com/">Link</a></body></html>',
+            body: '<html><head></head><body><a href="https://elsewhere.com/">Link</a></body></html>',
           },
         },
         {
@@ -1320,8 +1286,7 @@ describe('hyperlink', function () {
             headers: {
               'Content-Type': 'text/html; charset=UTF-8',
             },
-            body:
-              '<html><head></head><body><a href="https://elsewhere.com/">Link</a></body></html>',
+            body: '<html><head></head><body><a href="https://elsewhere.com/">Link</a></body></html>',
           },
         },
         {
@@ -1391,8 +1356,7 @@ describe('hyperlink', function () {
             headers: {
               'Content-Type': 'text/html; charset=UTF-8',
             },
-            body:
-              '<html><head></head><body><script src="https://elsewhere.com/"></script></body></html>',
+            body: '<html><head></head><body><script src="https://elsewhere.com/"></script></body></html>',
           },
         },
         {
@@ -1478,8 +1442,7 @@ describe('hyperlink', function () {
         });
         expect(t.push, 'to have a call satisfying', () => {
           t.push({
-            name:
-              'Connecting to 1 hosts (checking <link rel="preconnect" href="...">',
+            name: 'Connecting to 1 hosts (checking <link rel="preconnect" href="...">',
           });
         });
       });
@@ -1509,8 +1472,7 @@ describe('hyperlink', function () {
           t.push(null, {
             actual:
               'DNS missing: thisdomaindoesnotandshouldnotexistqhqwicqecqwe.com',
-            at:
-              'testdata/preconnect/nonexistent/index.html:3:34 <link rel="preconnect" href="https://thisdomaindoesnotandshouldnotexistqhqwicqecqwe.com/">',
+            at: 'testdata/preconnect/nonexistent/index.html:3:34 <link rel="preconnect" href="https://thisdomaindoesnotandshouldnotexistqhqwicqecqwe.com/">',
           });
         });
       });
@@ -1546,8 +1508,7 @@ describe('hyperlink', function () {
         });
         expect(t.push, 'to have a call satisfying', () => {
           t.push({
-            name:
-              'Looking up 1 host names (checking <link rel="dns-prefetch" href="...">',
+            name: 'Looking up 1 host names (checking <link rel="dns-prefetch" href="...">',
           });
         });
       });
@@ -1583,8 +1544,7 @@ describe('hyperlink', function () {
           t.push(null, {
             actual:
               'DNS missing: thisdomaindoesnotandshouldnotexistqhqwicqecqwe.com',
-            at:
-              'testdata/dns-prefetch/nonexistent/index.html:3:36 <link rel="dns-prefetch" href="//thisdomaindoesnotandshouldnotexistqhqwicqecqwe.com/">',
+            at: 'testdata/dns-prefetch/nonexistent/index.html:3:36 <link rel="dns-prefetch" href="//thisdomaindoesnotandshouldnotexistqhqwicqecqwe.com/">',
           });
         });
       });
@@ -1601,8 +1561,7 @@ describe('hyperlink', function () {
             headers: {
               'Content-Type': 'text/html; charset=UTF-8',
             },
-            body:
-              '<html><head><script src="script.js"></script></head><body></body></html>',
+            body: '<html><head><script src="script.js"></script></head><body></body></html>',
           },
         },
         {
@@ -1647,8 +1606,7 @@ describe('hyperlink', function () {
             headers: {
               'Content-Type': 'text/html; charset=UTF-8',
             },
-            body:
-              '<html><head><script src="script.js"></script></head><body></body></html>',
+            body: '<html><head><script src="script.js"></script></head><body></body></html>',
           },
         },
       ]);
@@ -1689,8 +1647,7 @@ describe('hyperlink', function () {
             headers: {
               'Content-Type': 'text/html; charset=UTF-8',
             },
-            body:
-              '<html><head><script src="script.js"></script></head><body></body></html>',
+            body: '<html><head><script src="script.js"></script></head><body></body></html>',
           },
         },
       ]);
@@ -1731,8 +1688,7 @@ describe('hyperlink', function () {
             headers: {
               'Content-Type': 'text/html; charset=UTF-8',
             },
-            body:
-              '<html><head><script src="http://example.com/insecureScript.js"></script></head><body></body></html>',
+            body: '<html><head><script src="http://example.com/insecureScript.js"></script></head><body></body></html>',
           },
         },
         {
@@ -1770,10 +1726,8 @@ describe('hyperlink', function () {
         t.push(null, {
           skip: true,
           operator: 'mixed-content',
-          name:
-            'mixed-content https://example.com/ --> http://example.com/insecureScript.js',
-          at:
-            'https://example.com/ (1:26) <script src="http://example.com/insecureScript.js">...</script>',
+          name: 'mixed-content https://example.com/ --> http://example.com/insecureScript.js',
+          at: 'https://example.com/ (1:26) <script src="http://example.com/insecureScript.js">...</script>',
         });
       });
     });
@@ -1787,8 +1741,7 @@ describe('hyperlink', function () {
             headers: {
               'Content-Type': 'text/html; charset=UTF-8',
             },
-            body:
-              '<html><head></head><body><a href="#missingId">Broken fragment link</a></body></html>',
+            body: '<html><head></head><body><a href="#missingId">Broken fragment link</a></body></html>',
           },
         },
       ]);
@@ -1839,8 +1792,7 @@ describe('hyperlink', function () {
             headers: {
               'Content-Type': 'text/html; charset=UTF-8',
             },
-            body:
-              '<html><head></head><body><a href="https://knownfailure.com" class="external-helper-class">url to skip</a></body></html>',
+            body: '<html><head></head><body><a href="https://knownfailure.com" class="external-helper-class">url to skip</a></body></html>',
           },
         },
       ]);
@@ -1869,8 +1821,7 @@ describe('hyperlink', function () {
           skip: true,
           operator: 'external-check',
           name: 'external-check https://knownfailure.com',
-          at:
-            'https://example.com/ (1:35) <a href="https://knownfailure.com" class="external-helper-class">...</a>',
+          at: 'https://example.com/ (1:35) <a href="https://knownfailure.com" class="external-helper-class">...</a>',
         });
       });
     });
@@ -1906,10 +1857,8 @@ describe('hyperlink', function () {
         t.push(null, {
           skip: true,
           operator: 'preconnect-check',
-          name:
-            'preconnect-check https://thisdomaindoesnotandshouldnotexistqhqwicqecqwe.com/',
-          at:
-            'testdata/preconnect/nonexistent/index.html:3:34 <link rel="preconnect" href="https://thisdomaindoesnotandshouldnotexistqhqwicqecqwe.com/">',
+          name: 'preconnect-check https://thisdomaindoesnotandshouldnotexistqhqwicqecqwe.com/',
+          at: 'testdata/preconnect/nonexistent/index.html:3:34 <link rel="preconnect" href="https://thisdomaindoesnotandshouldnotexistqhqwicqecqwe.com/">',
         });
       });
     });
@@ -1945,10 +1894,8 @@ describe('hyperlink', function () {
         t.push(null, {
           skip: true,
           operator: 'dns-prefetch-check',
-          name:
-            'dns-prefetch-check thisdomaindoesnotandshouldnotexistqhqwicqecqwe.com',
-          at:
-            'testdata/dns-prefetch/nonexistent/index.html:3:36 <link rel="dns-prefetch" href="//thisdomaindoesnotandshouldnotexistqhqwicqecqwe.com/">',
+          name: 'dns-prefetch-check thisdomaindoesnotandshouldnotexistqhqwicqecqwe.com',
+          at: 'testdata/dns-prefetch/nonexistent/index.html:3:36 <link rel="dns-prefetch" href="//thisdomaindoesnotandshouldnotexistqhqwicqecqwe.com/">',
         });
       });
     });
@@ -1964,8 +1911,7 @@ describe('hyperlink', function () {
             headers: {
               'Content-Type': 'text/html; charset=UTF-8',
             },
-            body:
-              '<html><head><script src="script.js"></script></head><body></body></html>',
+            body: '<html><head><script src="script.js"></script></head><body></body></html>',
           },
         },
         {
@@ -2009,8 +1955,7 @@ describe('hyperlink', function () {
             headers: {
               'Content-Type': 'text/html; charset=UTF-8',
             },
-            body:
-              '<html><head><script src="script.js"></script></head><body></body></html>',
+            body: '<html><head><script src="script.js"></script></head><body></body></html>',
           },
         },
         {
@@ -2054,8 +1999,7 @@ describe('hyperlink', function () {
             headers: {
               'Content-Type': 'text/html; charset=UTF-8',
             },
-            body:
-              '<html><head><script src="script.js"></script></head><body></body></html>',
+            body: '<html><head><script src="script.js"></script></head><body></body></html>',
           },
         },
         {
@@ -2333,8 +2277,7 @@ describe('hyperlink', function () {
         headers: {
           'content-type': 'text/html',
         },
-        body:
-          '<a id="user-content-tools-built-with-assetgraph" href="#tools-built-with-assetgraph"></a>',
+        body: '<a id="user-content-tools-built-with-assetgraph" href="#tools-built-with-assetgraph"></a>',
       },
     });
 
@@ -2357,8 +2300,7 @@ describe('hyperlink', function () {
       },
       {
         operator: 'fragment-check',
-        name:
-          'fragment-check https://github.com/assetgraph/assetgraph --> #tools-built-with-assetgraph',
+        name: 'fragment-check https://github.com/assetgraph/assetgraph --> #tools-built-with-assetgraph',
         ok: true,
         expected: 'id="tools-built-with-assetgraph"',
         actual: 'id="user-content-tools-built-with-assetgraph"',
@@ -2452,11 +2394,9 @@ describe('hyperlink', function () {
 
         {
           operator: 'fragment-check',
-          name:
-            'fragment-check testdata/internalfragment/singlepage.html --> #broken',
+          name: 'fragment-check testdata/internalfragment/singlepage.html --> #broken',
           expected: 'id="broken"',
-          at:
-            'testdata/internalfragment/singlepage.html:1:10 <a href="#broken">...</a>',
+          at: 'testdata/internalfragment/singlepage.html:1:10 <a href="#broken">...</a>',
           ok: false,
           actual: null,
         },
@@ -2496,11 +2436,9 @@ describe('hyperlink', function () {
         },
         {
           operator: 'fragment-check',
-          name:
-            'fragment-check testdata/internalfragment/multi-page2.html --> multi-page2.html#broken',
+          name: 'fragment-check testdata/internalfragment/multi-page2.html --> multi-page2.html#broken',
           expected: 'id="broken"',
-          at:
-            'testdata/internalfragment/multi-page2.html:1:10 <a href="multi-page2.html#broken">...</a>',
+          at: 'testdata/internalfragment/multi-page2.html:1:10 <a href="multi-page2.html#broken">...</a>',
           ok: false,
           actual: null,
         },
@@ -2516,8 +2454,7 @@ describe('hyperlink', function () {
             headers: {
               'content-type': 'text/html',
             },
-            body:
-              '<a href="https://nodejs.org/api/events.html#events_class_eventemitter"></a>',
+            body: '<a href="https://nodejs.org/api/events.html#events_class_eventemitter"></a>',
           },
         },
       ]);
@@ -2855,21 +2792,17 @@ describe('hyperlink', function () {
         },
         {
           operator: 'fragment-redirect',
-          name:
-            'fragment-redirect testdata/htmlInRedirect/index.html --> https://webpack.js.org/concepts#foo --> https://webpack.js.org/concepts/',
+          name: 'fragment-redirect testdata/htmlInRedirect/index.html --> https://webpack.js.org/concepts#foo --> https://webpack.js.org/concepts/',
           expected: 'https://webpack.js.org/concepts/#foo',
           actual: 'https://webpack.js.org/concepts#foo',
-          at:
-            'testdata/htmlInRedirect/index.html:1:10 <a href="https://webpack.js.org/concepts#foo">...</a>',
+          at: 'testdata/htmlInRedirect/index.html:1:10 <a href="https://webpack.js.org/concepts#foo">...</a>',
           ok: false,
         },
         {
           operator: 'fragment-check',
-          name:
-            'fragment-check testdata/htmlInRedirect/index.html --> https://webpack.js.org/concepts#foo',
+          name: 'fragment-check testdata/htmlInRedirect/index.html --> https://webpack.js.org/concepts#foo',
           expected: 'id="foo"',
-          at:
-            'testdata/htmlInRedirect/index.html:1:10 <a href="https://webpack.js.org/concepts#foo">...</a>',
+          at: 'testdata/htmlInRedirect/index.html:1:10 <a href="https://webpack.js.org/concepts#foo">...</a>',
           ok: false,
           actual: null,
         },

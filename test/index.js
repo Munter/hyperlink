@@ -3004,4 +3004,26 @@ describe('hyperlink', function () {
       todo: 0,
     });
   });
+
+  it('should handle special characters in paths. Regression test https://github.com/Munter/hyperlink/issues/169', async () => {
+    const t = new TapRender();
+    // t.pipe(process.stdout);
+    sinon.spy(t, 'push');
+    await hyperlink(
+      {
+        recursive: false,
+        root: pathModule.resolve(__dirname, '..', 'testdata', '@scopename'),
+        inputUrls: ['index.html'],
+      },
+      t
+    );
+
+    expect(t.close(), 'to satisfy', {
+      count: 2,
+      pass: 2,
+      fail: 0,
+      skip: 0,
+      todo: 0,
+    });
+  });
 });

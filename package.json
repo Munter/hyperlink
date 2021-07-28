@@ -43,7 +43,7 @@
     "hreftypes": "^1.0.1",
     "pretty-bytes": "^5.2.0",
     "request": "^2.88.0",
-    "urltools": "^0.4.1",
+    "urltools": "^0.4.2",
     "yargs": "^16.0.3"
   },
   "devDependencies": {

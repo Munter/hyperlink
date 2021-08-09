@@ -75,7 +75,16 @@ The `--root` option is only needed for resolving root relative urls in case you 
 
 Running `hyperlink path/to/index.html --canonicalroot https://deployed.website.com/ -r --internal path/to/index.html` will recursively explore the internals links of your website to ensure internal integrity. It is recommended to make this a part of your build pipeline and block on errors, since any error is very likely to be actually user facing if our page is deployed.
 
-Running `hyperlink path/to/index.html --canonicalroot https://deployed.website.com/ -r path/to/index.html` will recursively explore **all** links of your website, internal and external, to ensure that you aren't linking to external resources that have been removed or are otherwiser failing. It is not recommended to block your build pipeline on a failure of external links, since they are out of your control. Run in this mode in a non-blocking way and fix the errors in the report at your leisure. It is recommended to to this regularly, since external assets can move or disappear without warning.
+Running `hyperlink path/to/index.html --canonicalroot https://deployed.website.com/ -r path/to/index.html` will recursively explore **all** links of your website, internal and external, to ensure that you aren't linking to external resources that have been removed or are otherwise failing. It is not recommended to block your build pipeline on a failure of external links, since they are out of your control. Run in this mode in a non-blocking way and fix the errors in the report at your leisure. It is recommended to to this regularly, since external assets can move or disappear without warning.
+
+### Using a sitemap
+
+Hyperlink understands sitemaps, and if you have one, it is recommended to start hyperlink out from that. You might have multiple sitemaps, annotated with `Sitemap:`-directives in your `robots.txt`, in which case you can start hyperlink from your `robots.txt` as well. Run `hyperlink path/to/robots.txt` or `hyperlink path/to/sitemap.xml`
+
+The following sitemap formats are supported:
+- [XML Sitemap](https://en.wikipedia.org/wiki/Sitemaps#File_format)
+- [Text Sitemap](https://en.wikipedia.org/wiki/Sitemaps#Text_file)
+- [RSS or Atom syndictation feeds](https://en.wikipedia.org/wiki/Sitemaps#Syndication_feed)
 
 ## Reporters
 

@@ -1,9 +1,11 @@
 @font-face {
   font-family: 'Geomanist';
-  src: url(/1ebd0482aadade65f20ec178219fe012.woff2) format("woff2"), url(/314bbcd238d458622bbf32427346774f.woff) format("woff");
+  src: url(/1ebd0482aadade65f20ec178219fe012.woff2) format('woff2'),
+    url(/314bbcd238d458622bbf32427346774f.woff) format('woff');
   font-weight: 600;
-  font-style: normal; }
+  font-style: normal;
+}
 
 body {
-    background: red;
+  background: red;
 }

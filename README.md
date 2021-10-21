@@ -82,6 +82,7 @@ Running `hyperlink path/to/index.html --canonicalroot https://deployed.website.c
 Hyperlink understands sitemaps, and if you have one, it is recommended to start hyperlink out from that. You might have multiple sitemaps, annotated with `Sitemap:`-directives in your `robots.txt`, in which case you can start hyperlink from your `robots.txt` as well. Run `hyperlink path/to/robots.txt` or `hyperlink path/to/sitemap.xml`
 
 The following sitemap formats are supported:
+
 - [XML Sitemap](https://en.wikipedia.org/wiki/Sitemaps#File_format)
 - [Text Sitemap](https://en.wikipedia.org/wiki/Sitemaps#Text_file)
 - [RSS or Atom syndictation feeds](https://en.wikipedia.org/wiki/Sitemaps#Syndication_feed)

@@ -1,3 +1,7 @@
+### v5.0.2 (2021-11-20)
+
+- [Also require parseTree to be present, see \#196](https://github.com/Munter/hyperlink/commit/80870165df69d4fdf5b9d96c04a68e42a7eb891a) ([Andreas Lind](mailto:andreas.lind@workday.com))
+
 ### v5.0.1 (2021-11-20)
 
 - [Try to fix \#196](https://github.com/Munter/hyperlink/commit/3051c35259e824346297f31efc37da433375c242) ([Andreas Lind](mailto:andreas.lind@workday.com))

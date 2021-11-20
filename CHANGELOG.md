@@ -1,3 +1,7 @@
+### v5.0.1 (2021-11-20)
+
+- [Try to fix \#196](https://github.com/Munter/hyperlink/commit/3051c35259e824346297f31efc37da433375c242) ([Andreas Lind](mailto:andreas.lind@workday.com))
+
 ### v5.0.0 (2021-10-21)
 
 - [Add CHANGELOG.md to .prettierignore](https://github.com/Munter/hyperlink/commit/25312a181dd92fc95666046b7dbe268468dd9530) ([Andreas Lind](mailto:andreaslindpetersen@gmail.com))

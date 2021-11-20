@@ -911,6 +911,64 @@ describe('hyperlink', function () {
       });
     });
 
+    // Regression test for https://github.com/Munter/hyperlink/issues/196#issue-1059125132
+    it('should not break when an external link with a fragment hits a redirect', async function () {
+      httpception([
+        {
+          request: 'GET https://example.com/',
+          response: {
+            statusCode: 200,
+            headers: {
+              'Content-Type': 'text/html; charset=UTF-8',
+            },
+            body: '<html><head></head><body><a href="https://otherdoma.in/foo.html#foo">Link</a></body></html>',
+          },
+        },
+        {
+          request: 'GET https://otherdoma.in/foo.html',
+          response: {
+            statusCode: 302,
+            headers: {
+              Location: 'https://otherdoma.in/newfoo.html',
+            },
+          },
+        },
+        {
+          request: 'GET https://otherdoma.in/newfoo.html',
+          response: {
+            statusCode: 200,
+            headers: {
+              'Content-Type': 'text/html; charset=UTF-8',
+            },
+            body: '<html><head></head><body><a id="foo">Yo</a></body></html>',
+          },
+        },
+      ]);
+
+      const t = new TapRender();
+      sinon.spy(t, 'push');
+      await hyperlink(
+        {
+          recursive: true,
+          root: 'https://example.com/',
+          inputUrls: ['https://example.com/'],
+        },
+        t
+      );
+
+      expect(t.close(), 'to satisfy', { fail: 1 });
+      expect(t.push, 'to have a call satisfying', () => {
+        t.push(null, {
+          operator: 'fragment-check',
+          name: 'fragment-check https://example.com/ --> https://otherdoma.in/foo.html#foo',
+          expected: 'id="foo"',
+          at: 'https://example.com/ (1:35) <a href="https://otherdoma.in/foo.html#foo">...</a>',
+          ok: true,
+          actual: 'id="foo"',
+        });
+      });
+    });
+
     describe('on a local file system', function () {
       it('should report missing fragments through a FileRedirect', async function () {
         const t = new TapRender();

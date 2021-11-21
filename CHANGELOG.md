@@ -1,3 +1,8 @@
+### v5.0.3 (2021-11-21)
+
+- [Do not continue crawling on the other origin when the origin-crossing relation results in an HTTP redirect](https://github.com/Munter/hyperlink/commit/240f5848eb100ba205987be33d0b385e6bfc35f1) ([Andreas Lind](mailto:andreaslindpetersen@gmail.com))
+- [Add regression test for \#196](https://github.com/Munter/hyperlink/commit/a6ef642acfd380e90647e666e3518142f68f0e49) ([Andreas Lind](mailto:andreaslindpetersen@gmail.com))
+
 ### v5.0.2 (2021-11-20)
 
 - [Also require parseTree to be present, see \#196](https://github.com/Munter/hyperlink/commit/80870165df69d4fdf5b9d96c04a68e42a7eb891a) ([Andreas Lind](mailto:andreas.lind@workday.com))

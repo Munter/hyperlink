@@ -1048,6 +1048,59 @@ describe('hyperlink', function () {
         });
       });
     });
+
+    // Regression test for https://github.com/Munter/hyperlink/issues/196#issuecomment-974726167
+    it('should not follow relations after a redirect upon already crossing origins', async function () {
+      httpception([
+        {
+          request: 'GET https://docs.ovh.com/gb/en/dedicated/firewall-network',
+          response: {
+            statusCode: 301,
+            headers: {
+              'Content-Type': 'text/html',
+              Location:
+                'https://docs.ovh.com/gb/en/dedicated/firewall-network/',
+            },
+            body: '<html><head><title>301 Moved Permanently</title></head></html>',
+          },
+        },
+        {
+          request: 'GET https://docs.ovh.com/gb/en/dedicated/firewall-network/',
+          response: {
+            statusCode: 200,
+            headers: { 'Content-Type': 'text/html' },
+            body: `<html><head></head><body><a id="objective" href="/otherpage.html"></body></html>`,
+          },
+        },
+      ]);
+
+      const t = new TapRender();
+      sinon.spy(t, 'push');
+      await hyperlink(
+        {
+          recursive: true,
+          root: pathModule.resolve(
+            __dirname,
+            '..',
+            'testdata',
+            'externalLinkRedirect'
+          ),
+          inputUrls: ['index.html'],
+        },
+        t
+      );
+      expect(t.close(), 'to satisfy', { fail: 1 });
+      expect(t.push, 'to have a call satisfying', () => {
+        t.push(null, {
+          operator: 'fragment-check',
+          name: 'fragment-check testdata/externalLinkRedirect/index.html --> https://docs.ovh.com/gb/en/dedicated/firewall-network#objective',
+          expected: 'id="objective"',
+          at: 'testdata/externalLinkRedirect/index.html:1:10 <a href="https://docs.ovh.com/gb/en/dedicated/firewall-network#objective">...</a>',
+          ok: true,
+          actual: 'id="objective"',
+        });
+      });
+    });
   });
 
   describe('with a relation that points at an asset that returns 404', function () {

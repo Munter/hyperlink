@@ -1,3 +1,7 @@
+### v5.0.4 (2022-01-09)
+
+- [Do not follow cross-origin non-anchor relations in internalOnly mode](https://github.com/Munter/hyperlink/commit/bfaa8dcd4b2cbc59c64ca9064095f73eeb7589a2) ([Andreas Lind](mailto:andreaslindpetersen@gmail.com))
+
 ### v5.0.3 (2021-11-21)
 
 - [Do not continue crawling on the other origin when the origin-crossing relation results in an HTTP redirect](https://github.com/Munter/hyperlink/commit/240f5848eb100ba205987be33d0b385e6bfc35f1) ([Andreas Lind](mailto:andreaslindpetersen@gmail.com))

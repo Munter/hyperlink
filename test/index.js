@@ -2477,6 +2477,54 @@ describe('hyperlink', function () {
       expect(t.close(), 'to satisfy', { fail: 0 });
     });
 
+    // Regression test for https://github.com/Munter/hyperlink/issues/198
+    it('should not follow image/non-anchor relations to external assets', async function () {
+      httpception();
+      const t = new TapRender();
+      sinon.spy(t, 'push');
+      await hyperlink(
+        {
+          recursive: false,
+          internalOnly: true,
+          root: pathModule.resolve(__dirname, '..', 'testdata', 'issue198'),
+          inputUrls: ['index.html'],
+        },
+        t
+      );
+
+      expect(t.close(), 'to satisfy', {
+        count: 1,
+        pass: 1,
+        fail: 0,
+        skip: 0,
+        todo: 0,
+      });
+    });
+
+    // Regression test for https://github.com/Munter/hyperlink/issues/181
+    it('should not an <embed src=...> relation pointing at an external asset', async function () {
+      httpception();
+      const t = new TapRender();
+      sinon.spy(t, 'push');
+      await hyperlink(
+        {
+          recursive: false,
+          internalOnly: true,
+          root: pathModule.resolve(__dirname, '..', 'testdata', 'issue181'),
+          inputUrls: ['index.html'],
+        },
+        t
+      );
+
+      expect(t.close(), 'to satisfy', {
+        count: 1,
+        pass: 1,
+        fail: 0,
+        skip: 0,
+        todo: 0,
+      });
+    });
+
     it('should follow fragment links within the same page', async () => {
       const t = new TapRender();
       // t.pipe(process.stdout);

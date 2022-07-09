@@ -8,7 +8,7 @@
     "test": "mocha && npm run lint",
     "coverage": "nyc mocha",
     "preversion": "npm test",
-    "version": "offline-github-changelog --next=${npm_package_version} > CHANGELOG.md && git add CHANGELOG.md",
+    "version": "offline-github-changelog --next=${npm_new_version} > CHANGELOG.md && git add CHANGELOG.md",
     "test:ci": "npm run coverage"
   },
   "repository": {
